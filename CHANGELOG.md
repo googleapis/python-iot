@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [0.3.1](https://www.github.com/googleapis/python-iot/compare/v0.3.0...v0.3.1) (2020-02-06)
+
+
+### Bug Fixes
+
+* **iot:** modify retry and timeout configs; add 2.7 deprecation warning; add 'required' to docstring for required args; add 3.8 unit tests (via synth)  ([#10069](https://www.github.com/googleapis/python-iot/issues/10069)) ([ce6f5cf](https://www.github.com/googleapis/python-iot/commit/ce6f5cf2c1611af179da8dba3f73b1f8dc1bb1e1))
+
 ## 0.3.0
 
 07-24-2019 16:35 PDT
@@ -86,4 +93,3 @@
 
 ### New Features
 - Add v1 Endpoint for IoT (#5355)
-
