@@ -2035,8 +2035,7 @@ RegistryCredential = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_REGISTRYCREDENTIAL,
         __module__="google.cloud.iot_v1.proto.resources_pb2",
-        __doc__="""A server-stored registry credential used to validate
-  device credentials.
+        __doc__="""A server-stored registry credential used to validate device credentials.
   
   
   Attributes:
@@ -2057,7 +2056,8 @@ X509CertificateDetails = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_X509CERTIFICATEDETAILS,
         __module__="google.cloud.iot_v1.proto.resources_pb2",
-        __doc__="""Details of an X.509 certificate. For informational purposes only.
+        __doc__="""Details of an X.509 certificate. For informational
+  purposes only.
   
   
   Attributes:
