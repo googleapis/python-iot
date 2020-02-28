@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [1.0.0](https://www.github.com/googleapis/python-iot/compare/v0.3.1...v1.0.0) (2020-02-28)
+
+
+### Features
+
+* bump release status to GA ([#6](https://www.github.com/googleapis/python-iot/issues/6)) ([6793d49](https://www.github.com/googleapis/python-iot/commit/6793d493ec576191996c2e82c52ff549ee26347c))
+
 ### [0.3.1](https://www.github.com/googleapis/python-iot/compare/v0.3.0...v0.3.1) (2020-02-06)
 
 
