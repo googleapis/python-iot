@@ -1969,8 +1969,7 @@ HttpConfig = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_HTTPCONFIG,
         __module__="google.cloud.iot_v1.proto.resources_pb2",
-        __doc__="""The configuration of the HTTP bridge for a device
-  registry.
+        __doc__="""The configuration of the HTTP bridge for a device registry.
   
   
   Attributes:
