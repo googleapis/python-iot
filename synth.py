@@ -16,17 +16,16 @@
 import synthtool as s
 from synthtool import gcp
 
-gapic = gcp.GAPICGenerator()
+gapic = gcp.GAPICBazel()
 common = gcp.CommonTemplates()
 
 # ----------------------------------------------------------------------------
 # Generate iot GAPIC layer
 # ----------------------------------------------------------------------------
 library = gapic.py_library(
-    "iot",
-    "v1",
-    config_path="/google/cloud/iot/artman_cloudiot.yaml",
-    artman_output_name="iot-v1",
+    service="iot",
+    version="v1",
+    bazel_target="//google/cloud/iot/v1:iot-v1-py",
     include_protos=True,
 )
 
