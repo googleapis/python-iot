@@ -1569,8 +1569,6 @@ CreateDeviceRegistryRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_CREATEDEVICEREGISTRYREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``CreateDeviceRegistry``.
-  
-  
   Attributes:
       parent:
           Required. The project and cloud region where this device
@@ -1593,8 +1591,6 @@ GetDeviceRegistryRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_GETDEVICEREGISTRYREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``GetDeviceRegistry``.
-  
-  
   Attributes:
       name:
           Required. The name of the device registry. For example,
@@ -1613,8 +1609,6 @@ DeleteDeviceRegistryRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_DELETEDEVICEREGISTRYREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``DeleteDeviceRegistry``.
-  
-  
   Attributes:
       name:
           Required. The name of the device registry. For example,
@@ -1633,8 +1627,6 @@ UpdateDeviceRegistryRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_UPDATEDEVICEREGISTRYREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``UpdateDeviceRegistry``.
-  
-  
   Attributes:
       device_registry:
           Required. The new values for the device registry. The ``id``
@@ -1661,8 +1653,6 @@ ListDeviceRegistriesRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICEREGISTRIESREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``ListDeviceRegistries``.
-  
-  
   Attributes:
       parent:
           Required. The project and cloud region path. For example,
@@ -1691,8 +1681,6 @@ ListDeviceRegistriesResponse = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICEREGISTRIESRESPONSE,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Response for ``ListDeviceRegistries``.
-  
-  
   Attributes:
       device_registries:
           The registries that matched the query.
@@ -1713,8 +1701,6 @@ CreateDeviceRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_CREATEDEVICEREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``CreateDevice``.
-  
-  
   Attributes:
       parent:
           Required. The name of the device registry where this device
@@ -1737,8 +1723,6 @@ GetDeviceRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_GETDEVICEREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``GetDevice``.
-  
-  
   Attributes:
       name:
           Required. The name of the device. For example,
@@ -1763,8 +1747,6 @@ UpdateDeviceRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_UPDATEDEVICEREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``UpdateDevice``.
-  
-  
   Attributes:
       device:
           Required. The new values for the device. The ``id`` and
@@ -1793,8 +1775,6 @@ DeleteDeviceRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_DELETEDEVICEREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``DeleteDevice``.
-  
-  
   Attributes:
       name:
           Required. The name of the device. For example,
@@ -1815,8 +1795,6 @@ ListDevicesRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICESREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``ListDevices``.
-  
-  
   Attributes:
       parent:
           Required. The device registry path. Required. For example,
@@ -1858,10 +1836,7 @@ GatewayListOptions = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_GATEWAYLISTOPTIONS,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
-        __doc__="""Options for limiting the list based on gateway type and
-  associations.
-  
-  
+        __doc__="""Options for limiting the list based on gateway type and associations.
   Attributes:
       filter:
           If not set, all devices and gateways are returned. If set, the
@@ -1896,8 +1871,6 @@ ListDevicesResponse = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICESRESPONSE,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Response for ``ListDevices``.
-  
-  
   Attributes:
       devices:
           The devices that match the request.
@@ -1918,8 +1891,6 @@ ModifyCloudToDeviceConfigRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_MODIFYCLOUDTODEVICECONFIGREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``ModifyCloudToDeviceConfig``.
-  
-  
   Attributes:
       name:
           Required. The name of the device. For example,
@@ -1949,8 +1920,6 @@ ListDeviceConfigVersionsRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICECONFIGVERSIONSREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``ListDeviceConfigVersions``.
-  
-  
   Attributes:
       name:
           Required. The name of the device. For example,
@@ -1976,8 +1945,6 @@ ListDeviceConfigVersionsResponse = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICECONFIGVERSIONSRESPONSE,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Response for ``ListDeviceConfigVersions``.
-  
-  
   Attributes:
       device_configs:
           The device configuration for the last few versions. Versions
@@ -1996,8 +1963,6 @@ ListDeviceStatesRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICESTATESREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``ListDeviceStates``.
-  
-  
   Attributes:
       name:
           Required. The name of the device. For example,
@@ -2023,8 +1988,6 @@ ListDeviceStatesResponse = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_LISTDEVICESTATESRESPONSE,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Response for ``ListDeviceStates``.
-  
-  
   Attributes:
       device_states:
           The last few device states. States are listed in descending
@@ -2043,8 +2006,6 @@ SendCommandToDeviceRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_SENDCOMMANDTODEVICEREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``SendCommandToDevice``.
-  
-  
   Attributes:
       name:
           Required. The name of the device. For example,
@@ -2074,9 +2035,7 @@ SendCommandToDeviceResponse = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_SENDCOMMANDTODEVICERESPONSE,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
-        __doc__="""Response for ``SendCommandToDevice``.
-  
-  """,
+        __doc__="""Response for ``SendCommandToDevice``.""",
         # @@protoc_insertion_point(class_scope:google.cloud.iot.v1.SendCommandToDeviceResponse)
     ),
 )
@@ -2089,8 +2048,6 @@ BindDeviceToGatewayRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_BINDDEVICETOGATEWAYREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``BindDeviceToGateway``.
-  
-  
   Attributes:
       parent:
           Required. The name of the registry. For example,
@@ -2115,9 +2072,7 @@ BindDeviceToGatewayResponse = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_BINDDEVICETOGATEWAYRESPONSE,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
-        __doc__="""Response for ``BindDeviceToGateway``.
-  
-  """,
+        __doc__="""Response for ``BindDeviceToGateway``.""",
         # @@protoc_insertion_point(class_scope:google.cloud.iot.v1.BindDeviceToGatewayResponse)
     ),
 )
@@ -2130,8 +2085,6 @@ UnbindDeviceFromGatewayRequest = _reflection.GeneratedProtocolMessageType(
         DESCRIPTOR=_UNBINDDEVICEFROMGATEWAYREQUEST,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
         __doc__="""Request for ``UnbindDeviceFromGateway``.
-  
-  
   Attributes:
       parent:
           Required. The name of the registry. For example,
@@ -2156,9 +2109,7 @@ UnbindDeviceFromGatewayResponse = _reflection.GeneratedProtocolMessageType(
     dict(
         DESCRIPTOR=_UNBINDDEVICEFROMGATEWAYRESPONSE,
         __module__="google.cloud.iot_v1.proto.device_manager_pb2",
-        __doc__="""Response for ``UnbindDeviceFromGateway``.
-  
-  """,
+        __doc__="""Response for ``UnbindDeviceFromGateway``.""",
         # @@protoc_insertion_point(class_scope:google.cloud.iot.v1.UnbindDeviceFromGatewayResponse)
     ),
 )
