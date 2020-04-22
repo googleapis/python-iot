@@ -1,32 +1,25 @@
 {
   "sources": [
     {
-      "generator": {
-        "name": "artman",
-        "version": "2.0.0",
-        "dockerImage": "googleapis/artman@sha256:b3b47805231a305d0f40c4bf069df20f6a2635574e6d4259fac651d3f9f6e098"
-      }
-    },
-    {
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-iot.git",
-        "sha": "4f08a2e899983839fe36f1f8feec0a3098f8603b"
+        "sha": "bb331f9f9a2ead6b8e84845cc830ccc981da551a"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "42ee97c1b93a0e3759bbba3013da309f670a90ab",
-        "internalRef": "307114445"
+        "sha": "862cd840dbb0101a0630913217bf8b6d4101c84c",
+        "internalRef": "307739946"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "f5e4c17dc78a966dbf29961dd01f9bbd63e20a04"
+        "sha": "716f741f2d307b48cbe8a5bc3bc883571212344a"
       }
     }
   ],
@@ -37,8 +30,7 @@
         "apiName": "iot",
         "apiVersion": "v1",
         "language": "python",
-        "generator": "gapic",
-        "config": "google/cloud/iot/artman_cloudiot.yaml"
+        "generator": "bazel"
       }
     }
   ]

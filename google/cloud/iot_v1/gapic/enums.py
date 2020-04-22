@@ -76,12 +76,8 @@ class HttpState(enum.IntEnum):
 
 class LogLevel(enum.IntEnum):
     """
-    **Beta Feature**
-
-    The logging verbosity for device activity. Specifies which events should
-    be written to logs. For example, if the LogLevel is ERROR, only events
-    that terminate in errors will be logged. LogLevel is inclusive; enabling
-    INFO logging will also enable ERROR logging.
+    Required. The name of the registry. For example,
+    ``projects/example-project/locations/us-central1/registries/my-registry``.
 
     Attributes:
       LOG_LEVEL_UNSPECIFIED (int): No logging specified. If not specified, logging will be disabled.
@@ -122,10 +118,8 @@ class PublicKeyCertificateFormat(enum.IntEnum):
     Attributes:
       UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT (int): The format has not been specified. This is an invalid default value and
       must not be used.
-      X509_CERTIFICATE_PEM (int): An X.509v3 certificate
-      (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__), encoded in base64,
-      and wrapped by ``-----BEGIN CERTIFICATE-----`` and
-      ``-----END CERTIFICATE-----``.
+      X509_CERTIFICATE_PEM (int): Required. The name of the device registry. For example,
+      ``projects/example-project/locations/us-central1/registries/my-registry``.
     """
 
     UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT = 0
@@ -139,25 +133,12 @@ class PublicKeyFormat(enum.IntEnum):
     Attributes:
       UNSPECIFIED_PUBLIC_KEY_FORMAT (int): The format has not been specified. This is an invalid default value and
       must not be used.
-      RSA_PEM (int): An RSA public key encoded in base64, and wrapped by
-      ``-----BEGIN PUBLIC KEY-----`` and ``-----END PUBLIC KEY-----``. This
-      can be used to verify ``RS256`` signatures in JWT tokens
-      (`RFC7518 <https://www.ietf.org/rfc/rfc7518.txt>`__).
-      RSA_X509_PEM (int): As RSA\_PEM, but wrapped in an X.509v3 certificate
-      (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__), encoded in base64,
-      and wrapped by ``-----BEGIN CERTIFICATE-----`` and
-      ``-----END CERTIFICATE-----``.
-      ES256_PEM (int): Public key for the ECDSA algorithm using P-256 and SHA-256, encoded in
-      base64, and wrapped by ``-----BEGIN PUBLIC KEY-----`` and
-      ``-----END PUBLIC KEY-----``. This can be used to verify JWT tokens with
-      the ``ES256`` algorithm
-      (`RFC7518 <https://www.ietf.org/rfc/rfc7518.txt>`__). This curve is
-      defined in `OpenSSL <https://www.openssl.org/>`__ as the ``prime256v1``
-      curve.
-      ES256_X509_PEM (int): As ES256\_PEM, but wrapped in an X.509v3 certificate
-      (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__), encoded in base64,
-      and wrapped by ``-----BEGIN CERTIFICATE-----`` and
-      ``-----END CERTIFICATE-----``.
+      RSA_PEM (int): Required. The value of ``gateway_id`` can be either the device
+      numeric ID or the user-defined device identifier.
+      RSA_X509_PEM (int): Response message for ``TestIamPermissions`` method.
+      ES256_PEM (int): A subset of ``TestPermissionsRequest.permissions`` that the caller
+      is allowed.
+      ES256_X509_PEM (int): Request for ``DeleteDeviceRegistry``.
     """
 
     UNSPECIFIED_PUBLIC_KEY_FORMAT = 0

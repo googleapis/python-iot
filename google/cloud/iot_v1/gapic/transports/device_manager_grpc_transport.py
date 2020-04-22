@@ -316,9 +316,20 @@ class DeviceManagerGrpcTransport(object):
     def test_iam_permissions(self):
         """Return the gRPC stub for :meth:`DeviceManagerClient.test_iam_permissions`.
 
-        Returns permissions that a caller has on the specified resource. If the
-        resource does not exist, this will return an empty set of permissions,
-        not a NOT\_FOUND error.
+        ``etag`` is used for optimistic concurrency control as a way to help
+        prevent simultaneous updates of a policy from overwriting each other. It
+        is strongly suggested that systems make use of the ``etag`` in the
+        read-modify-write cycle to perform policy updates in order to avoid race
+        conditions: An ``etag`` is returned in the response to ``getIamPolicy``,
+        and systems are expected to put that etag in the request to
+        ``setIamPolicy`` to ensure that their change will be applied to the same
+        version of the policy.
+
+        If no ``etag`` is provided in the call to ``setIamPolicy``, then the
+        existing policy is overwritten. Due to blind-set semantics of an
+        etag-less policy, 'setIamPolicy' will not fail even if the incoming
+        policy version does not meet the requirements for modifying the stored
+        policy.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -331,21 +342,9 @@ class DeviceManagerGrpcTransport(object):
     def send_command_to_device(self):
         """Return the gRPC stub for :meth:`DeviceManagerClient.send_command_to_device`.
 
-        Sends a command to the specified device. In order for a device to be
-        able to receive commands, it must:
-
-        1) be connected to Cloud IoT Core using the MQTT protocol, and
-        2) be subscribed to the group of MQTT topics specified by
-           /devices/{device-id}/commands/#. This subscription will receive
-           commands at the top-level topic /devices/{device-id}/commands as well
-           as commands for subfolders, like
-           /devices/{device-id}/commands/subfolder. Note that subscribing to
-           specific subfolders is not supported. If the command could not be
-           delivered to the device, this method will return an error; in
-           particular, if the device is not subscribed, this method will return
-           FAILED\_PRECONDITION. Otherwise, this method will return OK. If the
-           subscription is QoS 1, at least once delivery will be guaranteed; for
-           QoS 0, no acknowledgment will be expected from the device.
+        [Output only] The last time a state event was received. Timestamps
+        are periodically collected and written to storage; they may be stale by
+        a few minutes.
 
         Returns:
             Callable: A callable which accepts the appropriate

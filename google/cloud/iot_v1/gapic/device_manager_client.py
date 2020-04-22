@@ -244,12 +244,12 @@ class DeviceManagerClient(object):
             >>> response = client.create_device_registry(parent, device_registry)
 
         Args:
-            parent (str): Required. The project and cloud region where this device registry must
-                be created. For example,
-                ``projects/example-project/locations/us-central1``.
-            device_registry (Union[dict, ~google.cloud.iot_v1.types.DeviceRegistry]): Required. The device registry. The field ``name`` must be empty. The
-                server will generate that field from the device registry ``id`` provided
-                and the ``parent`` field.
+            parent (str): [Output only] The last time a telemetry event was received.
+                Timestamps are periodically collected and written to storage; they may
+                be stale by a few minutes.
+            device_registry (Union[dict, ~google.cloud.iot_v1.types.DeviceRegistry]): If not empty, indicates that there may be more registries that match
+                the request; this value should be passed in a new
+                ``ListDeviceRegistriesRequest``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.DeviceRegistry`
@@ -323,8 +323,7 @@ class DeviceManagerClient(object):
             >>> response = client.get_device_registry(name)
 
         Args:
-            name (str): Required. The name of the device registry. For example,
-                ``projects/example-project/locations/us-central1/registries/my-registry``.
+            name (str): Request for ``CreateDevice``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -398,18 +397,56 @@ class DeviceManagerClient(object):
             >>> response = client.update_device_registry(device_registry, update_mask)
 
         Args:
-            device_registry (Union[dict, ~google.cloud.iot_v1.types.DeviceRegistry]): Required. The new values for the device registry. The ``id`` field must
-                be empty, and the ``name`` field must indicate the path of the resource.
-                For example,
-                ``projects/example-project/locations/us-central1/registries/my-registry``.
+            device_registry (Union[dict, ~google.cloud.iot_v1.types.DeviceRegistry]): Protocol Buffers - Google's data interchange format Copyright 2008
+                Google Inc. All rights reserved.
+                https://developers.google.com/protocol-buffers/
+
+                Redistribution and use in source and binary forms, with or without
+                modification, are permitted provided that the following conditions are
+                met:
+
+                ::
+
+                    * Redistributions of source code must retain the above copyright
+
+                notice, this list of conditions and the following disclaimer. \*
+                Redistributions in binary form must reproduce the above copyright
+                notice, this list of conditions and the following disclaimer in the
+                documentation and/or other materials provided with the distribution. \*
+                Neither the name of Google Inc. nor the names of its contributors may be
+                used to endorse or promote products derived from this software without
+                specific prior written permission.
+
+                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+                IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+                TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+                PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+                OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+                EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+                PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+                PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+                LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.DeviceRegistry`
-            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Required. Only updates the ``device_registry`` fields indicated by this
-                mask. The field mask must not be empty, and it must not contain fields
-                that are immutable or only set by the server. Mutable top-level fields:
-                ``event_notification_config``, ``http_config``, ``mqtt_config``, and
-                ``state_notification_config``.
+            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Whether the message is an automatically generated map entry type for
+                the maps field.
+
+                For maps fields: map<KeyType, ValueType> map_field = 1; The parsed
+                descriptor looks like: message MapFieldEntry { option map_entry = true;
+                optional KeyType key = 1; optional ValueType value = 2; } repeated
+                MapFieldEntry map_field = 1;
+
+                Implementations may choose not to generate the map_entry=true message,
+                but use a native map in the target language to hold the keys and values.
+                The reflection APIs in such implementations still need to work as if the
+                field is a repeated message field.
+
+                NOTE: Do not set the option in .proto files. Always use the maps syntax
+                instead. The option should only be implicitly set by the proto compiler
+                parser.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.FieldMask`
@@ -483,7 +520,8 @@ class DeviceManagerClient(object):
             >>> client.delete_device_registry(name)
 
         Args:
-            name (str): Required. The name of the device registry. For example,
+            name (str): Required. The name of the device registry where this device should
+                be created. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
@@ -563,8 +601,66 @@ class DeviceManagerClient(object):
             ...         pass
 
         Args:
-            parent (str): Required. The project and cloud region path. For example,
-                ``projects/example-project/locations/us-central1``.
+            parent (str): Defines an Identity and Access Management (IAM) policy. It is used
+                to specify access control policies for Cloud Platform resources.
+
+                A ``Policy`` is a collection of ``bindings``. A ``binding`` binds one or
+                more ``members`` to a single ``role``. Members can be user accounts,
+                service accounts, Google groups, and domains (such as G Suite). A
+                ``role`` is a named list of permissions (defined by IAM or configured by
+                users). A ``binding`` can optionally specify a ``condition``, which is a
+                logic expression that further constrains the role binding based on
+                attributes about the request and/or target resource.
+
+                **JSON Example**
+
+                ::
+
+                    {
+                      "bindings": [
+                        {
+                          "role": "roles/resourcemanager.organizationAdmin",
+                          "members": [
+                            "user:mike@example.com",
+                            "group:admins@example.com",
+                            "domain:google.com",
+                            "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+                          ]
+                        },
+                        {
+                          "role": "roles/resourcemanager.organizationViewer",
+                          "members": ["user:eve@example.com"],
+                          "condition": {
+                            "title": "expirable access",
+                            "description": "Does not grant access after Sep 2020",
+                            "expression": "request.time <
+                            timestamp('2020-10-01T00:00:00.000Z')",
+                          }
+                        }
+                      ]
+                    }
+
+                **YAML Example**
+
+                ::
+
+                    bindings:
+                    - members:
+                      - user:mike@example.com
+                      - group:admins@example.com
+                      - domain:google.com
+                      - serviceAccount:my-project-id@appspot.gserviceaccount.com
+                      role: roles/resourcemanager.organizationAdmin
+                    - members:
+                      - user:eve@example.com
+                      role: roles/resourcemanager.organizationViewer
+                      condition:
+                        title: expirable access
+                        description: Does not grant access after Sep 2020
+                        expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+
+                For a description of IAM and its features, see the `IAM developer's
+                guide <https://cloud.google.com/iam/docs>`__.
             page_size (int): The maximum number of resources contained in the
                 underlying API response. If page streaming is performed per-
                 resource, this parameter does not affect the return value. If page
@@ -658,12 +754,24 @@ class DeviceManagerClient(object):
             >>> response = client.create_device(parent, device)
 
         Args:
-            parent (str): Required. The name of the device registry where this device should be
-                created. For example,
+            parent (str): The resource path name. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
-            device (Union[dict, ~google.cloud.iot_v1.types.Device]): Required. The device registration details. The field ``name`` must be
-                empty. The server generates ``name`` from the device registry ``id`` and
-                the ``parent`` field.
+            device (Union[dict, ~google.cloud.iot_v1.types.Device]): Identifies which part of the FileDescriptorProto was defined at this
+                location.
+
+                Each element is a field number or an index. They form a path from the
+                root FileDescriptorProto to the place where the definition. For example,
+                this path: [ 4, 3, 2, 7, 1 ] refers to: file.message_type(3) // 4, 3
+                .field(7) // 2, 7 .name() // 1 This is because
+                FileDescriptorProto.message_type has field number 4: repeated
+                DescriptorProto message_type = 4; and DescriptorProto.field has field
+                number 2: repeated FieldDescriptorProto field = 2; and
+                FieldDescriptorProto.name has field number 1: optional string name = 1;
+
+                Thus, the above path gives the location of a field name. If we removed
+                the last element: [ 4, 3, 2, 7 ] this path refers to the whole field
+                declaration (from the beginning of the label to the terminating
+                semicolon).
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.Device`
@@ -736,12 +844,9 @@ class DeviceManagerClient(object):
             >>> response = client.get_device(name)
 
         Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
-            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): The fields of the ``Device`` resource to be returned in the response. If
-                the field mask is unset or empty, all fields are returned.
+            name (str): The fields of the ``Device`` resource to be returned in the
+                response. If the field mask is unset or empty, all fields are returned.
+            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Request for ``UpdateDevice``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.FieldMask`
@@ -818,18 +923,79 @@ class DeviceManagerClient(object):
             >>> response = client.update_device(device, update_mask)
 
         Args:
-            device (Union[dict, ~google.cloud.iot_v1.types.Device]): Required. The new values for the device. The ``id`` and ``num_id``
-                fields must be empty, and the field ``name`` must specify the name path.
-                For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``\ or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            device (Union[dict, ~google.cloud.iot_v1.types.Device]): Protocol Buffers - Google's data interchange format Copyright 2008
+                Google Inc. All rights reserved.
+                https://developers.google.com/protocol-buffers/
+
+                Redistribution and use in source and binary forms, with or without
+                modification, are permitted provided that the following conditions are
+                met:
+
+                ::
+
+                    * Redistributions of source code must retain the above copyright
+
+                notice, this list of conditions and the following disclaimer. \*
+                Redistributions in binary form must reproduce the above copyright
+                notice, this list of conditions and the following disclaimer in the
+                documentation and/or other materials provided with the distribution. \*
+                Neither the name of Google Inc. nor the names of its contributors may be
+                used to endorse or promote products derived from this software without
+                specific prior written permission.
+
+                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+                IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+                TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+                PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+                OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+                EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+                PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+                PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+                LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.Device`
-            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Required. Only updates the ``device`` fields indicated by this mask. The
-                field mask must not be empty, and it must not contain fields that are
-                immutable or only set by the server. Mutable top-level fields:
-                ``credentials``, ``blocked``, and ``metadata``
+            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): If this SourceCodeInfo represents a complete declaration, these are
+                any comments appearing before and after the declaration which appear to
+                be attached to the declaration.
+
+                A series of line comments appearing on consecutive lines, with no other
+                tokens appearing on those lines, will be treated as a single comment.
+
+                leading_detached_comments will keep paragraphs of comments that appear
+                before (but not connected to) the current element. Each paragraph,
+                separated by empty lines, will be one comment element in the repeated
+                field.
+
+                Only the comment content is provided; comment markers (e.g. //) are
+                stripped out. For block comments, leading whitespace and an asterisk
+                will be stripped from the beginning of each line other than the first.
+                Newlines are included in the output.
+
+                Examples:
+
+                optional int32 foo = 1; // Comment attached to foo. // Comment attached
+                to bar. optional int32 bar = 2;
+
+                optional string baz = 3; // Comment attached to baz. // Another line
+                attached to baz.
+
+                // Comment attached to qux. // // Another line attached to qux. optional
+                double qux = 4;
+
+                // Detached comment for corge. This is not leading or trailing comments
+                // to qux or corge because there are blank lines separating it from //
+                both.
+
+                // Detached comment for corge paragraph 2.
+
+                optional string corge = 5; /\* Block comment attached \* to corge.
+                Leading asterisks \* will be removed. */ /* Block comment attached to \*
+                grault. \*/ optional int32 grault = 6;
+
+                // ignored detached comments.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.FieldMask`
@@ -903,10 +1069,7 @@ class DeviceManagerClient(object):
             >>> client.delete_device(name)
 
         Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            name (str): Request for ``DeleteDevice``.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -989,15 +1152,124 @@ class DeviceManagerClient(object):
             ...         pass
 
         Args:
-            parent (str): Required. The device registry path. Required. For example,
-                ``projects/my-project/locations/us-central1/registries/my-registry``.
+            parent (str): ``Any`` contains an arbitrary serialized protocol buffer message
+                along with a URL that describes the type of the serialized message.
+
+                Protobuf library provides support to pack/unpack Any values in the form
+                of utility functions or additional generated methods of the Any type.
+
+                Example 1: Pack and unpack a message in C++.
+
+                ::
+
+                    Foo foo = ...;
+                    Any any;
+                    any.PackFrom(foo);
+                    ...
+                    if (any.UnpackTo(&foo)) {
+                      ...
+                    }
+
+                Example 2: Pack and unpack a message in Java.
+
+                ::
+
+                    Foo foo = ...;
+                    Any any = Any.pack(foo);
+                    ...
+                    if (any.is(Foo.class)) {
+                      foo = any.unpack(Foo.class);
+                    }
+
+                Example 3: Pack and unpack a message in Python.
+
+                ::
+
+                    foo = Foo(...)
+                    any = Any()
+                    any.Pack(foo)
+                    ...
+                    if any.Is(Foo.DESCRIPTOR):
+                      any.Unpack(foo)
+                      ...
+
+                Example 4: Pack and unpack a message in Go
+
+                ::
+
+                     foo := &pb.Foo{...}
+                     any, err := ptypes.MarshalAny(foo)
+                     ...
+                     foo := &pb.Foo{}
+                     if err := ptypes.UnmarshalAny(any, foo); err != nil {
+                       ...
+                     }
+
+                The pack methods provided by protobuf library will by default use
+                'type.googleapis.com/full.type.name' as the type URL and the unpack
+                methods only use the fully qualified type name after the last '/' in the
+                type URL, for example "foo.bar.com/x/y.z" will yield type name "y.z".
+
+                # JSON
+
+                The JSON representation of an ``Any`` value uses the regular
+                representation of the deserialized, embedded message, with an additional
+                field ``@type`` which contains the type URL. Example:
+
+                ::
+
+                    package google.profile;
+                    message Person {
+                      string first_name = 1;
+                      string last_name = 2;
+                    }
+
+                    {
+                      "@type": "type.googleapis.com/google.profile.Person",
+                      "firstName": <string>,
+                      "lastName": <string>
+                    }
+
+                If the embedded message type is well-known and has a custom JSON
+                representation, that representation will be embedded adding a field
+                ``value`` which holds the custom JSON in addition to the ``@type``
+                field. Example (for message ``google.protobuf.Duration``):
+
+                ::
+
+                    {
+                      "@type": "type.googleapis.com/google.protobuf.Duration",
+                      "value": "1.212s"
+                    }
             device_num_ids (list[long]): A list of device numeric IDs. If empty, this field is ignored. Maximum
                 IDs: 10,000.
-            device_ids (list[str]): A list of device string IDs. For example, ``['device0', 'device12']``.
-                If empty, this field is ignored. Maximum IDs: 10,000
-            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): The fields of the ``Device`` resource to be returned in the response.
-                The fields ``id`` and ``num_id`` are always returned, along with any
-                other fields specified.
+            device_ids (list[str]): A URL/resource name that uniquely identifies the type of the
+                serialized protocol buffer message. This string must contain at least
+                one "/" character. The last segment of the URL's path must represent the
+                fully qualified name of the type (as in
+                ``path/google.protobuf.Duration``). The name should be in a canonical
+                form (e.g., leading "." is not accepted).
+
+                In practice, teams usually precompile into the binary all types that
+                they expect it to use in the context of Any. However, for URLs which use
+                the scheme ``http``, ``https``, or no scheme, one can optionally set up
+                a type server that maps type URLs to message definitions as follows:
+
+                -  If no scheme is provided, ``https`` is assumed.
+                -  An HTTP GET on the URL must yield a ``google.protobuf.Type`` value in
+                   binary format, or produce an error.
+                -  Applications are allowed to cache lookup results based on the URL, or
+                   have them precompiled into a binary to avoid any lookup. Therefore,
+                   binary compatibility needs to be preserved on changes to types. (Use
+                   versioned type names to manage breaking changes.)
+
+                Note: this functionality is not currently available in the official
+                protobuf release, and it is not used for type URLs beginning with
+                type.googleapis.com.
+
+                Schemes other than ``http``, ``https`` (or the empty scheme) might be
+                used with implementation specific semantics.
+            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Request for ``ListDevices``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.FieldMask`
@@ -1106,10 +1378,9 @@ class DeviceManagerClient(object):
             >>> response = client.modify_cloud_to_device_config(name, binary_data)
 
         Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            name (str): The fields of the ``Device`` resource to be returned in the
+                response. The fields ``id`` and ``num_id`` are always returned, along
+                with any other fields specified.
             binary_data (bytes): Required. The configuration data for the device.
             version_to_update (long): The version number to update. If this value is zero, it will not check the
                 version number of the server and will always update the current version;
@@ -1190,10 +1461,34 @@ class DeviceManagerClient(object):
             >>> response = client.list_device_config_versions(name)
 
         Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            name (str): Should this field be parsed lazily? Lazy applies only to
+                message-type fields. It means that when the outer message is initially
+                parsed, the inner message's contents will not be parsed but instead
+                stored in encoded form. The inner message will actually be parsed when
+                it is first accessed.
+
+                This is only a hint. Implementations are free to choose whether to use
+                eager or lazy parsing regardless of the value of this option. However,
+                setting this option true suggests that the protocol author believes that
+                using lazy parsing on this field is worth the additional bookkeeping
+                overhead typically needed to implement it.
+
+                This option does not affect the public interface of any generated code;
+                all method signatures remain the same. Furthermore, thread-safety of the
+                interface is not affected by this option; const methods remain safe to
+                call from multiple threads concurrently, while non-const methods
+                continue to require exclusive access.
+
+                Note that implementations may choose not to check required fields within
+                a lazy sub-message. That is, calling IsInitialized() on the outer
+                message may return true even if the inner message has missing required
+                fields. This is necessary because otherwise the inner message would have
+                to be parsed in order to perform the check, defeating the purpose of
+                lazy parsing. An implementation which chooses not to check required
+                fields must be consistent about it. That is, for any particular
+                sub-message, the implementation must either *always* check its required
+                fields, or *never* check its required fields, regardless of whether or
+                not the message has been parsed.
             num_versions (int): The number of versions to list. Versions are listed in decreasing order of
                 the version number. The maximum number of versions retained is 10. If this
                 value is zero, it will return all the versions available.
@@ -1271,10 +1566,9 @@ class DeviceManagerClient(object):
             >>> response = client.list_device_states(name)
 
         Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            name (str): A developer-facing error message, which should be in English. Any
+                user-facing error message should be localized and sent in the
+                ``google.rpc.Status.details`` field, or localized by the client.
             num_states (int): The number of states to list. States are listed in descending order of
                 update time. The maximum number of states retained is 10. If this
                 value is zero, it will return all the states available.
@@ -1356,10 +1650,30 @@ class DeviceManagerClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy is being specified.
                 See the operation documentation for the appropriate value for this field.
-            policy (Union[dict, ~google.cloud.iot_v1.types.Policy]): REQUIRED: The complete policy to be applied to the ``resource``. The
-                size of the policy is limited to a few 10s of KB. An empty policy is a
-                valid policy but certain Cloud Platform services (such as Projects)
-                might reject them.
+            policy (Union[dict, ~google.cloud.iot_v1.types.Policy]): Optional. The relative resource name pattern associated with this
+                resource type. The DNS prefix of the full resource name shouldn't be
+                specified here.
+
+                The path pattern must follow the syntax, which aligns with HTTP binding
+                syntax:
+
+                ::
+
+                    Template = Segment { "/" Segment } ;
+                    Segment = LITERAL | Variable ;
+                    Variable = "{" LITERAL "}" ;
+
+                Examples:
+
+                ::
+
+                    - "projects/{project}/topics/{topic}"
+                    - "projects/{project}/knowledgeBases/{knowledge_base}"
+
+                The components in braces correspond to the IDs for each resource in the
+                hierarchy. It is expected that, if multiple patterns are provided, the
+                same component name (e.g. "project") refers to IDs of the same type of
+                resource.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.Policy`
@@ -1437,8 +1751,37 @@ class DeviceManagerClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy is being requested.
                 See the operation documentation for the appropriate value for this field.
-            options_ (Union[dict, ~google.cloud.iot_v1.types.GetPolicyOptions]): OPTIONAL: A ``GetPolicyOptions`` object for specifying options to
-                ``GetIamPolicy``. This field is only used by Cloud IAM.
+            options_ (Union[dict, ~google.cloud.iot_v1.types.GetPolicyOptions]): Protocol Buffers - Google's data interchange format Copyright 2008
+                Google Inc. All rights reserved.
+                https://developers.google.com/protocol-buffers/
+
+                Redistribution and use in source and binary forms, with or without
+                modification, are permitted provided that the following conditions are
+                met:
+
+                ::
+
+                    * Redistributions of source code must retain the above copyright
+
+                notice, this list of conditions and the following disclaimer. \*
+                Redistributions in binary form must reproduce the above copyright
+                notice, this list of conditions and the following disclaimer in the
+                documentation and/or other materials provided with the distribution. \*
+                Neither the name of Google Inc. nor the names of its contributors may be
+                used to endorse or promote products derived from this software without
+                specific prior written permission.
+
+                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+                IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+                TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+                PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+                OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+                EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+                PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+                PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+                LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+                SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.GetPolicyOptions`
@@ -1501,9 +1844,20 @@ class DeviceManagerClient(object):
         metadata=None,
     ):
         """
-        Returns permissions that a caller has on the specified resource. If the
-        resource does not exist, this will return an empty set of permissions,
-        not a NOT\_FOUND error.
+        ``etag`` is used for optimistic concurrency control as a way to help
+        prevent simultaneous updates of a policy from overwriting each other. It
+        is strongly suggested that systems make use of the ``etag`` in the
+        read-modify-write cycle to perform policy updates in order to avoid race
+        conditions: An ``etag`` is returned in the response to ``getIamPolicy``,
+        and systems are expected to put that etag in the request to
+        ``setIamPolicy`` to ensure that their change will be applied to the same
+        version of the policy.
+
+        If no ``etag`` is provided in the call to ``setIamPolicy``, then the
+        existing policy is overwritten. Due to blind-set semantics of an
+        etag-less policy, 'setIamPolicy' will not fail even if the incoming
+        policy version does not meet the requirements for modifying the stored
+        policy.
 
         Example:
             >>> from google.cloud import iot_v1
@@ -1521,10 +1875,24 @@ class DeviceManagerClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy detail is being requested.
                 See the operation documentation for the appropriate value for this field.
-            permissions (list[str]): The set of permissions to check for the ``resource``. Permissions with
-                wildcards (such as '*' or 'storage.*') are not allowed. For more
-                information see `IAM
-                Overview <https://cloud.google.com/iam/docs/overview#permissions>`__.
+            permissions (list[str]): Optional. The historical or future-looking state of the resource
+                pattern.
+
+                Example:
+
+                ::
+
+                    // The InspectTemplate message originally only supported resource
+                    // names with organization, and project was added later.
+                    message InspectTemplate {
+                      option (google.api.resource) = {
+                        type: "dlp.googleapis.com/InspectTemplate"
+                        pattern:
+                        "organizations/{organization}/inspectTemplates/{inspect_template}"
+                        pattern: "projects/{project}/inspectTemplates/{inspect_template}"
+                        history: ORIGINALLY_SINGLE_PATTERN
+                      };
+                    }
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -1585,21 +1953,9 @@ class DeviceManagerClient(object):
         metadata=None,
     ):
         """
-        Sends a command to the specified device. In order for a device to be
-        able to receive commands, it must:
-
-        1) be connected to Cloud IoT Core using the MQTT protocol, and
-        2) be subscribed to the group of MQTT topics specified by
-           /devices/{device-id}/commands/#. This subscription will receive
-           commands at the top-level topic /devices/{device-id}/commands as well
-           as commands for subfolders, like
-           /devices/{device-id}/commands/subfolder. Note that subscribing to
-           specific subfolders is not supported. If the command could not be
-           delivered to the device, this method will return an error; in
-           particular, if the device is not subscribed, this method will return
-           FAILED\_PRECONDITION. Otherwise, this method will return OK. If the
-           subscription is QoS 1, at least once delivery will be guaranteed; for
-           QoS 0, no acknowledgment will be expected from the device.
+        [Output only] The last time a state event was received. Timestamps
+        are periodically collected and written to storage; they may be stale by
+        a few minutes.
 
         Example:
             >>> from google.cloud import iot_v1
@@ -1614,10 +1970,9 @@ class DeviceManagerClient(object):
             >>> response = client.send_command_to_device(name, binary_data)
 
         Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            name (str): Required. The device to disassociate from the specified gateway. The
+                value of ``device_id`` can be either the device numeric ID or the
+                user-defined device identifier.
             binary_data (bytes): Required. The command data to send to the device.
             subfolder (str): Optional subfolder for the command. If empty, the command will be delivered
                 to the /devices/{device-id}/commands topic, otherwise it will be delivered
@@ -1702,13 +2057,44 @@ class DeviceManagerClient(object):
             >>> response = client.bind_device_to_gateway(parent, gateway_id, device_id)
 
         Args:
-            parent (str): Required. The name of the registry. For example,
-                ``projects/example-project/locations/us-central1/registries/my-registry``.
-            gateway_id (str): Required. The value of ``gateway_id`` can be either the device numeric
-                ID or the user-defined device identifier.
-            device_id (str): Required. The device to associate with the specified gateway. The value
-                of ``device_id`` can be either the device numeric ID or the user-defined
-                device identifier.
+            parent (str): If set, only devices associated with the specified gateway are
+                returned. The gateway ID can be numeric (``num_id``) or the user-defined
+                string (``id``). For example, if ``123`` is specified, only devices
+                bound to the gateway with ``num_id`` 123 are returned.
+            gateway_id (str): Required. The device registry. The field ``name`` must be empty. The
+                server will generate that field from the device registry ``id`` provided
+                and the ``parent`` field.
+            device_id (str): Each of the definitions above may have "options" attached. These are
+                just annotations which may cause code to be generated slightly
+                differently or may contain hints for code that manipulates protocol
+                messages.
+
+                Clients may define custom options as extensions of the \*Options
+                messages. These extensions may not yet be known at parsing time, so the
+                parser cannot store the values in them. Instead it stores them in a
+                field in the \*Options message called uninterpreted_option. This field
+                must have the same name across all \*Options messages. We then use this
+                field to populate the extensions when we build a descriptor, at which
+                point all protos have been parsed and so all extensions are known.
+
+                Extension numbers for custom options may be chosen as follows:
+
+                -  For options which will only be used within a single application or
+                   organization, or for experimental options, use field numbers 50000
+                   through 99999. It is up to you to ensure that you do not use the same
+                   number for multiple options.
+                -  For options which will be published and used publicly by multiple
+                   independent entities, e-mail
+                   protobuf-global-extension-registry@google.com to reserve extension
+                   numbers. Simply provide your project name (e.g. Objective-C plugin)
+                   and your project website (if available) -- there's no need to explain
+                   how you intend to use them. Usually you only need one extension
+                   number. You can declare multiple options with only one extension
+                   number by putting them in a sub-message. See the Custom Options
+                   section of the docs for examples:
+                   https://developers.google.com/protocol-buffers/docs/proto#options If
+                   this turns out to be popular, a web service will be set up to
+                   automatically assign option numbers.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -1787,13 +2173,15 @@ class DeviceManagerClient(object):
             >>> response = client.unbind_device_from_gateway(parent, gateway_id, device_id)
 
         Args:
-            parent (str): Required. The name of the registry. For example,
-                ``projects/example-project/locations/us-central1/registries/my-registry``.
-            gateway_id (str): Required. The value of ``gateway_id`` can be either the device numeric
-                ID or the user-defined device identifier.
-            device_id (str): Required. The device to disassociate from the specified gateway. The
-                value of ``device_id`` can be either the device numeric ID or the
-                user-defined device identifier.
+            parent (str): Response for ``ListDevices``.
+            gateway_id (str): If set, all the classes from the .proto file are wrapped in a single
+                outer class with the given name. This applies to both Proto1 (equivalent
+                to the old "--one_java_file" option) and Proto2 (where a .proto always
+                translates to a single class, but you may want to explicitly choose the
+                class name).
+            device_id (str): A single identity that is exempted from "data access" audit logging
+                for the ``service`` specified above. Follows the same format of
+                Binding.members.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
