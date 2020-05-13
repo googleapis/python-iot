@@ -244,8 +244,8 @@ class DeviceManagerClient(object):
             >>> response = client.create_device_registry(parent, device_registry)
 
         Args:
-            parent (str): Required. The project and cloud region where this device registry must
-                be created. For example,
+            parent (str): Required. The project and cloud region where this device registry
+                must be created. For example,
                 ``projects/example-project/locations/us-central1``.
             device_registry (Union[dict, ~google.cloud.iot_v1.types.DeviceRegistry]): Required. The device registry. The field ``name`` must be empty. The
                 server will generate that field from the device registry ``id`` provided
@@ -398,18 +398,18 @@ class DeviceManagerClient(object):
             >>> response = client.update_device_registry(device_registry, update_mask)
 
         Args:
-            device_registry (Union[dict, ~google.cloud.iot_v1.types.DeviceRegistry]): Required. The new values for the device registry. The ``id`` field must
-                be empty, and the ``name`` field must indicate the path of the resource.
-                For example,
+            device_registry (Union[dict, ~google.cloud.iot_v1.types.DeviceRegistry]): Required. The new values for the device registry. The ``id`` field
+                must be empty, and the ``name`` field must indicate the path of the
+                resource. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.DeviceRegistry`
-            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Required. Only updates the ``device_registry`` fields indicated by this
-                mask. The field mask must not be empty, and it must not contain fields
-                that are immutable or only set by the server. Mutable top-level fields:
-                ``event_notification_config``, ``http_config``, ``mqtt_config``, and
-                ``state_notification_config``.
+            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Required. Only updates the ``device_registry`` fields indicated by
+                this mask. The field mask must not be empty, and it must not contain
+                fields that are immutable or only set by the server. Mutable top-level
+                fields: ``event_notification_config``, ``http_config``, ``mqtt_config``,
+                and ``state_notification_config``.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.FieldMask`
@@ -658,12 +658,12 @@ class DeviceManagerClient(object):
             >>> response = client.create_device(parent, device)
 
         Args:
-            parent (str): Required. The name of the device registry where this device should be
-                created. For example,
+            parent (str): Required. The name of the device registry where this device should
+                be created. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
-            device (Union[dict, ~google.cloud.iot_v1.types.Device]): Required. The device registration details. The field ``name`` must be
-                empty. The server generates ``name`` from the device registry ``id`` and
-                the ``parent`` field.
+            device (Union[dict, ~google.cloud.iot_v1.types.Device]): Required. The device registration details. The field ``name`` must
+                be empty. The server generates ``name`` from the device registry ``id``
+                and the ``parent`` field.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.Device`
@@ -740,8 +740,8 @@ class DeviceManagerClient(object):
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
-            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): The fields of the ``Device`` resource to be returned in the response. If
-                the field mask is unset or empty, all fields are returned.
+            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): The fields of the ``Device`` resource to be returned in the
+                response. If the field mask is unset or empty, all fields are returned.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.FieldMask`
@@ -826,9 +826,9 @@ class DeviceManagerClient(object):
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.Device`
-            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Required. Only updates the ``device`` fields indicated by this mask. The
-                field mask must not be empty, and it must not contain fields that are
-                immutable or only set by the server. Mutable top-level fields:
+            update_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): Required. Only updates the ``device`` fields indicated by this mask.
+                The field mask must not be empty, and it must not contain fields that
+                are immutable or only set by the server. Mutable top-level fields:
                 ``credentials``, ``blocked``, and ``metadata``
 
                 If a dict is provided, it must be of the same form as the protobuf
@@ -993,11 +993,12 @@ class DeviceManagerClient(object):
                 ``projects/my-project/locations/us-central1/registries/my-registry``.
             device_num_ids (list[long]): A list of device numeric IDs. If empty, this field is ignored. Maximum
                 IDs: 10,000.
-            device_ids (list[str]): A list of device string IDs. For example, ``['device0', 'device12']``.
-                If empty, this field is ignored. Maximum IDs: 10,000
-            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): The fields of the ``Device`` resource to be returned in the response.
-                The fields ``id`` and ``num_id`` are always returned, along with any
-                other fields specified.
+            device_ids (list[str]): A list of device string IDs. For example,
+                ``['device0', 'device12']``. If empty, this field is ignored. Maximum
+                IDs: 10,000
+            field_mask (Union[dict, ~google.cloud.iot_v1.types.FieldMask]): The fields of the ``Device`` resource to be returned in the
+                response. The fields ``id`` and ``num_id`` are always returned, along
+                with any other fields specified.
 
                 If a dict is provided, it must be of the same form as the protobuf
                 message :class:`~google.cloud.iot_v1.types.FieldMask`
@@ -1501,9 +1502,9 @@ class DeviceManagerClient(object):
         metadata=None,
     ):
         """
-        Returns permissions that a caller has on the specified resource. If the
-        resource does not exist, this will return an empty set of permissions,
-        not a NOT\_FOUND error.
+        Returns permissions that a caller has on the specified resource. If
+        the resource does not exist, this will return an empty set of
+        permissions, not a NOT_FOUND error.
 
         Example:
             >>> from google.cloud import iot_v1
@@ -1521,8 +1522,8 @@ class DeviceManagerClient(object):
         Args:
             resource (str): REQUIRED: The resource for which the policy detail is being requested.
                 See the operation documentation for the appropriate value for this field.
-            permissions (list[str]): The set of permissions to check for the ``resource``. Permissions with
-                wildcards (such as '*' or 'storage.*') are not allowed. For more
+            permissions (list[str]): The set of permissions to check for the ``resource``. Permissions
+                with wildcards (such as '*' or 'storage.*') are not allowed. For more
                 information see `IAM
                 Overview <https://cloud.google.com/iam/docs/overview#permissions>`__.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
@@ -1597,7 +1598,7 @@ class DeviceManagerClient(object):
            specific subfolders is not supported. If the command could not be
            delivered to the device, this method will return an error; in
            particular, if the device is not subscribed, this method will return
-           FAILED\_PRECONDITION. Otherwise, this method will return OK. If the
+           FAILED_PRECONDITION. Otherwise, this method will return OK. If the
            subscription is QoS 1, at least once delivery will be guaranteed; for
            QoS 0, no acknowledgment will be expected from the device.
 
@@ -1704,11 +1705,11 @@ class DeviceManagerClient(object):
         Args:
             parent (str): Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
-            gateway_id (str): Required. The value of ``gateway_id`` can be either the device numeric
-                ID or the user-defined device identifier.
-            device_id (str): Required. The device to associate with the specified gateway. The value
-                of ``device_id`` can be either the device numeric ID or the user-defined
-                device identifier.
+            gateway_id (str): Required. The value of ``gateway_id`` can be either the device
+                numeric ID or the user-defined device identifier.
+            device_id (str): Required. The device to associate with the specified gateway. The
+                value of ``device_id`` can be either the device numeric ID or the
+                user-defined device identifier.
             retry (Optional[google.api_core.retry.Retry]):  A retry object used
                 to retry requests. If ``None`` is specified, requests will
                 be retried using a default configuration.
@@ -1789,8 +1790,8 @@ class DeviceManagerClient(object):
         Args:
             parent (str): Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
-            gateway_id (str): Required. The value of ``gateway_id`` can be either the device numeric
-                ID or the user-defined device identifier.
+            gateway_id (str): Required. The value of ``gateway_id`` can be either the device
+                numeric ID or the user-defined device identifier.
             device_id (str): Required. The device to disassociate from the specified gateway. The
                 value of ``device_id`` can be either the device numeric ID or the
                 user-defined device identifier.
