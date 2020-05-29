@@ -1746,8 +1746,6 @@ Device = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DEVICE,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """The device resource.
-  
-  
   Attributes:
       id:
           The user-defined device identifier. The device ID must be
@@ -1850,8 +1848,6 @@ GatewayConfig = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _GATEWAYCONFIG,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """Gateway-related configuration and state.
-  
-  
   Attributes:
       gateway_type:
           Indicates whether the device is a gateway.
@@ -1877,8 +1873,6 @@ DeviceRegistry = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DEVICEREGISTRY,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """A container for a group of devices.
-  
-  
   Attributes:
       id:
           The identifier of this device registry. For example,
@@ -1940,8 +1934,6 @@ MqttConfig = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _MQTTCONFIG,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """The configuration of MQTT for a device registry.
-  
-  
   Attributes:
       mqtt_enabled_state:
           If enabled, allows connections using the MQTT protocol.
@@ -1958,10 +1950,7 @@ HttpConfig = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _HTTPCONFIG,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
-        "__doc__": """The configuration of the HTTP bridge for a device
-  registry.
-  
-  
+        "__doc__": """The configuration of the HTTP bridge for a device registry.
   Attributes:
       http_enabled_state:
           If enabled, allows devices to use DeviceService via the HTTP
@@ -1980,8 +1969,6 @@ EventNotificationConfig = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _EVENTNOTIFICATIONCONFIG,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """The configuration for forwarding telemetry events.
-  
-  
   Attributes:
       subfolder_matches:
           If the subfolder name matches this string exactly, this
@@ -2004,10 +1991,8 @@ StateNotificationConfig = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _STATENOTIFICATIONCONFIG,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
-        "__doc__": """The configuration for notification of new states received
-  from the device.
-  
-  
+        "__doc__": """The configuration for notification of new states received from the
+  device.
   Attributes:
       pubsub_topic_name:
           A Cloud Pub/Sub topic name. For example,
@@ -2024,10 +2009,8 @@ RegistryCredential = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _REGISTRYCREDENTIAL,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
-        "__doc__": """A server-stored registry credential used to validate
-  device credentials.
-  
-  
+        "__doc__": """A server-stored registry credential used to validate device
+  credentials.
   Attributes:
       credential:
           The credential data. Reserved for expansion in the future.
@@ -2046,10 +2029,7 @@ X509CertificateDetails = _reflection.GeneratedProtocolMessageType(
     {
         "DESCRIPTOR": _X509CERTIFICATEDETAILS,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
-        "__doc__": """Details of an X.509 certificate. For informational
-  purposes only.
-  
-  
+        "__doc__": """Details of an X.509 certificate. For informational purposes only.
   Attributes:
       issuer:
           The entity that signed the certificate.
@@ -2076,8 +2056,6 @@ PublicKeyCertificate = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _PUBLICKEYCERTIFICATE,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """A public key certificate format and data.
-  
-  
   Attributes:
       format:
           The certificate format.
@@ -2099,8 +2077,6 @@ DeviceCredential = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DEVICECREDENTIAL,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """A server-stored device credential used for authentication.
-  
-  
   Attributes:
       credential:
           The credential data. Reserved for expansion in the future.
@@ -2135,8 +2111,6 @@ PublicKeyCredential = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _PUBLICKEYCREDENTIAL,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """A public key format and data.
-  
-  
   Attributes:
       format:
           The format of the key.
@@ -2155,8 +2129,6 @@ DeviceConfig = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DEVICECONFIG,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """The device configuration. Eventually delivered to devices.
-  
-  
   Attributes:
       version:
           [Output only] The version of this update. The version number
@@ -2194,8 +2166,6 @@ DeviceState = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _DEVICESTATE,
         "__module__": "google.cloud.iot_v1.proto.resources_pb2",
         "__doc__": """The device state, as reported by the device.
-  
-  
   Attributes:
       update_time:
           [Output only] The time at which this state version was updated
