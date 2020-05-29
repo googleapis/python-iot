@@ -2093,7 +2093,6 @@ BindDeviceToGatewayResponse = _reflection.GeneratedProtocolMessageType(
         "DESCRIPTOR": _BINDDEVICETOGATEWAYRESPONSE,
         "__module__": "google.cloud.iot_v1.proto.device_manager_pb2",
         "__doc__": """Response for ``BindDeviceToGateway``.
-  
   """,
         # @@protoc_insertion_point(class_scope:google.cloud.iot.v1.BindDeviceToGatewayResponse)
     },
