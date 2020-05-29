@@ -316,9 +316,9 @@ class DeviceManagerGrpcTransport(object):
     def test_iam_permissions(self):
         """Return the gRPC stub for :meth:`DeviceManagerClient.test_iam_permissions`.
 
-        Returns permissions that a caller has on the specified resource. If the
-        resource does not exist, this will return an empty set of permissions,
-        not a NOT\_FOUND error.
+        Returns permissions that a caller has on the specified resource. If
+        the resource does not exist, this will return an empty set of
+        permissions, not a NOT_FOUND error.
 
         Returns:
             Callable: A callable which accepts the appropriate
@@ -343,7 +343,7 @@ class DeviceManagerGrpcTransport(object):
            specific subfolders is not supported. If the command could not be
            delivered to the device, this method will return an error; in
            particular, if the device is not subscribed, this method will return
-           FAILED\_PRECONDITION. Otherwise, this method will return OK. If the
+           FAILED_PRECONDITION. Otherwise, this method will return OK. If the
            subscription is QoS 1, at least once delivery will be guaranteed; for
            QoS 0, no acknowledgment will be expected from the device.
 
