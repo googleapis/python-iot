@@ -23,6 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     package="google.cloud.iot.v1",
     syntax="proto3",
     serialized_options=b"\n\027com.google.cloud.iot.v1B\016ResourcesProtoP\001Z6google.golang.org/genproto/googleapis/cloud/iot/v1;iot\370\001\001",
+    create_key=_descriptor._internal_create_key,
     serialized_pb=b'\n)google/cloud/iot_v1/proto/resources.proto\x12\x13google.cloud.iot.v1\x1a\x19google/api/resource.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x17google/rpc/status.proto"\xb0\x07\n\x06\x44\x65vice\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x0e\n\x06num_id\x18\x03 \x01(\x04\x12:\n\x0b\x63redentials\x18\x0c \x03(\x0b\x32%.google.cloud.iot.v1.DeviceCredential\x12\x37\n\x13last_heartbeat_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x33\n\x0flast_event_time\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x33\n\x0flast_state_time\x18\x14 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x38\n\x14last_config_ack_time\x18\x0e \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x39\n\x15last_config_send_time\x18\x12 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0f\n\x07\x62locked\x18\x13 \x01(\x08\x12\x33\n\x0flast_error_time\x18\n \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12-\n\x11last_error_status\x18\x0b \x01(\x0b\x32\x12.google.rpc.Status\x12\x31\n\x06\x63onfig\x18\r \x01(\x0b\x32!.google.cloud.iot.v1.DeviceConfig\x12/\n\x05state\x18\x10 \x01(\x0b\x32 .google.cloud.iot.v1.DeviceState\x12\x30\n\tlog_level\x18\x15 \x01(\x0e\x32\x1d.google.cloud.iot.v1.LogLevel\x12;\n\x08metadata\x18\x11 \x03(\x0b\x32).google.cloud.iot.v1.Device.MetadataEntry\x12:\n\x0egateway_config\x18\x18 \x01(\x0b\x32".google.cloud.iot.v1.GatewayConfig\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01:s\xea\x41p\n\x1e\x63loudiot.googleapis.com/Device\x12Nprojects/{project}/locations/{location}/registries/{registry}/devices/{device}"\xee\x01\n\rGatewayConfig\x12\x36\n\x0cgateway_type\x18\x01 \x01(\x0e\x32 .google.cloud.iot.v1.GatewayType\x12\x43\n\x13gateway_auth_method\x18\x02 \x01(\x0e\x32&.google.cloud.iot.v1.GatewayAuthMethod\x12 \n\x18last_accessed_gateway_id\x18\x03 \x01(\t\x12>\n\x1alast_accessed_gateway_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp"\x8f\x04\n\x0e\x44\x65viceRegistry\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12P\n\x1a\x65vent_notification_configs\x18\n \x03(\x0b\x32,.google.cloud.iot.v1.EventNotificationConfig\x12O\n\x19state_notification_config\x18\x07 \x01(\x0b\x32,.google.cloud.iot.v1.StateNotificationConfig\x12\x34\n\x0bmqtt_config\x18\x04 \x01(\x0b\x32\x1f.google.cloud.iot.v1.MqttConfig\x12\x34\n\x0bhttp_config\x18\t \x01(\x0b\x32\x1f.google.cloud.iot.v1.HttpConfig\x12\x30\n\tlog_level\x18\x0b \x01(\x0e\x32\x1d.google.cloud.iot.v1.LogLevel\x12<\n\x0b\x63redentials\x18\x08 \x03(\x0b\x32\'.google.cloud.iot.v1.RegistryCredential:d\xea\x41\x61\n cloudiot.googleapis.com/Registry\x12=projects/{project}/locations/{location}/registries/{registry}"H\n\nMqttConfig\x12:\n\x12mqtt_enabled_state\x18\x01 \x01(\x0e\x32\x1e.google.cloud.iot.v1.MqttState"H\n\nHttpConfig\x12:\n\x12http_enabled_state\x18\x01 \x01(\x0e\x32\x1e.google.cloud.iot.v1.HttpState"O\n\x17\x45ventNotificationConfig\x12\x19\n\x11subfolder_matches\x18\x02 \x01(\t\x12\x19\n\x11pubsub_topic_name\x18\x01 \x01(\t"4\n\x17StateNotificationConfig\x12\x19\n\x11pubsub_topic_name\x18\x01 \x01(\t"o\n\x12RegistryCredential\x12K\n\x16public_key_certificate\x18\x01 \x01(\x0b\x32).google.cloud.iot.v1.PublicKeyCertificateH\x00\x42\x0c\n\ncredential"\xd0\x01\n\x16X509CertificateDetails\x12\x0e\n\x06issuer\x18\x01 \x01(\t\x12\x0f\n\x07subject\x18\x02 \x01(\t\x12.\n\nstart_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12/\n\x0b\x65xpiry_time\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1b\n\x13signature_algorithm\x18\x05 \x01(\t\x12\x17\n\x0fpublic_key_type\x18\x06 \x01(\t"\xaf\x01\n\x14PublicKeyCertificate\x12?\n\x06\x66ormat\x18\x01 \x01(\x0e\x32/.google.cloud.iot.v1.PublicKeyCertificateFormat\x12\x13\n\x0b\x63\x65rtificate\x18\x02 \x01(\t\x12\x41\n\x0cx509_details\x18\x03 \x01(\x0b\x32+.google.cloud.iot.v1.X509CertificateDetails"\x95\x01\n\x10\x44\x65viceCredential\x12>\n\npublic_key\x18\x02 \x01(\x0b\x32(.google.cloud.iot.v1.PublicKeyCredentialH\x00\x12\x33\n\x0f\x65xpiration_time\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x0c\n\ncredential"X\n\x13PublicKeyCredential\x12\x34\n\x06\x66ormat\x18\x01 \x01(\x0e\x32$.google.cloud.iot.v1.PublicKeyFormat\x12\x0b\n\x03key\x18\x02 \x01(\t"\xa0\x01\n\x0c\x44\x65viceConfig\x12\x0f\n\x07version\x18\x01 \x01(\x03\x12\x35\n\x11\x63loud_update_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x33\n\x0f\x64\x65vice_ack_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x13\n\x0b\x62inary_data\x18\x04 \x01(\x0c"S\n\x0b\x44\x65viceState\x12/\n\x0bupdate_time\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x13\n\x0b\x62inary_data\x18\x02 \x01(\x0c*L\n\tMqttState\x12\x1a\n\x16MQTT_STATE_UNSPECIFIED\x10\x00\x12\x10\n\x0cMQTT_ENABLED\x10\x01\x12\x11\n\rMQTT_DISABLED\x10\x02*L\n\tHttpState\x12\x1a\n\x16HTTP_STATE_UNSPECIFIED\x10\x00\x12\x10\n\x0cHTTP_ENABLED\x10\x01\x12\x11\n\rHTTP_DISABLED\x10\x02*O\n\x08LogLevel\x12\x19\n\x15LOG_LEVEL_UNSPECIFIED\x10\x00\x12\x08\n\x04NONE\x10\n\x12\t\n\x05\x45RROR\x10\x14\x12\x08\n\x04INFO\x10\x1e\x12\t\n\x05\x44\x45\x42UG\x10(*I\n\x0bGatewayType\x12\x1c\n\x18GATEWAY_TYPE_UNSPECIFIED\x10\x00\x12\x0b\n\x07GATEWAY\x10\x01\x12\x0f\n\x0bNON_GATEWAY\x10\x02*\x91\x01\n\x11GatewayAuthMethod\x12#\n\x1fGATEWAY_AUTH_METHOD_UNSPECIFIED\x10\x00\x12\x14\n\x10\x41SSOCIATION_ONLY\x10\x01\x12\x1a\n\x16\x44\x45VICE_AUTH_TOKEN_ONLY\x10\x02\x12%\n!ASSOCIATION_AND_DEVICE_AUTH_TOKEN\x10\x03*e\n\x1aPublicKeyCertificateFormat\x12-\n)UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT\x10\x00\x12\x18\n\x14X509_CERTIFICATE_PEM\x10\x01*v\n\x0fPublicKeyFormat\x12!\n\x1dUNSPECIFIED_PUBLIC_KEY_FORMAT\x10\x00\x12\x0b\n\x07RSA_PEM\x10\x03\x12\x10\n\x0cRSA_X509_PEM\x10\x01\x12\r\n\tES256_PEM\x10\x02\x12\x12\n\x0e\x45S256_X509_PEM\x10\x04\x42\x66\n\x17\x63om.google.cloud.iot.v1B\x0eResourcesProtoP\x01Z6google.golang.org/genproto/googleapis/cloud/iot/v1;iot\xf8\x01\x01\x62\x06proto3',
     dependencies=[
         google_dot_api_dot_resource__pb2.DESCRIPTOR,
@@ -36,6 +37,7 @@ _MQTTSTATE = _descriptor.EnumDescriptor(
     full_name="google.cloud.iot.v1.MqttState",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="MQTT_STATE_UNSPECIFIED",
@@ -43,12 +45,23 @@ _MQTTSTATE = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="MQTT_ENABLED", index=1, number=1, serialized_options=None, type=None
+            name="MQTT_ENABLED",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="MQTT_DISABLED", index=2, number=2, serialized_options=None, type=None
+            name="MQTT_DISABLED",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -64,6 +77,7 @@ _HTTPSTATE = _descriptor.EnumDescriptor(
     full_name="google.cloud.iot.v1.HttpState",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="HTTP_STATE_UNSPECIFIED",
@@ -71,12 +85,23 @@ _HTTPSTATE = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="HTTP_ENABLED", index=1, number=1, serialized_options=None, type=None
+            name="HTTP_ENABLED",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="HTTP_DISABLED", index=2, number=2, serialized_options=None, type=None
+            name="HTTP_DISABLED",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -92,6 +117,7 @@ _LOGLEVEL = _descriptor.EnumDescriptor(
     full_name="google.cloud.iot.v1.LogLevel",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="LOG_LEVEL_UNSPECIFIED",
@@ -99,18 +125,39 @@ _LOGLEVEL = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="NONE", index=1, number=10, serialized_options=None, type=None
+            name="NONE",
+            index=1,
+            number=10,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="ERROR", index=2, number=20, serialized_options=None, type=None
+            name="ERROR",
+            index=2,
+            number=20,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="INFO", index=3, number=30, serialized_options=None, type=None
+            name="INFO",
+            index=3,
+            number=30,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="DEBUG", index=4, number=40, serialized_options=None, type=None
+            name="DEBUG",
+            index=4,
+            number=40,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -126,6 +173,7 @@ _GATEWAYTYPE = _descriptor.EnumDescriptor(
     full_name="google.cloud.iot.v1.GatewayType",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="GATEWAY_TYPE_UNSPECIFIED",
@@ -133,12 +181,23 @@ _GATEWAYTYPE = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="GATEWAY", index=1, number=1, serialized_options=None, type=None
+            name="GATEWAY",
+            index=1,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="NON_GATEWAY", index=2, number=2, serialized_options=None, type=None
+            name="NON_GATEWAY",
+            index=2,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -154,6 +213,7 @@ _GATEWAYAUTHMETHOD = _descriptor.EnumDescriptor(
     full_name="google.cloud.iot.v1.GatewayAuthMethod",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="GATEWAY_AUTH_METHOD_UNSPECIFIED",
@@ -161,6 +221,7 @@ _GATEWAYAUTHMETHOD = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
             name="ASSOCIATION_ONLY",
@@ -168,6 +229,7 @@ _GATEWAYAUTHMETHOD = _descriptor.EnumDescriptor(
             number=1,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
             name="DEVICE_AUTH_TOKEN_ONLY",
@@ -175,6 +237,7 @@ _GATEWAYAUTHMETHOD = _descriptor.EnumDescriptor(
             number=2,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
             name="ASSOCIATION_AND_DEVICE_AUTH_TOKEN",
@@ -182,6 +245,7 @@ _GATEWAYAUTHMETHOD = _descriptor.EnumDescriptor(
             number=3,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -197,6 +261,7 @@ _PUBLICKEYCERTIFICATEFORMAT = _descriptor.EnumDescriptor(
     full_name="google.cloud.iot.v1.PublicKeyCertificateFormat",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT",
@@ -204,6 +269,7 @@ _PUBLICKEYCERTIFICATEFORMAT = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
             name="X509_CERTIFICATE_PEM",
@@ -211,6 +277,7 @@ _PUBLICKEYCERTIFICATEFORMAT = _descriptor.EnumDescriptor(
             number=1,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -228,6 +295,7 @@ _PUBLICKEYFORMAT = _descriptor.EnumDescriptor(
     full_name="google.cloud.iot.v1.PublicKeyFormat",
     filename=None,
     file=DESCRIPTOR,
+    create_key=_descriptor._internal_create_key,
     values=[
         _descriptor.EnumValueDescriptor(
             name="UNSPECIFIED_PUBLIC_KEY_FORMAT",
@@ -235,18 +303,39 @@ _PUBLICKEYFORMAT = _descriptor.EnumDescriptor(
             number=0,
             serialized_options=None,
             type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="RSA_PEM", index=1, number=3, serialized_options=None, type=None
+            name="RSA_PEM",
+            index=1,
+            number=3,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="RSA_X509_PEM", index=2, number=1, serialized_options=None, type=None
+            name="RSA_X509_PEM",
+            index=2,
+            number=1,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="ES256_PEM", index=3, number=2, serialized_options=None, type=None
+            name="ES256_PEM",
+            index=3,
+            number=2,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.EnumValueDescriptor(
-            name="ES256_X509_PEM", index=4, number=4, serialized_options=None, type=None
+            name="ES256_X509_PEM",
+            index=4,
+            number=4,
+            serialized_options=None,
+            type=None,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     containing_type=None,
@@ -290,6 +379,7 @@ _DEVICE_METADATAENTRY = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="key",
@@ -308,6 +398,7 @@ _DEVICE_METADATAENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="value",
@@ -326,6 +417,7 @@ _DEVICE_METADATAENTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -346,6 +438,7 @@ _DEVICE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="id",
@@ -364,6 +457,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="name",
@@ -382,6 +476,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="num_id",
@@ -400,6 +495,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="credentials",
@@ -418,6 +514,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_heartbeat_time",
@@ -436,6 +533,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_event_time",
@@ -454,6 +552,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_state_time",
@@ -472,6 +571,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_config_ack_time",
@@ -490,6 +590,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_config_send_time",
@@ -508,6 +609,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="blocked",
@@ -526,6 +628,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_error_time",
@@ -544,6 +647,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_error_status",
@@ -562,6 +666,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="config",
@@ -580,6 +685,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="state",
@@ -598,6 +704,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="log_level",
@@ -616,6 +723,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="metadata",
@@ -634,6 +742,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="gateway_config",
@@ -652,6 +761,7 @@ _DEVICE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -673,6 +783,7 @@ _GATEWAYCONFIG = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="gateway_type",
@@ -691,6 +802,7 @@ _GATEWAYCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="gateway_auth_method",
@@ -709,6 +821,7 @@ _GATEWAYCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_accessed_gateway_id",
@@ -727,6 +840,7 @@ _GATEWAYCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="last_accessed_gateway_time",
@@ -745,6 +859,7 @@ _GATEWAYCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -766,6 +881,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="id",
@@ -784,6 +900,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="name",
@@ -802,6 +919,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="event_notification_configs",
@@ -820,6 +938,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="state_notification_config",
@@ -838,6 +957,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="mqtt_config",
@@ -856,6 +976,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="http_config",
@@ -874,6 +995,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="log_level",
@@ -892,6 +1014,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="credentials",
@@ -910,6 +1033,7 @@ _DEVICEREGISTRY = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -931,6 +1055,7 @@ _MQTTCONFIG = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="mqtt_enabled_state",
@@ -949,6 +1074,7 @@ _MQTTCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         )
     ],
     extensions=[],
@@ -970,6 +1096,7 @@ _HTTPCONFIG = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="http_enabled_state",
@@ -988,6 +1115,7 @@ _HTTPCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         )
     ],
     extensions=[],
@@ -1009,6 +1137,7 @@ _EVENTNOTIFICATIONCONFIG = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="subfolder_matches",
@@ -1027,6 +1156,7 @@ _EVENTNOTIFICATIONCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="pubsub_topic_name",
@@ -1045,6 +1175,7 @@ _EVENTNOTIFICATIONCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1066,6 +1197,7 @@ _STATENOTIFICATIONCONFIG = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="pubsub_topic_name",
@@ -1084,6 +1216,7 @@ _STATENOTIFICATIONCONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         )
     ],
     extensions=[],
@@ -1105,6 +1238,7 @@ _REGISTRYCREDENTIAL = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="public_key_certificate",
@@ -1123,6 +1257,7 @@ _REGISTRYCREDENTIAL = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         )
     ],
     extensions=[],
@@ -1138,6 +1273,7 @@ _REGISTRYCREDENTIAL = _descriptor.Descriptor(
             full_name="google.cloud.iot.v1.RegistryCredential.credential",
             index=0,
             containing_type=None,
+            create_key=_descriptor._internal_create_key,
             fields=[],
         )
     ],
@@ -1152,6 +1288,7 @@ _X509CERTIFICATEDETAILS = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="issuer",
@@ -1170,6 +1307,7 @@ _X509CERTIFICATEDETAILS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="subject",
@@ -1188,6 +1326,7 @@ _X509CERTIFICATEDETAILS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="start_time",
@@ -1206,6 +1345,7 @@ _X509CERTIFICATEDETAILS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="expiry_time",
@@ -1224,6 +1364,7 @@ _X509CERTIFICATEDETAILS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="signature_algorithm",
@@ -1242,6 +1383,7 @@ _X509CERTIFICATEDETAILS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="public_key_type",
@@ -1260,6 +1402,7 @@ _X509CERTIFICATEDETAILS = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1281,6 +1424,7 @@ _PUBLICKEYCERTIFICATE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="format",
@@ -1299,6 +1443,7 @@ _PUBLICKEYCERTIFICATE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="certificate",
@@ -1317,6 +1462,7 @@ _PUBLICKEYCERTIFICATE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="x509_details",
@@ -1335,6 +1481,7 @@ _PUBLICKEYCERTIFICATE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1356,6 +1503,7 @@ _DEVICECREDENTIAL = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="public_key",
@@ -1374,6 +1522,7 @@ _DEVICECREDENTIAL = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="expiration_time",
@@ -1392,6 +1541,7 @@ _DEVICECREDENTIAL = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1407,6 +1557,7 @@ _DEVICECREDENTIAL = _descriptor.Descriptor(
             full_name="google.cloud.iot.v1.DeviceCredential.credential",
             index=0,
             containing_type=None,
+            create_key=_descriptor._internal_create_key,
             fields=[],
         )
     ],
@@ -1421,6 +1572,7 @@ _PUBLICKEYCREDENTIAL = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="format",
@@ -1439,6 +1591,7 @@ _PUBLICKEYCREDENTIAL = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="key",
@@ -1457,6 +1610,7 @@ _PUBLICKEYCREDENTIAL = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1478,6 +1632,7 @@ _DEVICECONFIG = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="version",
@@ -1496,6 +1651,7 @@ _DEVICECONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="cloud_update_time",
@@ -1514,6 +1670,7 @@ _DEVICECONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="device_ack_time",
@@ -1532,6 +1689,7 @@ _DEVICECONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="binary_data",
@@ -1550,6 +1708,7 @@ _DEVICECONFIG = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
@@ -1571,6 +1730,7 @@ _DEVICESTATE = _descriptor.Descriptor(
     filename=None,
     file=DESCRIPTOR,
     containing_type=None,
+    create_key=_descriptor._internal_create_key,
     fields=[
         _descriptor.FieldDescriptor(
             name="update_time",
@@ -1589,6 +1749,7 @@ _DEVICESTATE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
         _descriptor.FieldDescriptor(
             name="binary_data",
@@ -1607,6 +1768,7 @@ _DEVICESTATE = _descriptor.Descriptor(
             extension_scope=None,
             serialized_options=None,
             file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
         ),
     ],
     extensions=[],
