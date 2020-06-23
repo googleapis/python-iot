@@ -44,7 +44,7 @@ from google.protobuf import empty_pb2
 from google.protobuf import field_mask_pb2
 
 
-_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-iot").version
+_GAPIC_LIBRARY_VERSION = pkg_resources.get_distribution("google-cloud-iot",).version
 
 
 class DeviceManagerClient(object):
@@ -194,12 +194,12 @@ class DeviceManagerClient(object):
                 self.transport = transport
         else:
             self.transport = device_manager_grpc_transport.DeviceManagerGrpcTransport(
-                address=api_endpoint, channel=channel, credentials=credentials
+                address=api_endpoint, channel=channel, credentials=credentials,
             )
 
         if client_info is None:
             client_info = google.api_core.gapic_v1.client_info.ClientInfo(
-                gapic_version=_GAPIC_LIBRARY_VERSION
+                gapic_version=_GAPIC_LIBRARY_VERSION,
             )
         else:
             client_info.gapic_version = _GAPIC_LIBRARY_VERSION
@@ -210,7 +210,7 @@ class DeviceManagerClient(object):
         # (Ordinarily, these are the defaults specified in the `*_config.py`
         # file next to this one.)
         self._method_configs = google.api_core.gapic_v1.config.parse_method_configs(
-            client_config["interfaces"][self._INTERFACE_NAME]
+            client_config["interfaces"][self._INTERFACE_NAME],
         )
 
         # Save a dictionary of cached API call functions.
@@ -269,7 +269,7 @@ class DeviceManagerClient(object):
                 client_info=self._client_info,
             )
 
-        request = device_manager_pb2.DeleteDeviceRegistryRequest(name=name)
+        request = device_manager_pb2.DeleteDeviceRegistryRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -338,7 +338,7 @@ class DeviceManagerClient(object):
                 client_info=self._client_info,
             )
 
-        request = device_manager_pb2.DeleteDeviceRequest(name=name)
+        request = device_manager_pb2.DeleteDeviceRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -426,7 +426,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.ModifyCloudToDeviceConfigRequest(
-            name=name, binary_data=binary_data, version_to_update=version_to_update
+            name=name, binary_data=binary_data, version_to_update=version_to_update,
         )
         if metadata is None:
             metadata = []
@@ -525,7 +525,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.SendCommandToDeviceRequest(
-            name=name, binary_data=binary_data, subfolder=subfolder
+            name=name, binary_data=binary_data, subfolder=subfolder,
         )
         if metadata is None:
             metadata = []
@@ -608,7 +608,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.CreateDeviceRegistryRequest(
-            parent=parent, device_registry=device_registry
+            parent=parent, device_registry=device_registry,
         )
         if metadata is None:
             metadata = []
@@ -679,7 +679,7 @@ class DeviceManagerClient(object):
                 client_info=self._client_info,
             )
 
-        request = device_manager_pb2.GetDeviceRegistryRequest(name=name)
+        request = device_manager_pb2.GetDeviceRegistryRequest(name=name,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -768,7 +768,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.UpdateDeviceRegistryRequest(
-            device_registry=device_registry, update_mask=update_mask
+            device_registry=device_registry, update_mask=update_mask,
         )
         if metadata is None:
             metadata = []
@@ -861,7 +861,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.ListDeviceRegistriesRequest(
-            parent=parent, page_size=page_size
+            parent=parent, page_size=page_size,
         )
         if metadata is None:
             metadata = []
@@ -954,7 +954,7 @@ class DeviceManagerClient(object):
                 client_info=self._client_info,
             )
 
-        request = device_manager_pb2.CreateDeviceRequest(parent=parent, device=device)
+        request = device_manager_pb2.CreateDeviceRequest(parent=parent, device=device,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1032,7 +1032,7 @@ class DeviceManagerClient(object):
                 client_info=self._client_info,
             )
 
-        request = device_manager_pb2.GetDeviceRequest(name=name, field_mask=field_mask)
+        request = device_manager_pb2.GetDeviceRequest(name=name, field_mask=field_mask,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1121,7 +1121,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.UpdateDeviceRequest(
-            device=device, update_mask=update_mask
+            device=device, update_mask=update_mask,
         )
         if metadata is None:
             metadata = []
@@ -1330,7 +1330,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.ListDeviceConfigVersionsRequest(
-            name=name, num_versions=num_versions
+            name=name, num_versions=num_versions,
         )
         if metadata is None:
             metadata = []
@@ -1409,7 +1409,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.ListDeviceStatesRequest(
-            name=name, num_states=num_states
+            name=name, num_states=num_states,
         )
         if metadata is None:
             metadata = []
@@ -1493,7 +1493,7 @@ class DeviceManagerClient(object):
                 client_info=self._client_info,
             )
 
-        request = iam_policy_pb2.SetIamPolicyRequest(resource=resource, policy=policy)
+        request = iam_policy_pb2.SetIamPolicyRequest(resource=resource, policy=policy,)
         if metadata is None:
             metadata = []
         metadata = list(metadata)
@@ -1573,7 +1573,7 @@ class DeviceManagerClient(object):
             )
 
         request = iam_policy_pb2.GetIamPolicyRequest(
-            resource=resource, options=options_
+            resource=resource, options=options_,
         )
         if metadata is None:
             metadata = []
@@ -1656,7 +1656,7 @@ class DeviceManagerClient(object):
             )
 
         request = iam_policy_pb2.TestIamPermissionsRequest(
-            resource=resource, permissions=permissions
+            resource=resource, permissions=permissions,
         )
         if metadata is None:
             metadata = []
@@ -1741,7 +1741,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.BindDeviceToGatewayRequest(
-            parent=parent, gateway_id=gateway_id, device_id=device_id
+            parent=parent, gateway_id=gateway_id, device_id=device_id,
         )
         if metadata is None:
             metadata = []
@@ -1826,7 +1826,7 @@ class DeviceManagerClient(object):
             )
 
         request = device_manager_pb2.UnbindDeviceFromGatewayRequest(
-            parent=parent, gateway_id=gateway_id, device_id=device_id
+            parent=parent, gateway_id=gateway_id, device_id=device_id,
         )
         if metadata is None:
             metadata = []

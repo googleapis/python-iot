@@ -134,7 +134,7 @@ _GETDEVICEREGISTRYREQUEST = _descriptor.Descriptor(
             serialized_options=b'\340A\002\372A"\n cloudiot.googleapis.com/Registry',
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -175,7 +175,7 @@ _DELETEDEVICEREGISTRYREQUEST = _descriptor.Descriptor(
             serialized_options=b'\340A\002\372A"\n cloudiot.googleapis.com/Registry',
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -595,7 +595,7 @@ _DELETEDEVICEREQUEST = _descriptor.Descriptor(
             serialized_options=b"\340A\002\372A \n\036cloudiot.googleapis.com/Device",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -846,7 +846,7 @@ _GATEWAYLISTOPTIONS = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=1851,
     serialized_end=2008,
@@ -1078,7 +1078,7 @@ _LISTDEVICECONFIGVERSIONSRESPONSE = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1179,7 +1179,7 @@ _LISTDEVICESTATESRESPONSE = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],

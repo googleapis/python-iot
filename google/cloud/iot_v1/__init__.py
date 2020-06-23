@@ -38,4 +38,8 @@ class DeviceManagerClient(device_manager_client.DeviceManagerClient):
     enums = enums
 
 
-__all__ = ("enums", "types", "DeviceManagerClient")
+__all__ = (
+    "enums",
+    "types",
+    "DeviceManagerClient",
+)

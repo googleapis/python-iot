@@ -56,7 +56,7 @@ class DeviceManagerGrpcTransport(object):
         # exception (channels come with credentials baked in already).
         if channel is not None and credentials is not None:
             raise ValueError(
-                "The `channel` and `credentials` arguments are mutually " "exclusive."
+                "The `channel` and `credentials` arguments are mutually " "exclusive.",
             )
 
         # Create the channel.
@@ -75,7 +75,7 @@ class DeviceManagerGrpcTransport(object):
         # gRPC uses objects called "stubs" that are bound to the
         # channel and provide a basic method for each RPC.
         self._stubs = {
-            "device_manager_stub": device_manager_pb2_grpc.DeviceManagerStub(channel)
+            "device_manager_stub": device_manager_pb2_grpc.DeviceManagerStub(channel),
         }
 
     @classmethod

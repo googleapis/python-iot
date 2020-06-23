@@ -765,7 +765,7 @@ _DEVICE = _descriptor.Descriptor(
         ),
     ],
     extensions=[],
-    nested_types=[_DEVICE_METADATAENTRY],
+    nested_types=[_DEVICE_METADATAENTRY,],
     enum_types=[],
     serialized_options=b"\352Ap\n\036cloudiot.googleapis.com/Device\022Nprojects/{project}/locations/{location}/registries/{registry}/devices/{device}",
     is_extendable=False,
@@ -1075,7 +1075,7 @@ _MQTTCONFIG = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1116,7 +1116,7 @@ _HTTPCONFIG = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1217,7 +1217,7 @@ _STATENOTIFICATIONCONFIG = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1258,7 +1258,7 @@ _REGISTRYCREDENTIAL = _descriptor.Descriptor(
             serialized_options=None,
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
-        )
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -1275,7 +1275,7 @@ _REGISTRYCREDENTIAL = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=2152,
     serialized_end=2263,
@@ -1559,7 +1559,7 @@ _DEVICECREDENTIAL = _descriptor.Descriptor(
             containing_type=None,
             create_key=_descriptor._internal_create_key,
             fields=[],
-        )
+        ),
     ],
     serialized_start=2655,
     serialized_end=2804,
