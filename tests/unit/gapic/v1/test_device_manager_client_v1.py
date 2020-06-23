@@ -65,6 +65,154 @@ class CustomException(Exception):
 
 
 class TestDeviceManagerClient(object):
+    def test_delete_device_registry(self):
+        channel = ChannelStub()
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup Request
+        name = client.registry_path("[PROJECT]", "[LOCATION]", "[REGISTRY]")
+
+        client.delete_device_registry(name)
+
+        assert len(channel.requests) == 1
+        expected_request = device_manager_pb2.DeleteDeviceRegistryRequest(name=name)
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_delete_device_registry_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup request
+        name = client.registry_path("[PROJECT]", "[LOCATION]", "[REGISTRY]")
+
+        with pytest.raises(CustomException):
+            client.delete_device_registry(name)
+
+    def test_delete_device(self):
+        channel = ChannelStub()
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup Request
+        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
+
+        client.delete_device(name)
+
+        assert len(channel.requests) == 1
+        expected_request = device_manager_pb2.DeleteDeviceRequest(name=name)
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_delete_device_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup request
+        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
+
+        with pytest.raises(CustomException):
+            client.delete_device(name)
+
+    def test_modify_cloud_to_device_config(self):
+        # Setup Expected Response
+        version = 351608024
+        binary_data_2 = b"-37"
+        expected_response = {"version": version, "binary_data": binary_data_2}
+        expected_response = resources_pb2.DeviceConfig(**expected_response)
+
+        # Mock the API response
+        channel = ChannelStub(responses=[expected_response])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup Request
+        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
+        binary_data = b"40"
+
+        response = client.modify_cloud_to_device_config(name, binary_data)
+        assert expected_response == response
+
+        assert len(channel.requests) == 1
+        expected_request = device_manager_pb2.ModifyCloudToDeviceConfigRequest(
+            name=name, binary_data=binary_data
+        )
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_modify_cloud_to_device_config_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup request
+        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
+        binary_data = b"40"
+
+        with pytest.raises(CustomException):
+            client.modify_cloud_to_device_config(name, binary_data)
+
+    def test_send_command_to_device(self):
+        # Setup Expected Response
+        expected_response = {}
+        expected_response = device_manager_pb2.SendCommandToDeviceResponse(
+            **expected_response
+        )
+
+        # Mock the API response
+        channel = ChannelStub(responses=[expected_response])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup Request
+        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
+        binary_data = b"40"
+
+        response = client.send_command_to_device(name, binary_data)
+        assert expected_response == response
+
+        assert len(channel.requests) == 1
+        expected_request = device_manager_pb2.SendCommandToDeviceRequest(
+            name=name, binary_data=binary_data
+        )
+        actual_request = channel.requests[0][1]
+        assert expected_request == actual_request
+
+    def test_send_command_to_device_exception(self):
+        # Mock the API response
+        channel = ChannelStub(responses=[CustomException()])
+        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
+        with patch as create_channel:
+            create_channel.return_value = channel
+            client = iot_v1.DeviceManagerClient()
+
+        # Setup request
+        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
+        binary_data = b"40"
+
+        with pytest.raises(CustomException):
+            client.send_command_to_device(name, binary_data)
+
     def test_create_device_registry(self):
         # Setup Expected Response
         id_ = "id3355"
@@ -189,37 +337,6 @@ class TestDeviceManagerClient(object):
 
         with pytest.raises(CustomException):
             client.update_device_registry(device_registry, update_mask)
-
-    def test_delete_device_registry(self):
-        channel = ChannelStub()
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup Request
-        name = client.registry_path("[PROJECT]", "[LOCATION]", "[REGISTRY]")
-
-        client.delete_device_registry(name)
-
-        assert len(channel.requests) == 1
-        expected_request = device_manager_pb2.DeleteDeviceRegistryRequest(name=name)
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_delete_device_registry_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup request
-        name = client.registry_path("[PROJECT]", "[LOCATION]", "[REGISTRY]")
-
-        with pytest.raises(CustomException):
-            client.delete_device_registry(name)
 
     def test_list_device_registries(self):
         # Setup Expected Response
@@ -415,37 +532,6 @@ class TestDeviceManagerClient(object):
         with pytest.raises(CustomException):
             client.update_device(device, update_mask)
 
-    def test_delete_device(self):
-        channel = ChannelStub()
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup Request
-        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
-
-        client.delete_device(name)
-
-        assert len(channel.requests) == 1
-        expected_request = device_manager_pb2.DeleteDeviceRequest(name=name)
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_delete_device_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup request
-        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
-
-        with pytest.raises(CustomException):
-            client.delete_device(name)
-
     def test_list_devices(self):
         # Setup Expected Response
         next_page_token = ""
@@ -488,49 +574,6 @@ class TestDeviceManagerClient(object):
         paged_list_response = client.list_devices(parent)
         with pytest.raises(CustomException):
             list(paged_list_response)
-
-    def test_modify_cloud_to_device_config(self):
-        # Setup Expected Response
-        version = 351608024
-        binary_data_2 = b"-37"
-        expected_response = {"version": version, "binary_data": binary_data_2}
-        expected_response = resources_pb2.DeviceConfig(**expected_response)
-
-        # Mock the API response
-        channel = ChannelStub(responses=[expected_response])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup Request
-        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
-        binary_data = b"40"
-
-        response = client.modify_cloud_to_device_config(name, binary_data)
-        assert expected_response == response
-
-        assert len(channel.requests) == 1
-        expected_request = device_manager_pb2.ModifyCloudToDeviceConfigRequest(
-            name=name, binary_data=binary_data
-        )
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_modify_cloud_to_device_config_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup request
-        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
-        binary_data = b"40"
-
-        with pytest.raises(CustomException):
-            client.modify_cloud_to_device_config(name, binary_data)
 
     def test_list_device_config_versions(self):
         # Setup Expected Response
@@ -734,49 +777,6 @@ class TestDeviceManagerClient(object):
 
         with pytest.raises(CustomException):
             client.test_iam_permissions(resource, permissions)
-
-    def test_send_command_to_device(self):
-        # Setup Expected Response
-        expected_response = {}
-        expected_response = device_manager_pb2.SendCommandToDeviceResponse(
-            **expected_response
-        )
-
-        # Mock the API response
-        channel = ChannelStub(responses=[expected_response])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup Request
-        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
-        binary_data = b"40"
-
-        response = client.send_command_to_device(name, binary_data)
-        assert expected_response == response
-
-        assert len(channel.requests) == 1
-        expected_request = device_manager_pb2.SendCommandToDeviceRequest(
-            name=name, binary_data=binary_data
-        )
-        actual_request = channel.requests[0][1]
-        assert expected_request == actual_request
-
-    def test_send_command_to_device_exception(self):
-        # Mock the API response
-        channel = ChannelStub(responses=[CustomException()])
-        patch = mock.patch("google.api_core.grpc_helpers.create_channel")
-        with patch as create_channel:
-            create_channel.return_value = channel
-            client = iot_v1.DeviceManagerClient()
-
-        # Setup request
-        name = client.device_path("[PROJECT]", "[LOCATION]", "[REGISTRY]", "[DEVICE]")
-        binary_data = b"40"
-
-        with pytest.raises(CustomException):
-            client.send_command_to_device(name, binary_data)
 
     def test_bind_device_to_gateway(self):
         # Setup Expected Response
