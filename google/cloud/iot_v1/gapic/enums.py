@@ -143,18 +143,18 @@ class PublicKeyFormat(enum.IntEnum):
       ``-----BEGIN PUBLIC KEY-----`` and ``-----END PUBLIC KEY-----``. This
       can be used to verify ``RS256`` signatures in JWT tokens
       (`RFC7518 <https://www.ietf.org/rfc/rfc7518.txt>`__).
-      RSA_X509_PEM (int): As RSA\_PEM, but wrapped in an X.509v3 certificate
+      RSA_X509_PEM (int): As RSA_PEM, but wrapped in an X.509v3 certificate
       (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__), encoded in base64,
       and wrapped by ``-----BEGIN CERTIFICATE-----`` and
       ``-----END CERTIFICATE-----``.
-      ES256_PEM (int): Public key for the ECDSA algorithm using P-256 and SHA-256, encoded in
-      base64, and wrapped by ``-----BEGIN PUBLIC KEY-----`` and
+      ES256_PEM (int): Public key for the ECDSA algorithm using P-256 and SHA-256, encoded
+      in base64, and wrapped by ``-----BEGIN PUBLIC KEY-----`` and
       ``-----END PUBLIC KEY-----``. This can be used to verify JWT tokens with
       the ``ES256`` algorithm
       (`RFC7518 <https://www.ietf.org/rfc/rfc7518.txt>`__). This curve is
       defined in `OpenSSL <https://www.openssl.org/>`__ as the ``prime256v1``
       curve.
-      ES256_X509_PEM (int): As ES256\_PEM, but wrapped in an X.509v3 certificate
+      ES256_X509_PEM (int): As ES256_PEM, but wrapped in an X.509v3 certificate
       (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__), encoded in base64,
       and wrapped by ``-----BEGIN CERTIFICATE-----`` and
       ``-----END CERTIFICATE-----``.

@@ -45,7 +45,10 @@ _shared_modules = [
     expr_pb2,
 ]
 
-_local_modules = [device_manager_pb2, resources_pb2]
+_local_modules = [
+    device_manager_pb2,
+    resources_pb2,
+]
 
 names = []
 
