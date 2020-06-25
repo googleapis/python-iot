@@ -40,4 +40,7 @@ s.move(library / "docs", excludes="index.rst")
 templated_files = common.py_library(cov_level=74)
 s.move(templated_files)
 
+# TODO(busunkim): Use latest sphinx after microgenerator transition
+s.replace("noxfile.py", """['"]sphinx['"]""", '"sphinx<3.0.0"')
+
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)
