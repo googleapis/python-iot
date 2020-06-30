@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [1.0.1](https://www.github.com/googleapis/python-iot/compare/v1.0.0...v1.0.1) (2020-06-30)
+
+
+### Bug Fixes
+
+* update retry configs ([#19](https://www.github.com/googleapis/python-iot/issues/19)) ([5d7a613](https://www.github.com/googleapis/python-iot/commit/5d7a613f54e5326adf719e7aeb9cac06ef64f48c))
+
 ## [1.0.0](https://www.github.com/googleapis/python-iot/compare/v0.3.1...v1.0.0) (2020-02-28)
 
 
