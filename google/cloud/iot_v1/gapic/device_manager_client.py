@@ -220,330 +220,6 @@ class DeviceManagerClient(object):
         self._inner_api_calls = {}
 
     # Service calls
-    def delete_device_registry(
-        self,
-        name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Deletes a device registry configuration.
-
-        Example:
-            >>> from google.cloud import iot_v1
-            >>>
-            >>> client = iot_v1.DeviceManagerClient()
-            >>>
-            >>> name = client.registry_path('[PROJECT]', '[LOCATION]', '[REGISTRY]')
-            >>>
-            >>> client.delete_device_registry(name)
-
-        Args:
-            name (str): Required. The name of the device registry. For example,
-                ``projects/example-project/locations/us-central1/registries/my-registry``.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "delete_device_registry" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_device_registry"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.delete_device_registry,
-                default_retry=self._method_configs["DeleteDeviceRegistry"].retry,
-                default_timeout=self._method_configs["DeleteDeviceRegistry"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = device_manager_pb2.DeleteDeviceRegistryRequest(name=name,)
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("name", name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        self._inner_api_calls["delete_device_registry"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
-    def delete_device(
-        self,
-        name,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Deletes a device.
-
-        Example:
-            >>> from google.cloud import iot_v1
-            >>>
-            >>> client = iot_v1.DeviceManagerClient()
-            >>>
-            >>> name = client.device_path('[PROJECT]', '[LOCATION]', '[REGISTRY]', '[DEVICE]')
-            >>>
-            >>> client.delete_device(name)
-
-        Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "delete_device" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "delete_device"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.delete_device,
-                default_retry=self._method_configs["DeleteDevice"].retry,
-                default_timeout=self._method_configs["DeleteDevice"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = device_manager_pb2.DeleteDeviceRequest(name=name,)
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("name", name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        self._inner_api_calls["delete_device"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
-    def modify_cloud_to_device_config(
-        self,
-        name,
-        binary_data,
-        version_to_update=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Modifies the configuration for the device, which is eventually sent from
-        the Cloud IoT Core servers. Returns the modified configuration version and
-        its metadata.
-
-        Example:
-            >>> from google.cloud import iot_v1
-            >>>
-            >>> client = iot_v1.DeviceManagerClient()
-            >>>
-            >>> name = client.device_path('[PROJECT]', '[LOCATION]', '[REGISTRY]', '[DEVICE]')
-            >>>
-            >>> # TODO: Initialize `binary_data`:
-            >>> binary_data = b''
-            >>>
-            >>> response = client.modify_cloud_to_device_config(name, binary_data)
-
-        Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
-            binary_data (bytes): Required. The configuration data for the device.
-            version_to_update (long): The version number to update. If this value is zero, it will not check the
-                version number of the server and will always update the current version;
-                otherwise, this update will fail if the version number found on the server
-                does not match this version number. This is used to support multiple
-                simultaneous updates without losing data.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Returns:
-            A :class:`~google.cloud.iot_v1.types.DeviceConfig` instance.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "modify_cloud_to_device_config" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "modify_cloud_to_device_config"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.modify_cloud_to_device_config,
-                default_retry=self._method_configs["ModifyCloudToDeviceConfig"].retry,
-                default_timeout=self._method_configs[
-                    "ModifyCloudToDeviceConfig"
-                ].timeout,
-                client_info=self._client_info,
-            )
-
-        request = device_manager_pb2.ModifyCloudToDeviceConfigRequest(
-            name=name, binary_data=binary_data, version_to_update=version_to_update,
-        )
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("name", name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        return self._inner_api_calls["modify_cloud_to_device_config"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
-    def send_command_to_device(
-        self,
-        name,
-        binary_data,
-        subfolder=None,
-        retry=google.api_core.gapic_v1.method.DEFAULT,
-        timeout=google.api_core.gapic_v1.method.DEFAULT,
-        metadata=None,
-    ):
-        """
-        Sends a command to the specified device. In order for a device to be
-        able to receive commands, it must:
-
-        1) be connected to Cloud IoT Core using the MQTT protocol, and
-        2) be subscribed to the group of MQTT topics specified by
-           /devices/{device-id}/commands/#. This subscription will receive
-           commands at the top-level topic /devices/{device-id}/commands as well
-           as commands for subfolders, like
-           /devices/{device-id}/commands/subfolder. Note that subscribing to
-           specific subfolders is not supported. If the command could not be
-           delivered to the device, this method will return an error; in
-           particular, if the device is not subscribed, this method will return
-           FAILED_PRECONDITION. Otherwise, this method will return OK. If the
-           subscription is QoS 1, at least once delivery will be guaranteed; for
-           QoS 0, no acknowledgment will be expected from the device.
-
-        Example:
-            >>> from google.cloud import iot_v1
-            >>>
-            >>> client = iot_v1.DeviceManagerClient()
-            >>>
-            >>> name = client.device_path('[PROJECT]', '[LOCATION]', '[REGISTRY]', '[DEVICE]')
-            >>>
-            >>> # TODO: Initialize `binary_data`:
-            >>> binary_data = b''
-            >>>
-            >>> response = client.send_command_to_device(name, binary_data)
-
-        Args:
-            name (str): Required. The name of the device. For example,
-                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
-                or
-                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
-            binary_data (bytes): Required. The command data to send to the device.
-            subfolder (str): Optional subfolder for the command. If empty, the command will be delivered
-                to the /devices/{device-id}/commands topic, otherwise it will be delivered
-                to the /devices/{device-id}/commands/{subfolder} topic. Multi-level
-                subfolders are allowed. This field must not have more than 256 characters,
-                and must not contain any MQTT wildcards ("+" or "#") or null characters.
-            retry (Optional[google.api_core.retry.Retry]):  A retry object used
-                to retry requests. If ``None`` is specified, requests will
-                be retried using a default configuration.
-            timeout (Optional[float]): The amount of time, in seconds, to wait
-                for the request to complete. Note that if ``retry`` is
-                specified, the timeout applies to each individual attempt.
-            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
-                that is provided to the method.
-
-        Returns:
-            A :class:`~google.cloud.iot_v1.types.SendCommandToDeviceResponse` instance.
-
-        Raises:
-            google.api_core.exceptions.GoogleAPICallError: If the request
-                    failed for any reason.
-            google.api_core.exceptions.RetryError: If the request failed due
-                    to a retryable error and retry attempts failed.
-            ValueError: If the parameters are invalid.
-        """
-        # Wrap the transport method to add retry and timeout logic.
-        if "send_command_to_device" not in self._inner_api_calls:
-            self._inner_api_calls[
-                "send_command_to_device"
-            ] = google.api_core.gapic_v1.method.wrap_method(
-                self.transport.send_command_to_device,
-                default_retry=self._method_configs["SendCommandToDevice"].retry,
-                default_timeout=self._method_configs["SendCommandToDevice"].timeout,
-                client_info=self._client_info,
-            )
-
-        request = device_manager_pb2.SendCommandToDeviceRequest(
-            name=name, binary_data=binary_data, subfolder=subfolder,
-        )
-        if metadata is None:
-            metadata = []
-        metadata = list(metadata)
-        try:
-            routing_header = [("name", name)]
-        except AttributeError:
-            pass
-        else:
-            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
-                routing_header
-            )
-            metadata.append(routing_metadata)
-
-        return self._inner_api_calls["send_command_to_device"](
-            request, retry=retry, timeout=timeout, metadata=metadata
-        )
-
     def create_device_registry(
         self,
         parent,
@@ -784,6 +460,73 @@ class DeviceManagerClient(object):
             metadata.append(routing_metadata)
 
         return self._inner_api_calls["update_device_registry"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
+    def delete_device_registry(
+        self,
+        name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Deletes a device registry configuration.
+
+        Example:
+            >>> from google.cloud import iot_v1
+            >>>
+            >>> client = iot_v1.DeviceManagerClient()
+            >>>
+            >>> name = client.registry_path('[PROJECT]', '[LOCATION]', '[REGISTRY]')
+            >>>
+            >>> client.delete_device_registry(name)
+
+        Args:
+            name (str): Required. The name of the device registry. For example,
+                ``projects/example-project/locations/us-central1/registries/my-registry``.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "delete_device_registry" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_device_registry"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.delete_device_registry,
+                default_retry=self._method_configs["DeleteDeviceRegistry"].retry,
+                default_timeout=self._method_configs["DeleteDeviceRegistry"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = device_manager_pb2.DeleteDeviceRegistryRequest(name=name,)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        self._inner_api_calls["delete_device_registry"](
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 
@@ -1140,6 +883,75 @@ class DeviceManagerClient(object):
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 
+    def delete_device(
+        self,
+        name,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Deletes a device.
+
+        Example:
+            >>> from google.cloud import iot_v1
+            >>>
+            >>> client = iot_v1.DeviceManagerClient()
+            >>>
+            >>> name = client.device_path('[PROJECT]', '[LOCATION]', '[REGISTRY]', '[DEVICE]')
+            >>>
+            >>> client.delete_device(name)
+
+        Args:
+            name (str): Required. The name of the device. For example,
+                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
+                or
+                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "delete_device" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "delete_device"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.delete_device,
+                default_retry=self._method_configs["DeleteDevice"].retry,
+                default_timeout=self._method_configs["DeleteDevice"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = device_manager_pb2.DeleteDeviceRequest(name=name,)
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        self._inner_api_calls["delete_device"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
     def list_devices(
         self,
         parent,
@@ -1267,6 +1079,95 @@ class DeviceManagerClient(object):
             response_token_field="next_page_token",
         )
         return iterator
+
+    def modify_cloud_to_device_config(
+        self,
+        name,
+        binary_data,
+        version_to_update=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Modifies the configuration for the device, which is eventually sent from
+        the Cloud IoT Core servers. Returns the modified configuration version and
+        its metadata.
+
+        Example:
+            >>> from google.cloud import iot_v1
+            >>>
+            >>> client = iot_v1.DeviceManagerClient()
+            >>>
+            >>> name = client.device_path('[PROJECT]', '[LOCATION]', '[REGISTRY]', '[DEVICE]')
+            >>>
+            >>> # TODO: Initialize `binary_data`:
+            >>> binary_data = b''
+            >>>
+            >>> response = client.modify_cloud_to_device_config(name, binary_data)
+
+        Args:
+            name (str): Required. The name of the device. For example,
+                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
+                or
+                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            binary_data (bytes): Required. The configuration data for the device.
+            version_to_update (long): The version number to update. If this value is zero, it will not check the
+                version number of the server and will always update the current version;
+                otherwise, this update will fail if the version number found on the server
+                does not match this version number. This is used to support multiple
+                simultaneous updates without losing data.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.iot_v1.types.DeviceConfig` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "modify_cloud_to_device_config" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "modify_cloud_to_device_config"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.modify_cloud_to_device_config,
+                default_retry=self._method_configs["ModifyCloudToDeviceConfig"].retry,
+                default_timeout=self._method_configs[
+                    "ModifyCloudToDeviceConfig"
+                ].timeout,
+                client_info=self._client_info,
+            )
+
+        request = device_manager_pb2.ModifyCloudToDeviceConfigRequest(
+            name=name, binary_data=binary_data, version_to_update=version_to_update,
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["modify_cloud_to_device_config"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
 
     def list_device_config_versions(
         self,
@@ -1672,6 +1573,105 @@ class DeviceManagerClient(object):
             metadata.append(routing_metadata)
 
         return self._inner_api_calls["test_iam_permissions"](
+            request, retry=retry, timeout=timeout, metadata=metadata
+        )
+
+    def send_command_to_device(
+        self,
+        name,
+        binary_data,
+        subfolder=None,
+        retry=google.api_core.gapic_v1.method.DEFAULT,
+        timeout=google.api_core.gapic_v1.method.DEFAULT,
+        metadata=None,
+    ):
+        """
+        Sends a command to the specified device. In order for a device to be
+        able to receive commands, it must:
+
+        1) be connected to Cloud IoT Core using the MQTT protocol, and
+        2) be subscribed to the group of MQTT topics specified by
+           /devices/{device-id}/commands/#. This subscription will receive
+           commands at the top-level topic /devices/{device-id}/commands as well
+           as commands for subfolders, like
+           /devices/{device-id}/commands/subfolder. Note that subscribing to
+           specific subfolders is not supported. If the command could not be
+           delivered to the device, this method will return an error; in
+           particular, if the device is not subscribed, this method will return
+           FAILED_PRECONDITION. Otherwise, this method will return OK. If the
+           subscription is QoS 1, at least once delivery will be guaranteed; for
+           QoS 0, no acknowledgment will be expected from the device.
+
+        Example:
+            >>> from google.cloud import iot_v1
+            >>>
+            >>> client = iot_v1.DeviceManagerClient()
+            >>>
+            >>> name = client.device_path('[PROJECT]', '[LOCATION]', '[REGISTRY]', '[DEVICE]')
+            >>>
+            >>> # TODO: Initialize `binary_data`:
+            >>> binary_data = b''
+            >>>
+            >>> response = client.send_command_to_device(name, binary_data)
+
+        Args:
+            name (str): Required. The name of the device. For example,
+                ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
+                or
+                ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+            binary_data (bytes): Required. The command data to send to the device.
+            subfolder (str): Optional subfolder for the command. If empty, the command will be delivered
+                to the /devices/{device-id}/commands topic, otherwise it will be delivered
+                to the /devices/{device-id}/commands/{subfolder} topic. Multi-level
+                subfolders are allowed. This field must not have more than 256 characters,
+                and must not contain any MQTT wildcards ("+" or "#") or null characters.
+            retry (Optional[google.api_core.retry.Retry]):  A retry object used
+                to retry requests. If ``None`` is specified, requests will
+                be retried using a default configuration.
+            timeout (Optional[float]): The amount of time, in seconds, to wait
+                for the request to complete. Note that if ``retry`` is
+                specified, the timeout applies to each individual attempt.
+            metadata (Optional[Sequence[Tuple[str, str]]]): Additional metadata
+                that is provided to the method.
+
+        Returns:
+            A :class:`~google.cloud.iot_v1.types.SendCommandToDeviceResponse` instance.
+
+        Raises:
+            google.api_core.exceptions.GoogleAPICallError: If the request
+                    failed for any reason.
+            google.api_core.exceptions.RetryError: If the request failed due
+                    to a retryable error and retry attempts failed.
+            ValueError: If the parameters are invalid.
+        """
+        # Wrap the transport method to add retry and timeout logic.
+        if "send_command_to_device" not in self._inner_api_calls:
+            self._inner_api_calls[
+                "send_command_to_device"
+            ] = google.api_core.gapic_v1.method.wrap_method(
+                self.transport.send_command_to_device,
+                default_retry=self._method_configs["SendCommandToDevice"].retry,
+                default_timeout=self._method_configs["SendCommandToDevice"].timeout,
+                client_info=self._client_info,
+            )
+
+        request = device_manager_pb2.SendCommandToDeviceRequest(
+            name=name, binary_data=binary_data, subfolder=subfolder,
+        )
+        if metadata is None:
+            metadata = []
+        metadata = list(metadata)
+        try:
+            routing_header = [("name", name)]
+        except AttributeError:
+            pass
+        else:
+            routing_metadata = google.api_core.gapic_v1.routing_header.to_grpc_metadata(
+                routing_header
+            )
+            metadata.append(routing_metadata)
+
+        return self._inner_api_calls["send_command_to_device"](
             request, retry=retry, timeout=timeout, metadata=metadata
         )
 

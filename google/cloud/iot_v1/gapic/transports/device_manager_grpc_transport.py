@@ -111,74 +111,6 @@ class DeviceManagerGrpcTransport(object):
         return self._channel
 
     @property
-    def delete_device_registry(self):
-        """Return the gRPC stub for :meth:`DeviceManagerClient.delete_device_registry`.
-
-        Deletes a device registry configuration.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["device_manager_stub"].DeleteDeviceRegistry
-
-    @property
-    def delete_device(self):
-        """Return the gRPC stub for :meth:`DeviceManagerClient.delete_device`.
-
-        Deletes a device.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["device_manager_stub"].DeleteDevice
-
-    @property
-    def modify_cloud_to_device_config(self):
-        """Return the gRPC stub for :meth:`DeviceManagerClient.modify_cloud_to_device_config`.
-
-        Modifies the configuration for the device, which is eventually sent from
-        the Cloud IoT Core servers. Returns the modified configuration version and
-        its metadata.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["device_manager_stub"].ModifyCloudToDeviceConfig
-
-    @property
-    def send_command_to_device(self):
-        """Return the gRPC stub for :meth:`DeviceManagerClient.send_command_to_device`.
-
-        Sends a command to the specified device. In order for a device to be
-        able to receive commands, it must:
-
-        1) be connected to Cloud IoT Core using the MQTT protocol, and
-        2) be subscribed to the group of MQTT topics specified by
-           /devices/{device-id}/commands/#. This subscription will receive
-           commands at the top-level topic /devices/{device-id}/commands as well
-           as commands for subfolders, like
-           /devices/{device-id}/commands/subfolder. Note that subscribing to
-           specific subfolders is not supported. If the command could not be
-           delivered to the device, this method will return an error; in
-           particular, if the device is not subscribed, this method will return
-           FAILED_PRECONDITION. Otherwise, this method will return OK. If the
-           subscription is QoS 1, at least once delivery will be guaranteed; for
-           QoS 0, no acknowledgment will be expected from the device.
-
-        Returns:
-            Callable: A callable which accepts the appropriate
-                deserialized request object and returns a
-                deserialized response object.
-        """
-        return self._stubs["device_manager_stub"].SendCommandToDevice
-
-    @property
     def create_device_registry(self):
         """Return the gRPC stub for :meth:`DeviceManagerClient.create_device_registry`.
 
@@ -216,6 +148,19 @@ class DeviceManagerGrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["device_manager_stub"].UpdateDeviceRegistry
+
+    @property
+    def delete_device_registry(self):
+        """Return the gRPC stub for :meth:`DeviceManagerClient.delete_device_registry`.
+
+        Deletes a device registry configuration.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["device_manager_stub"].DeleteDeviceRegistry
 
     @property
     def list_device_registries(self):
@@ -270,6 +215,19 @@ class DeviceManagerGrpcTransport(object):
         return self._stubs["device_manager_stub"].UpdateDevice
 
     @property
+    def delete_device(self):
+        """Return the gRPC stub for :meth:`DeviceManagerClient.delete_device`.
+
+        Deletes a device.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["device_manager_stub"].DeleteDevice
+
+    @property
     def list_devices(self):
         """Return the gRPC stub for :meth:`DeviceManagerClient.list_devices`.
 
@@ -281,6 +239,21 @@ class DeviceManagerGrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["device_manager_stub"].ListDevices
+
+    @property
+    def modify_cloud_to_device_config(self):
+        """Return the gRPC stub for :meth:`DeviceManagerClient.modify_cloud_to_device_config`.
+
+        Modifies the configuration for the device, which is eventually sent from
+        the Cloud IoT Core servers. Returns the modified configuration version and
+        its metadata.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["device_manager_stub"].ModifyCloudToDeviceConfig
 
     @property
     def list_device_config_versions(self):
@@ -353,6 +326,33 @@ class DeviceManagerGrpcTransport(object):
                 deserialized response object.
         """
         return self._stubs["device_manager_stub"].TestIamPermissions
+
+    @property
+    def send_command_to_device(self):
+        """Return the gRPC stub for :meth:`DeviceManagerClient.send_command_to_device`.
+
+        Sends a command to the specified device. In order for a device to be
+        able to receive commands, it must:
+
+        1) be connected to Cloud IoT Core using the MQTT protocol, and
+        2) be subscribed to the group of MQTT topics specified by
+           /devices/{device-id}/commands/#. This subscription will receive
+           commands at the top-level topic /devices/{device-id}/commands as well
+           as commands for subfolders, like
+           /devices/{device-id}/commands/subfolder. Note that subscribing to
+           specific subfolders is not supported. If the command could not be
+           delivered to the device, this method will return an error; in
+           particular, if the device is not subscribed, this method will return
+           FAILED_PRECONDITION. Otherwise, this method will return OK. If the
+           subscription is QoS 1, at least once delivery will be guaranteed; for
+           QoS 0, no acknowledgment will be expected from the device.
+
+        Returns:
+            Callable: A callable which accepts the appropriate
+                deserialized request object and returns a
+                deserialized response object.
+        """
+        return self._stubs["device_manager_stub"].SendCommandToDevice
 
     @property
     def bind_device_to_gateway(self):
