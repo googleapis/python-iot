@@ -4,22 +4,21 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-iot.git",
-        "sha": "5d7a613f54e5326adf719e7aeb9cac06ef64f48c"
-      }
-    },
-    {
-      "git": {
-        "name": "googleapis",
-        "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "cf41866c6f14f10a07aa1e2a1260fc0a2727d889",
-        "internalRef": "317812187"
+        "sha": "0b3f15ea5f1d723b4116463090b94aee611fbb50"
       }
     },
     {
       "git": {
         "name": "synthtool",
         "remote": "https://github.com/googleapis/synthtool.git",
-        "sha": "303271797a360f8a439203413f13a160f2f5b3b4"
+        "sha": "d302f93d7f47e2852e585ac35ab2d15585717ec0"
+      }
+    },
+    {
+      "git": {
+        "name": "synthtool",
+        "remote": "https://github.com/googleapis/synthtool.git",
+        "sha": "d302f93d7f47e2852e585ac35ab2d15585717ec0"
       }
     }
   ],
