@@ -22,7 +22,6 @@ from google.cloud import pubsub
 import pytest
 
 # Add command receiver for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'mqtt_example'))  # noqa
 import cloudiot_mqtt_example  # noqa
 import manager  # noqa
 
