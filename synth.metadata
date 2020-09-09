@@ -4,7 +4,7 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-iot.git",
-        "sha": "06ed25e2a7f407d098410969c6dfa24a4c84ac9d"
+        "sha": "43f1f1a2b00d2e808afc12f08f674f4232de043d"
       }
     },
     {
