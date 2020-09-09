@@ -393,8 +393,8 @@ def create_registry(
         print('Error, registry not created')
         raise
     except AlreadyExists:
-        print('Error, registry already exists')
-        raise
+        print('registry already exists')
+        return {}
     # [END iot_create_registry]
 
 
