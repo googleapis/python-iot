@@ -19,6 +19,7 @@ from synthtool.languages import python
 
 gapic = gcp.GAPICBazel()
 common = gcp.CommonTemplates()
+excludes = ["README.rst", "setup.py", "nox*.py", "docs/index.rst"]
 
 # ----------------------------------------------------------------------------
 # Generate iot GAPIC layer
@@ -29,17 +30,17 @@ library = gapic.py_library(
     bazel_target="//google/cloud/iot/v1:iot-v1-py",
     include_protos=True,
 )
-
-s.move(library / "google/cloud/iot_v1")
-s.move(library / "tests/unit/gapic")
-s.move(library / "tests/system/gapic")
-s.move(library / "docs", excludes="index.rst")
+s.copy(library, excludes=excludes)
 
 # ----------------------------------------------------------------------------
 # Add templated files
 # ----------------------------------------------------------------------------
-templated_files = common.py_library(cov_level=74, samples=True)
-s.move(templated_files)
+templated_files = common.py_library(
+    samples=True,
+    microgenerator=True,
+    cov_level=99,
+)
+s.move(templated_files, excludes=[".coveragerc"])  # microgenerator has a good .coveragerc file
 
 # ----------------------------------------------------------------------------
 # Samples templates

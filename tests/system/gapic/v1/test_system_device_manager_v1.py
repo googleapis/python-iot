@@ -18,7 +18,6 @@ import os
 import time
 
 from google.cloud import iot_v1
-from google.cloud.iot_v1.proto import device_manager_pb2
 
 
 class TestSystemDeviceManager(object):
@@ -26,5 +25,5 @@ class TestSystemDeviceManager(object):
         project_id = os.environ["PROJECT_ID"]
 
         client = iot_v1.DeviceManagerClient()
-        parent = client.location_path(project_id, "us-central1")
-        response = client.list_device_registries(parent)
+        parent = f"projects/{project_id}/locations/us-central1"
+        response = client.list_device_registries(request={"parent": parent})
