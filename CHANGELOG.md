@@ -4,6 +4,22 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.0.0](https://www.github.com/googleapis/python-iot/compare/v1.0.0...v2.0.0) (2020-09-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate to use microgen (#29)
+
+### Features
+
+* migrate to use microgen ([#29](https://www.github.com/googleapis/python-iot/issues/29)) ([f420fd3](https://www.github.com/googleapis/python-iot/commit/f420fd37441c92f3c9324b1d7278b210e3c5a8bc))
+
+
+### Bug Fixes
+
+* update retry configs ([#19](https://www.github.com/googleapis/python-iot/issues/19)) ([5d7a613](https://www.github.com/googleapis/python-iot/commit/5d7a613f54e5326adf719e7aeb9cac06ef64f48c))
+
 ## [1.0.0](https://www.github.com/googleapis/python-iot/compare/v0.3.1...v1.0.0) (2020-02-28)
 
 
