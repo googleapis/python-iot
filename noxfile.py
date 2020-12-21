@@ -173,7 +173,7 @@ def docfx(session):
     """Build the docfx yaml files for this library."""
 
     session.install("-e", ".")
-    session.install("sphinx<1.6.3", "alabaster", "recommonmark", "sphinx-docfx-yaml")
+    session.install("sphinx<1.5.5", "alabaster", "recommonmark", "sphinx-docfx-yaml")
 
     shutil.rmtree(os.path.join("docs", "_build"), ignore_errors=True)
     session.run(
