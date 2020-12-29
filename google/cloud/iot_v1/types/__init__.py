@@ -30,6 +30,13 @@ from .resources import (
     PublicKeyCredential,
     DeviceConfig,
     DeviceState,
+    MqttState,
+    HttpState,
+    LogLevel,
+    GatewayType,
+    GatewayAuthMethod,
+    PublicKeyCertificateFormat,
+    PublicKeyFormat,
 )
 from .device_manager import (
     CreateDeviceRegistryRequest,
@@ -58,7 +65,6 @@ from .device_manager import (
     UnbindDeviceFromGatewayResponse,
 )
 
-
 __all__ = (
     "Device",
     "GatewayConfig",
@@ -74,6 +80,13 @@ __all__ = (
     "PublicKeyCredential",
     "DeviceConfig",
     "DeviceState",
+    "MqttState",
+    "HttpState",
+    "LogLevel",
+    "GatewayType",
+    "GatewayAuthMethod",
+    "PublicKeyCertificateFormat",
+    "PublicKeyFormat",
     "CreateDeviceRegistryRequest",
     "GetDeviceRegistryRequest",
     "DeleteDeviceRegistryRequest",
