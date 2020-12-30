@@ -53,8 +53,12 @@ def clean_up_registries():
         registry_id = registry.id
         if registry_id.find('test-registry-') == 0:
             time_str = registry_id[
-                registry_id.rfind('-') + 1: len(registry_id)]
-            test_date = datetime.datetime.utcfromtimestamp(int(time_str))
+                registry_id.rfind('-') + 1 : len(registry_id)]
+            try:
+                test_date = datetime.datetime.utcfromtimestamp(int(time_str))
+            except ValueError:
+                # skip incorrect formatted registry
+                continue
             now_date = datetime.datetime.utcfromtimestamp(int(time.time()))
             difftime = now_date - test_date
 
