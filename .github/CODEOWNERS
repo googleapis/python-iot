@@ -8,4 +8,4 @@
 *               @googleapis/yoshi-python
 
 
-/samples/**/*.py                           @gcseh @GoogleCloudPlatform/api-iot @googleapis/python-samples-owners
+/samples/**/*.py                            @gcseh @googleapis/api-iot @googleapis/python-samples-owners
