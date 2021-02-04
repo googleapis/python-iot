@@ -281,7 +281,7 @@ def get_device(service_account_json, project_id, cloud_region, registry_id, devi
 
     # See full list of device fields: https://cloud.google.com/iot/docs/reference/cloudiot/rest/v1/projects.locations.registries.devices
     # Warning! Use snake_case field names.
-    fieldMask = gp_field_mask.FieldMask(paths=[ 'id', 'name', 'num_id', 'credentials', 'last_heartbeat_time', 'last_event_time', 'last_state_time', 'last_config_ack_time', 'last_config_send_time', 'blocked', 'last_error_time', 'last_error_status', 'config', 'state', 'log_level', 'metadata', 'gateway_config' ])
+    fieldMask = gp_field_mask.FieldMask(paths=['id', 'name', 'num_id', 'credentials', 'last_heartbeat_time', 'last_event_time', 'last_state_time', 'last_config_ack_time', 'last_config_send_time', 'blocked', 'last_error_time', 'last_error_status', 'config', 'state', 'log_level', 'metadata', 'gateway_config'])
 
     device = client.get_device(request={"name": device_path, "field_mask": fieldMask})
 
@@ -351,7 +351,7 @@ def list_devices(service_account_json, project_id, cloud_region, registry_id):
 
     # See full list of device fields: https://cloud.google.com/iot/docs/reference/cloudiot/rest/v1/projects.locations.registries.devices
     # Warning! Use snake_case field names.
-    fieldMask = gp_field_mask.FieldMask(paths=[ 'id', 'name', 'num_id', 'credentials', 'last_heartbeat_time', 'last_event_time', 'last_state_time', 'last_config_ack_time', 'last_config_send_time', 'blocked', 'last_error_time', 'last_error_status', 'config', 'state', 'log_level', 'metadata', 'gateway_config' ])
+    fieldMask = gp_field_mask.FieldMask(paths=['id', 'name', 'num_id', 'credentials', 'last_heartbeat_time', 'last_event_time', 'last_state_time', 'last_config_ack_time', 'last_config_send_time', 'blocked', 'last_error_time', 'last_error_status', 'config', 'state', 'log_level', 'metadata', 'gateway_config'])
 
     devices = list(client.list_devices(request={"parent": registry_path, "field_mask": fieldMask}))
     for device in devices:
