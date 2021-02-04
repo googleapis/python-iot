@@ -279,7 +279,11 @@ def get_device(service_account_json, project_id, cloud_region, registry_id, devi
     client = iot_v1.DeviceManagerClient()
     device_path = client.device_path(project_id, cloud_region, registry_id, device_id)
 
-    device = client.get_device(request={"name": device_path})
+    # See full list of device fields: https://cloud.google.com/iot/docs/reference/cloudiot/rest/v1/projects.locations.registries.devices
+    # Warning! Use snake_case field names.
+    fieldMask = gp_field_mask.FieldMask(paths=[ 'id', 'name', 'num_id', 'credentials', 'last_heartbeat_time', 'last_event_time', 'last_state_time', 'last_config_ack_time', 'last_config_send_time', 'blocked', 'last_error_time', 'last_error_status', 'config', 'state', 'log_level', 'metadata', 'gateway_config' ])
+
+    device = client.get_device(request={"name": device_path, "field_mask": fieldMask})
 
     print("Id : {}".format(device.id))
     print("Name : {}".format(device.name))
@@ -345,9 +349,13 @@ def list_devices(service_account_json, project_id, cloud_region, registry_id):
     client = iot_v1.DeviceManagerClient()
     registry_path = client.registry_path(project_id, cloud_region, registry_id)
 
-    devices = list(client.list_devices(request={"parent": registry_path}))
+    # See full list of device fields: https://cloud.google.com/iot/docs/reference/cloudiot/rest/v1/projects.locations.registries.devices
+    # Warning! Use snake_case field names.
+    fieldMask = gp_field_mask.FieldMask(paths=[ 'id', 'name', 'num_id', 'credentials', 'last_heartbeat_time', 'last_event_time', 'last_state_time', 'last_config_ack_time', 'last_config_send_time', 'blocked', 'last_error_time', 'last_error_status', 'config', 'state', 'log_level', 'metadata', 'gateway_config' ])
+
+    devices = list(client.list_devices(request={"parent": registry_path, "field_mask": fieldMask}))
     for device in devices:
-        print("Device: {} : {}".format(device.num_id, device.id))
+        print(device)
 
     return devices
     # [END iot_list_devices]
