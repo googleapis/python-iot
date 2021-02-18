@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [2.0.2](https://www.github.com/googleapis/python-iot/compare/v2.0.1...v2.0.2) (2021-02-05)
+
+
+### Bug Fixes
+
+* add fieldMask for getDevice and listDevices ([#64](https://www.github.com/googleapis/python-iot/issues/64)) ([24c9c9a](https://www.github.com/googleapis/python-iot/commit/24c9c9a98af4147c77aa632ec4a9c3fb6464f30c))
+
 ### [2.0.1](https://www.github.com/googleapis/python-iot/compare/v2.0.0...v2.0.1) (2020-09-10)
 
 
