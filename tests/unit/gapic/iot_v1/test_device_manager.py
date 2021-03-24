@@ -42,7 +42,7 @@ from google.iam.v1 import iam_policy_pb2 as iam_policy  # type: ignore
 from google.iam.v1 import options_pb2 as options  # type: ignore
 from google.iam.v1 import policy_pb2 as policy  # type: ignore
 from google.oauth2 import service_account
-from google.protobuf import any_pb2 as any  # type: ignore
+from google.protobuf import any_pb2 as gp_any  # type: ignore
 from google.protobuf import field_mask_pb2 as field_mask  # type: ignore
 from google.protobuf import timestamp_pb2 as timestamp  # type: ignore
 from google.rpc import status_pb2 as status  # type: ignore
@@ -94,7 +94,24 @@ def test__get_default_mtls_endpoint():
 
 
 @pytest.mark.parametrize(
-    "client_class", [DeviceManagerClient, DeviceManagerAsyncClient]
+    "client_class", [DeviceManagerClient, DeviceManagerAsyncClient,]
+)
+def test_device_manager_client_from_service_account_info(client_class):
+    creds = credentials.AnonymousCredentials()
+    with mock.patch.object(
+        service_account.Credentials, "from_service_account_info"
+    ) as factory:
+        factory.return_value = creds
+        info = {"valid": True}
+        client = client_class.from_service_account_info(info)
+        assert client.transport._credentials == creds
+        assert isinstance(client, client_class)
+
+        assert client.transport._host == "cloudiot.googleapis.com:443"
+
+
+@pytest.mark.parametrize(
+    "client_class", [DeviceManagerClient, DeviceManagerAsyncClient,]
 )
 def test_device_manager_client_from_service_account_file(client_class):
     creds = credentials.AnonymousCredentials()
@@ -103,17 +120,22 @@ def test_device_manager_client_from_service_account_file(client_class):
     ) as factory:
         factory.return_value = creds
         client = client_class.from_service_account_file("dummy/file/path.json")
-        assert client._transport._credentials == creds
+        assert client.transport._credentials == creds
+        assert isinstance(client, client_class)
 
         client = client_class.from_service_account_json("dummy/file/path.json")
-        assert client._transport._credentials == creds
+        assert client.transport._credentials == creds
+        assert isinstance(client, client_class)
 
-        assert client._transport._host == "cloudiot.googleapis.com:443"
+        assert client.transport._host == "cloudiot.googleapis.com:443"
 
 
 def test_device_manager_client_get_transport_class():
     transport = DeviceManagerClient.get_transport_class()
-    assert transport == transports.DeviceManagerGrpcTransport
+    available_transports = [
+        transports.DeviceManagerGrpcTransport,
+    ]
+    assert transport in available_transports
 
     transport = DeviceManagerClient.get_transport_class("grpc")
     assert transport == transports.DeviceManagerGrpcTransport
@@ -164,15 +186,14 @@ def test_device_manager_client_client_options(
             credentials_file=None,
             host="squid.clam.whelk",
             scopes=None,
-            api_mtls_endpoint="squid.clam.whelk",
-            client_cert_source=None,
+            client_cert_source_for_mtls=None,
             quota_project_id=None,
             client_info=transports.base.DEFAULT_CLIENT_INFO,
         )
 
-    # Check the case api_endpoint is not provided and GOOGLE_API_USE_MTLS is
+    # Check the case api_endpoint is not provided and GOOGLE_API_USE_MTLS_ENDPOINT is
     # "never".
-    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS": "never"}):
+    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS_ENDPOINT": "never"}):
         with mock.patch.object(transport_class, "__init__") as patched:
             patched.return_value = None
             client = client_class()
@@ -181,15 +202,14 @@ def test_device_manager_client_client_options(
                 credentials_file=None,
                 host=client.DEFAULT_ENDPOINT,
                 scopes=None,
-                api_mtls_endpoint=client.DEFAULT_ENDPOINT,
-                client_cert_source=None,
+                client_cert_source_for_mtls=None,
                 quota_project_id=None,
                 client_info=transports.base.DEFAULT_CLIENT_INFO,
             )
 
-    # Check the case api_endpoint is not provided and GOOGLE_API_USE_MTLS is
+    # Check the case api_endpoint is not provided and GOOGLE_API_USE_MTLS_ENDPOINT is
     # "always".
-    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS": "always"}):
+    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS_ENDPOINT": "always"}):
         with mock.patch.object(transport_class, "__init__") as patched:
             patched.return_value = None
             client = client_class()
@@ -198,78 +218,22 @@ def test_device_manager_client_client_options(
                 credentials_file=None,
                 host=client.DEFAULT_MTLS_ENDPOINT,
                 scopes=None,
-                api_mtls_endpoint=client.DEFAULT_MTLS_ENDPOINT,
-                client_cert_source=None,
+                client_cert_source_for_mtls=None,
                 quota_project_id=None,
                 client_info=transports.base.DEFAULT_CLIENT_INFO,
             )
 
-    # Check the case api_endpoint is not provided, GOOGLE_API_USE_MTLS is
-    # "auto", and client_cert_source is provided.
-    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS": "auto"}):
-        options = client_options.ClientOptions(
-            client_cert_source=client_cert_source_callback
-        )
-        with mock.patch.object(transport_class, "__init__") as patched:
-            patched.return_value = None
-            client = client_class(client_options=options)
-            patched.assert_called_once_with(
-                credentials=None,
-                credentials_file=None,
-                host=client.DEFAULT_MTLS_ENDPOINT,
-                scopes=None,
-                api_mtls_endpoint=client.DEFAULT_MTLS_ENDPOINT,
-                client_cert_source=client_cert_source_callback,
-                quota_project_id=None,
-                client_info=transports.base.DEFAULT_CLIENT_INFO,
-            )
-
-    # Check the case api_endpoint is not provided, GOOGLE_API_USE_MTLS is
-    # "auto", and default_client_cert_source is provided.
-    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS": "auto"}):
-        with mock.patch.object(transport_class, "__init__") as patched:
-            with mock.patch(
-                "google.auth.transport.mtls.has_default_client_cert_source",
-                return_value=True,
-            ):
-                patched.return_value = None
-                client = client_class()
-                patched.assert_called_once_with(
-                    credentials=None,
-                    credentials_file=None,
-                    host=client.DEFAULT_MTLS_ENDPOINT,
-                    scopes=None,
-                    api_mtls_endpoint=client.DEFAULT_MTLS_ENDPOINT,
-                    client_cert_source=None,
-                    quota_project_id=None,
-                    client_info=transports.base.DEFAULT_CLIENT_INFO,
-                )
-
-    # Check the case api_endpoint is not provided, GOOGLE_API_USE_MTLS is
-    # "auto", but client_cert_source and default_client_cert_source are None.
-    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS": "auto"}):
-        with mock.patch.object(transport_class, "__init__") as patched:
-            with mock.patch(
-                "google.auth.transport.mtls.has_default_client_cert_source",
-                return_value=False,
-            ):
-                patched.return_value = None
-                client = client_class()
-                patched.assert_called_once_with(
-                    credentials=None,
-                    credentials_file=None,
-                    host=client.DEFAULT_ENDPOINT,
-                    scopes=None,
-                    api_mtls_endpoint=client.DEFAULT_ENDPOINT,
-                    client_cert_source=None,
-                    quota_project_id=None,
-                    client_info=transports.base.DEFAULT_CLIENT_INFO,
-                )
-
-    # Check the case api_endpoint is not provided and GOOGLE_API_USE_MTLS has
+    # Check the case api_endpoint is not provided and GOOGLE_API_USE_MTLS_ENDPOINT has
     # unsupported value.
-    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS": "Unsupported"}):
+    with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS_ENDPOINT": "Unsupported"}):
         with pytest.raises(MutualTLSChannelError):
+            client = client_class()
+
+    # Check the case GOOGLE_API_USE_CLIENT_CERTIFICATE has unsupported value.
+    with mock.patch.dict(
+        os.environ, {"GOOGLE_API_USE_CLIENT_CERTIFICATE": "Unsupported"}
+    ):
+        with pytest.raises(ValueError):
             client = client_class()
 
     # Check the case quota_project_id is provided
@@ -282,11 +246,130 @@ def test_device_manager_client_client_options(
             credentials_file=None,
             host=client.DEFAULT_ENDPOINT,
             scopes=None,
-            api_mtls_endpoint=client.DEFAULT_ENDPOINT,
-            client_cert_source=None,
+            client_cert_source_for_mtls=None,
             quota_project_id="octopus",
             client_info=transports.base.DEFAULT_CLIENT_INFO,
         )
+
+
+@pytest.mark.parametrize(
+    "client_class,transport_class,transport_name,use_client_cert_env",
+    [
+        (DeviceManagerClient, transports.DeviceManagerGrpcTransport, "grpc", "true"),
+        (
+            DeviceManagerAsyncClient,
+            transports.DeviceManagerGrpcAsyncIOTransport,
+            "grpc_asyncio",
+            "true",
+        ),
+        (DeviceManagerClient, transports.DeviceManagerGrpcTransport, "grpc", "false"),
+        (
+            DeviceManagerAsyncClient,
+            transports.DeviceManagerGrpcAsyncIOTransport,
+            "grpc_asyncio",
+            "false",
+        ),
+    ],
+)
+@mock.patch.object(
+    DeviceManagerClient,
+    "DEFAULT_ENDPOINT",
+    modify_default_endpoint(DeviceManagerClient),
+)
+@mock.patch.object(
+    DeviceManagerAsyncClient,
+    "DEFAULT_ENDPOINT",
+    modify_default_endpoint(DeviceManagerAsyncClient),
+)
+@mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS_ENDPOINT": "auto"})
+def test_device_manager_client_mtls_env_auto(
+    client_class, transport_class, transport_name, use_client_cert_env
+):
+    # This tests the endpoint autoswitch behavior. Endpoint is autoswitched to the default
+    # mtls endpoint, if GOOGLE_API_USE_CLIENT_CERTIFICATE is "true" and client cert exists.
+
+    # Check the case client_cert_source is provided. Whether client cert is used depends on
+    # GOOGLE_API_USE_CLIENT_CERTIFICATE value.
+    with mock.patch.dict(
+        os.environ, {"GOOGLE_API_USE_CLIENT_CERTIFICATE": use_client_cert_env}
+    ):
+        options = client_options.ClientOptions(
+            client_cert_source=client_cert_source_callback
+        )
+        with mock.patch.object(transport_class, "__init__") as patched:
+            patched.return_value = None
+            client = client_class(client_options=options)
+
+            if use_client_cert_env == "false":
+                expected_client_cert_source = None
+                expected_host = client.DEFAULT_ENDPOINT
+            else:
+                expected_client_cert_source = client_cert_source_callback
+                expected_host = client.DEFAULT_MTLS_ENDPOINT
+
+            patched.assert_called_once_with(
+                credentials=None,
+                credentials_file=None,
+                host=expected_host,
+                scopes=None,
+                client_cert_source_for_mtls=expected_client_cert_source,
+                quota_project_id=None,
+                client_info=transports.base.DEFAULT_CLIENT_INFO,
+            )
+
+    # Check the case ADC client cert is provided. Whether client cert is used depends on
+    # GOOGLE_API_USE_CLIENT_CERTIFICATE value.
+    with mock.patch.dict(
+        os.environ, {"GOOGLE_API_USE_CLIENT_CERTIFICATE": use_client_cert_env}
+    ):
+        with mock.patch.object(transport_class, "__init__") as patched:
+            with mock.patch(
+                "google.auth.transport.mtls.has_default_client_cert_source",
+                return_value=True,
+            ):
+                with mock.patch(
+                    "google.auth.transport.mtls.default_client_cert_source",
+                    return_value=client_cert_source_callback,
+                ):
+                    if use_client_cert_env == "false":
+                        expected_host = client.DEFAULT_ENDPOINT
+                        expected_client_cert_source = None
+                    else:
+                        expected_host = client.DEFAULT_MTLS_ENDPOINT
+                        expected_client_cert_source = client_cert_source_callback
+
+                    patched.return_value = None
+                    client = client_class()
+                    patched.assert_called_once_with(
+                        credentials=None,
+                        credentials_file=None,
+                        host=expected_host,
+                        scopes=None,
+                        client_cert_source_for_mtls=expected_client_cert_source,
+                        quota_project_id=None,
+                        client_info=transports.base.DEFAULT_CLIENT_INFO,
+                    )
+
+    # Check the case client_cert_source and ADC client cert are not provided.
+    with mock.patch.dict(
+        os.environ, {"GOOGLE_API_USE_CLIENT_CERTIFICATE": use_client_cert_env}
+    ):
+        with mock.patch.object(transport_class, "__init__") as patched:
+            with mock.patch(
+                "google.auth.transport.mtls.has_default_client_cert_source",
+                return_value=False,
+            ):
+                patched.return_value = None
+                client = client_class()
+                patched.assert_called_once_with(
+                    credentials=None,
+                    credentials_file=None,
+                    host=client.DEFAULT_ENDPOINT,
+                    scopes=None,
+                    client_cert_source_for_mtls=None,
+                    quota_project_id=None,
+                    client_info=transports.base.DEFAULT_CLIENT_INFO,
+                )
 
 
 @pytest.mark.parametrize(
@@ -313,8 +396,7 @@ def test_device_manager_client_client_options_scopes(
             credentials_file=None,
             host=client.DEFAULT_ENDPOINT,
             scopes=["1", "2"],
-            api_mtls_endpoint=client.DEFAULT_ENDPOINT,
-            client_cert_source=None,
+            client_cert_source_for_mtls=None,
             quota_project_id=None,
             client_info=transports.base.DEFAULT_CLIENT_INFO,
         )
@@ -344,8 +426,7 @@ def test_device_manager_client_client_options_credentials_file(
             credentials_file="credentials.json",
             host=client.DEFAULT_ENDPOINT,
             scopes=None,
-            api_mtls_endpoint=client.DEFAULT_ENDPOINT,
-            client_cert_source=None,
+            client_cert_source_for_mtls=None,
             quota_project_id=None,
             client_info=transports.base.DEFAULT_CLIENT_INFO,
         )
@@ -364,8 +445,7 @@ def test_device_manager_client_client_options_from_dict():
             credentials_file=None,
             host="squid.clam.whelk",
             scopes=None,
-            api_mtls_endpoint="squid.clam.whelk",
-            client_cert_source=None,
+            client_cert_source_for_mtls=None,
             quota_project_id=None,
             client_info=transports.base.DEFAULT_CLIENT_INFO,
         )
@@ -384,7 +464,7 @@ def test_create_device_registry(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.create_device_registry), "__call__"
+        type(client.transport.create_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry(
@@ -400,6 +480,7 @@ def test_create_device_registry(
         assert args[0] == device_manager.CreateDeviceRegistryRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, resources.DeviceRegistry)
 
     assert response.id == "id_value"
@@ -413,19 +494,40 @@ def test_create_device_registry_from_dict():
     test_create_device_registry(request_type=dict)
 
 
+def test_create_device_registry_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.create_device_registry), "__call__"
+    ) as call:
+        client.create_device_registry()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.CreateDeviceRegistryRequest()
+
+
 @pytest.mark.asyncio
-async def test_create_device_registry_async(transport: str = "grpc_asyncio"):
+async def test_create_device_registry_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.CreateDeviceRegistryRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.CreateDeviceRegistryRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.create_device_registry), "__call__"
+        type(client.transport.create_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -440,7 +542,7 @@ async def test_create_device_registry_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.CreateDeviceRegistryRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, resources.DeviceRegistry)
@@ -450,6 +552,11 @@ async def test_create_device_registry_async(transport: str = "grpc_asyncio"):
     assert response.name == "name_value"
 
     assert response.log_level == resources.LogLevel.NONE
+
+
+@pytest.mark.asyncio
+async def test_create_device_registry_async_from_dict():
+    await test_create_device_registry_async(request_type=dict)
 
 
 def test_create_device_registry_field_headers():
@@ -462,7 +569,7 @@ def test_create_device_registry_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.create_device_registry), "__call__"
+        type(client.transport.create_device_registry), "__call__"
     ) as call:
         call.return_value = resources.DeviceRegistry()
 
@@ -489,7 +596,7 @@ async def test_create_device_registry_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.create_device_registry), "__call__"
+        type(client.transport.create_device_registry), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             resources.DeviceRegistry()
@@ -512,7 +619,7 @@ def test_create_device_registry_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.create_device_registry), "__call__"
+        type(client.transport.create_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry()
@@ -553,7 +660,7 @@ async def test_create_device_registry_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.create_device_registry), "__call__"
+        type(client.transport.create_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry()
@@ -605,7 +712,7 @@ def test_get_device_registry(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.get_device_registry), "__call__"
+        type(client.transport.get_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry(
@@ -621,6 +728,7 @@ def test_get_device_registry(
         assert args[0] == device_manager.GetDeviceRegistryRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, resources.DeviceRegistry)
 
     assert response.id == "id_value"
@@ -634,19 +742,40 @@ def test_get_device_registry_from_dict():
     test_get_device_registry(request_type=dict)
 
 
+def test_get_device_registry_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.get_device_registry), "__call__"
+    ) as call:
+        client.get_device_registry()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.GetDeviceRegistryRequest()
+
+
 @pytest.mark.asyncio
-async def test_get_device_registry_async(transport: str = "grpc_asyncio"):
+async def test_get_device_registry_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.GetDeviceRegistryRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.GetDeviceRegistryRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.get_device_registry), "__call__"
+        type(client.transport.get_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -661,7 +790,7 @@ async def test_get_device_registry_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.GetDeviceRegistryRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, resources.DeviceRegistry)
@@ -671,6 +800,11 @@ async def test_get_device_registry_async(transport: str = "grpc_asyncio"):
     assert response.name == "name_value"
 
     assert response.log_level == resources.LogLevel.NONE
+
+
+@pytest.mark.asyncio
+async def test_get_device_registry_async_from_dict():
+    await test_get_device_registry_async(request_type=dict)
 
 
 def test_get_device_registry_field_headers():
@@ -683,7 +817,7 @@ def test_get_device_registry_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.get_device_registry), "__call__"
+        type(client.transport.get_device_registry), "__call__"
     ) as call:
         call.return_value = resources.DeviceRegistry()
 
@@ -710,7 +844,7 @@ async def test_get_device_registry_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.get_device_registry), "__call__"
+        type(client.transport.get_device_registry), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             resources.DeviceRegistry()
@@ -733,7 +867,7 @@ def test_get_device_registry_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.get_device_registry), "__call__"
+        type(client.transport.get_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry()
@@ -767,7 +901,7 @@ async def test_get_device_registry_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.get_device_registry), "__call__"
+        type(client.transport.get_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry()
@@ -812,7 +946,7 @@ def test_update_device_registry(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.update_device_registry), "__call__"
+        type(client.transport.update_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry(
@@ -828,6 +962,7 @@ def test_update_device_registry(
         assert args[0] == device_manager.UpdateDeviceRegistryRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, resources.DeviceRegistry)
 
     assert response.id == "id_value"
@@ -841,19 +976,40 @@ def test_update_device_registry_from_dict():
     test_update_device_registry(request_type=dict)
 
 
+def test_update_device_registry_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.update_device_registry), "__call__"
+    ) as call:
+        client.update_device_registry()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.UpdateDeviceRegistryRequest()
+
+
 @pytest.mark.asyncio
-async def test_update_device_registry_async(transport: str = "grpc_asyncio"):
+async def test_update_device_registry_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.UpdateDeviceRegistryRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.UpdateDeviceRegistryRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.update_device_registry), "__call__"
+        type(client.transport.update_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -868,7 +1024,7 @@ async def test_update_device_registry_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.UpdateDeviceRegistryRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, resources.DeviceRegistry)
@@ -878,6 +1034,11 @@ async def test_update_device_registry_async(transport: str = "grpc_asyncio"):
     assert response.name == "name_value"
 
     assert response.log_level == resources.LogLevel.NONE
+
+
+@pytest.mark.asyncio
+async def test_update_device_registry_async_from_dict():
+    await test_update_device_registry_async(request_type=dict)
 
 
 def test_update_device_registry_field_headers():
@@ -890,7 +1051,7 @@ def test_update_device_registry_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.update_device_registry), "__call__"
+        type(client.transport.update_device_registry), "__call__"
     ) as call:
         call.return_value = resources.DeviceRegistry()
 
@@ -920,7 +1081,7 @@ async def test_update_device_registry_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.update_device_registry), "__call__"
+        type(client.transport.update_device_registry), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             resources.DeviceRegistry()
@@ -946,7 +1107,7 @@ def test_update_device_registry_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.update_device_registry), "__call__"
+        type(client.transport.update_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry()
@@ -987,7 +1148,7 @@ async def test_update_device_registry_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.update_device_registry), "__call__"
+        type(client.transport.update_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceRegistry()
@@ -1039,7 +1200,7 @@ def test_delete_device_registry(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.delete_device_registry), "__call__"
+        type(client.transport.delete_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
@@ -1060,19 +1221,40 @@ def test_delete_device_registry_from_dict():
     test_delete_device_registry(request_type=dict)
 
 
+def test_delete_device_registry_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.delete_device_registry), "__call__"
+    ) as call:
+        client.delete_device_registry()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.DeleteDeviceRegistryRequest()
+
+
 @pytest.mark.asyncio
-async def test_delete_device_registry_async(transport: str = "grpc_asyncio"):
+async def test_delete_device_registry_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.DeleteDeviceRegistryRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.DeleteDeviceRegistryRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.delete_device_registry), "__call__"
+        type(client.transport.delete_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
@@ -1083,10 +1265,15 @@ async def test_delete_device_registry_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.DeleteDeviceRegistryRequest()
 
     # Establish that the response is the type that we expect.
     assert response is None
+
+
+@pytest.mark.asyncio
+async def test_delete_device_registry_async_from_dict():
+    await test_delete_device_registry_async(request_type=dict)
 
 
 def test_delete_device_registry_field_headers():
@@ -1099,7 +1286,7 @@ def test_delete_device_registry_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.delete_device_registry), "__call__"
+        type(client.transport.delete_device_registry), "__call__"
     ) as call:
         call.return_value = None
 
@@ -1126,7 +1313,7 @@ async def test_delete_device_registry_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.delete_device_registry), "__call__"
+        type(client.transport.delete_device_registry), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
 
@@ -1147,7 +1334,7 @@ def test_delete_device_registry_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.delete_device_registry), "__call__"
+        type(client.transport.delete_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
@@ -1181,7 +1368,7 @@ async def test_delete_device_registry_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.delete_device_registry), "__call__"
+        type(client.transport.delete_device_registry), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
@@ -1224,7 +1411,7 @@ def test_list_device_registries(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceRegistriesResponse(
@@ -1240,6 +1427,7 @@ def test_list_device_registries(
         assert args[0] == device_manager.ListDeviceRegistriesRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, pagers.ListDeviceRegistriesPager)
 
     assert response.next_page_token == "next_page_token_value"
@@ -1249,19 +1437,40 @@ def test_list_device_registries_from_dict():
     test_list_device_registries(request_type=dict)
 
 
+def test_list_device_registries_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.list_device_registries), "__call__"
+    ) as call:
+        client.list_device_registries()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.ListDeviceRegistriesRequest()
+
+
 @pytest.mark.asyncio
-async def test_list_device_registries_async(transport: str = "grpc_asyncio"):
+async def test_list_device_registries_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.ListDeviceRegistriesRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.ListDeviceRegistriesRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -1276,12 +1485,17 @@ async def test_list_device_registries_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.ListDeviceRegistriesRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, pagers.ListDeviceRegistriesAsyncPager)
 
     assert response.next_page_token == "next_page_token_value"
+
+
+@pytest.mark.asyncio
+async def test_list_device_registries_async_from_dict():
+    await test_list_device_registries_async(request_type=dict)
 
 
 def test_list_device_registries_field_headers():
@@ -1294,7 +1508,7 @@ def test_list_device_registries_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         call.return_value = device_manager.ListDeviceRegistriesResponse()
 
@@ -1321,7 +1535,7 @@ async def test_list_device_registries_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.ListDeviceRegistriesResponse()
@@ -1344,7 +1558,7 @@ def test_list_device_registries_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceRegistriesResponse()
@@ -1378,7 +1592,7 @@ async def test_list_device_registries_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceRegistriesResponse()
@@ -1415,7 +1629,7 @@ def test_list_device_registries_pager():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         # Set the response to a series of pages.
         call.side_effect = (
@@ -1460,7 +1674,7 @@ def test_list_device_registries_pages():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_registries), "__call__"
+        type(client.transport.list_device_registries), "__call__"
     ) as call:
         # Set the response to a series of pages.
         call.side_effect = (
@@ -1497,7 +1711,7 @@ async def test_list_device_registries_async_pager():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_registries),
+        type(client.transport.list_device_registries),
         "__call__",
         new_callable=mock.AsyncMock,
     ) as call:
@@ -1541,7 +1755,7 @@ async def test_list_device_registries_async_pages():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_registries),
+        type(client.transport.list_device_registries),
         "__call__",
         new_callable=mock.AsyncMock,
     ) as call:
@@ -1588,7 +1802,7 @@ def test_create_device(
     request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.create_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.create_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device(
             id="id_value",
@@ -1607,6 +1821,7 @@ def test_create_device(
         assert args[0] == device_manager.CreateDeviceRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, resources.Device)
 
     assert response.id == "id_value"
@@ -1624,20 +1839,36 @@ def test_create_device_from_dict():
     test_create_device(request_type=dict)
 
 
+def test_create_device_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(type(client.transport.create_device), "__call__") as call:
+        client.create_device()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.CreateDeviceRequest()
+
+
 @pytest.mark.asyncio
-async def test_create_device_async(transport: str = "grpc_asyncio"):
+async def test_create_device_async(
+    transport: str = "grpc_asyncio", request_type=device_manager.CreateDeviceRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.CreateDeviceRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.create_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.create_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             resources.Device(
@@ -1655,7 +1886,7 @@ async def test_create_device_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.CreateDeviceRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, resources.Device)
@@ -1671,6 +1902,11 @@ async def test_create_device_async(transport: str = "grpc_asyncio"):
     assert response.log_level == resources.LogLevel.NONE
 
 
+@pytest.mark.asyncio
+async def test_create_device_async_from_dict():
+    await test_create_device_async(request_type=dict)
+
+
 def test_create_device_field_headers():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
@@ -1680,7 +1916,7 @@ def test_create_device_field_headers():
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.create_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.create_device), "__call__") as call:
         call.return_value = resources.Device()
 
         client.create_device(request)
@@ -1705,9 +1941,7 @@ async def test_create_device_field_headers_async():
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.create_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.create_device), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(resources.Device())
 
         await client.create_device(request)
@@ -1726,7 +1960,7 @@ def test_create_device_flattened():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.create_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.create_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device()
 
@@ -1764,9 +1998,7 @@ async def test_create_device_flattened_async():
     client = DeviceManagerAsyncClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.create_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.create_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device()
 
@@ -1813,7 +2045,7 @@ def test_get_device(
     request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.get_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.get_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device(
             id="id_value",
@@ -1832,6 +2064,7 @@ def test_get_device(
         assert args[0] == device_manager.GetDeviceRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, resources.Device)
 
     assert response.id == "id_value"
@@ -1849,20 +2082,36 @@ def test_get_device_from_dict():
     test_get_device(request_type=dict)
 
 
+def test_get_device_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(type(client.transport.get_device), "__call__") as call:
+        client.get_device()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.GetDeviceRequest()
+
+
 @pytest.mark.asyncio
-async def test_get_device_async(transport: str = "grpc_asyncio"):
+async def test_get_device_async(
+    transport: str = "grpc_asyncio", request_type=device_manager.GetDeviceRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.GetDeviceRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.get_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.get_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             resources.Device(
@@ -1880,7 +2129,7 @@ async def test_get_device_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.GetDeviceRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, resources.Device)
@@ -1896,6 +2145,11 @@ async def test_get_device_async(transport: str = "grpc_asyncio"):
     assert response.log_level == resources.LogLevel.NONE
 
 
+@pytest.mark.asyncio
+async def test_get_device_async_from_dict():
+    await test_get_device_async(request_type=dict)
+
+
 def test_get_device_field_headers():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
@@ -1905,7 +2159,7 @@ def test_get_device_field_headers():
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.get_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.get_device), "__call__") as call:
         call.return_value = resources.Device()
 
         client.get_device(request)
@@ -1930,9 +2184,7 @@ async def test_get_device_field_headers_async():
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.get_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.get_device), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(resources.Device())
 
         await client.get_device(request)
@@ -1951,7 +2203,7 @@ def test_get_device_flattened():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.get_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.get_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device()
 
@@ -1983,9 +2235,7 @@ async def test_get_device_flattened_async():
     client = DeviceManagerAsyncClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.get_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.get_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device()
 
@@ -2026,7 +2276,7 @@ def test_update_device(
     request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.update_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.update_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device(
             id="id_value",
@@ -2045,6 +2295,7 @@ def test_update_device(
         assert args[0] == device_manager.UpdateDeviceRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, resources.Device)
 
     assert response.id == "id_value"
@@ -2062,20 +2313,36 @@ def test_update_device_from_dict():
     test_update_device(request_type=dict)
 
 
+def test_update_device_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(type(client.transport.update_device), "__call__") as call:
+        client.update_device()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.UpdateDeviceRequest()
+
+
 @pytest.mark.asyncio
-async def test_update_device_async(transport: str = "grpc_asyncio"):
+async def test_update_device_async(
+    transport: str = "grpc_asyncio", request_type=device_manager.UpdateDeviceRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.UpdateDeviceRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.update_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.update_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             resources.Device(
@@ -2093,7 +2360,7 @@ async def test_update_device_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.UpdateDeviceRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, resources.Device)
@@ -2109,6 +2376,11 @@ async def test_update_device_async(transport: str = "grpc_asyncio"):
     assert response.log_level == resources.LogLevel.NONE
 
 
+@pytest.mark.asyncio
+async def test_update_device_async_from_dict():
+    await test_update_device_async(request_type=dict)
+
+
 def test_update_device_field_headers():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
@@ -2118,7 +2390,7 @@ def test_update_device_field_headers():
     request.device.name = "device.name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.update_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.update_device), "__call__") as call:
         call.return_value = resources.Device()
 
         client.update_device(request)
@@ -2143,9 +2415,7 @@ async def test_update_device_field_headers_async():
     request.device.name = "device.name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.update_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.update_device), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(resources.Device())
 
         await client.update_device(request)
@@ -2164,7 +2434,7 @@ def test_update_device_flattened():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.update_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.update_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device()
 
@@ -2203,9 +2473,7 @@ async def test_update_device_flattened_async():
     client = DeviceManagerAsyncClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.update_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.update_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.Device()
 
@@ -2253,7 +2521,7 @@ def test_delete_device(
     request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.delete_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.delete_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
 
@@ -2273,20 +2541,36 @@ def test_delete_device_from_dict():
     test_delete_device(request_type=dict)
 
 
+def test_delete_device_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(type(client.transport.delete_device), "__call__") as call:
+        client.delete_device()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.DeleteDeviceRequest()
+
+
 @pytest.mark.asyncio
-async def test_delete_device_async(transport: str = "grpc_asyncio"):
+async def test_delete_device_async(
+    transport: str = "grpc_asyncio", request_type=device_manager.DeleteDeviceRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.DeleteDeviceRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.delete_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.delete_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
 
@@ -2296,10 +2580,15 @@ async def test_delete_device_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.DeleteDeviceRequest()
 
     # Establish that the response is the type that we expect.
     assert response is None
+
+
+@pytest.mark.asyncio
+async def test_delete_device_async_from_dict():
+    await test_delete_device_async(request_type=dict)
 
 
 def test_delete_device_field_headers():
@@ -2311,7 +2600,7 @@ def test_delete_device_field_headers():
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.delete_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.delete_device), "__call__") as call:
         call.return_value = None
 
         client.delete_device(request)
@@ -2336,9 +2625,7 @@ async def test_delete_device_field_headers_async():
     request.name = "name/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.delete_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.delete_device), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(None)
 
         await client.delete_device(request)
@@ -2357,7 +2644,7 @@ def test_delete_device_flattened():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.delete_device), "__call__") as call:
+    with mock.patch.object(type(client.transport.delete_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
 
@@ -2389,9 +2676,7 @@ async def test_delete_device_flattened_async():
     client = DeviceManagerAsyncClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.delete_device), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.delete_device), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = None
 
@@ -2432,7 +2717,7 @@ def test_list_devices(
     request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.list_devices), "__call__") as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDevicesResponse(
             next_page_token="next_page_token_value",
@@ -2447,6 +2732,7 @@ def test_list_devices(
         assert args[0] == device_manager.ListDevicesRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, pagers.ListDevicesPager)
 
     assert response.next_page_token == "next_page_token_value"
@@ -2456,20 +2742,36 @@ def test_list_devices_from_dict():
     test_list_devices(request_type=dict)
 
 
+def test_list_devices_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
+        client.list_devices()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.ListDevicesRequest()
+
+
 @pytest.mark.asyncio
-async def test_list_devices_async(transport: str = "grpc_asyncio"):
+async def test_list_devices_async(
+    transport: str = "grpc_asyncio", request_type=device_manager.ListDevicesRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.ListDevicesRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.list_devices), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.ListDevicesResponse(next_page_token="next_page_token_value",)
@@ -2481,12 +2783,17 @@ async def test_list_devices_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.ListDevicesRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, pagers.ListDevicesAsyncPager)
 
     assert response.next_page_token == "next_page_token_value"
+
+
+@pytest.mark.asyncio
+async def test_list_devices_async_from_dict():
+    await test_list_devices_async(request_type=dict)
 
 
 def test_list_devices_field_headers():
@@ -2498,7 +2805,7 @@ def test_list_devices_field_headers():
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.list_devices), "__call__") as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         call.return_value = device_manager.ListDevicesResponse()
 
         client.list_devices(request)
@@ -2523,9 +2830,7 @@ async def test_list_devices_field_headers_async():
     request.parent = "parent/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.list_devices), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.ListDevicesResponse()
         )
@@ -2546,7 +2851,7 @@ def test_list_devices_flattened():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.list_devices), "__call__") as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDevicesResponse()
 
@@ -2578,9 +2883,7 @@ async def test_list_devices_flattened_async():
     client = DeviceManagerAsyncClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.list_devices), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDevicesResponse()
 
@@ -2615,7 +2918,7 @@ def test_list_devices_pager():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials,)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.list_devices), "__call__") as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         # Set the response to a series of pages.
         call.side_effect = (
             device_manager.ListDevicesResponse(
@@ -2649,7 +2952,7 @@ def test_list_devices_pages():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials,)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.list_devices), "__call__") as call:
+    with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
         # Set the response to a series of pages.
         call.side_effect = (
             device_manager.ListDevicesResponse(
@@ -2676,9 +2979,7 @@ async def test_list_devices_async_pager():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_devices),
-        "__call__",
-        new_callable=mock.AsyncMock,
+        type(client.transport.list_devices), "__call__", new_callable=mock.AsyncMock
     ) as call:
         # Set the response to a series of pages.
         call.side_effect = (
@@ -2711,9 +3012,7 @@ async def test_list_devices_async_pages():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_devices),
-        "__call__",
-        new_callable=mock.AsyncMock,
+        type(client.transport.list_devices), "__call__", new_callable=mock.AsyncMock
     ) as call:
         # Set the response to a series of pages.
         call.side_effect = (
@@ -2751,7 +3050,7 @@ def test_modify_cloud_to_device_config(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.modify_cloud_to_device_config), "__call__"
+        type(client.transport.modify_cloud_to_device_config), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceConfig(
@@ -2767,6 +3066,7 @@ def test_modify_cloud_to_device_config(
         assert args[0] == device_manager.ModifyCloudToDeviceConfigRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, resources.DeviceConfig)
 
     assert response.version == 774
@@ -2778,19 +3078,40 @@ def test_modify_cloud_to_device_config_from_dict():
     test_modify_cloud_to_device_config(request_type=dict)
 
 
+def test_modify_cloud_to_device_config_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.modify_cloud_to_device_config), "__call__"
+    ) as call:
+        client.modify_cloud_to_device_config()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.ModifyCloudToDeviceConfigRequest()
+
+
 @pytest.mark.asyncio
-async def test_modify_cloud_to_device_config_async(transport: str = "grpc_asyncio"):
+async def test_modify_cloud_to_device_config_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.ModifyCloudToDeviceConfigRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.ModifyCloudToDeviceConfigRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.modify_cloud_to_device_config), "__call__"
+        type(client.transport.modify_cloud_to_device_config), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -2803,7 +3124,7 @@ async def test_modify_cloud_to_device_config_async(transport: str = "grpc_asynci
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.ModifyCloudToDeviceConfigRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, resources.DeviceConfig)
@@ -2811,6 +3132,11 @@ async def test_modify_cloud_to_device_config_async(transport: str = "grpc_asynci
     assert response.version == 774
 
     assert response.binary_data == b"binary_data_blob"
+
+
+@pytest.mark.asyncio
+async def test_modify_cloud_to_device_config_async_from_dict():
+    await test_modify_cloud_to_device_config_async(request_type=dict)
 
 
 def test_modify_cloud_to_device_config_field_headers():
@@ -2823,7 +3149,7 @@ def test_modify_cloud_to_device_config_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.modify_cloud_to_device_config), "__call__"
+        type(client.transport.modify_cloud_to_device_config), "__call__"
     ) as call:
         call.return_value = resources.DeviceConfig()
 
@@ -2850,7 +3176,7 @@ async def test_modify_cloud_to_device_config_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.modify_cloud_to_device_config), "__call__"
+        type(client.transport.modify_cloud_to_device_config), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             resources.DeviceConfig()
@@ -2873,7 +3199,7 @@ def test_modify_cloud_to_device_config_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.modify_cloud_to_device_config), "__call__"
+        type(client.transport.modify_cloud_to_device_config), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceConfig()
@@ -2913,7 +3239,7 @@ async def test_modify_cloud_to_device_config_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.modify_cloud_to_device_config), "__call__"
+        type(client.transport.modify_cloud_to_device_config), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = resources.DeviceConfig()
@@ -2964,7 +3290,7 @@ def test_list_device_config_versions(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_config_versions), "__call__"
+        type(client.transport.list_device_config_versions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceConfigVersionsResponse()
@@ -2978,6 +3304,7 @@ def test_list_device_config_versions(
         assert args[0] == device_manager.ListDeviceConfigVersionsRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, device_manager.ListDeviceConfigVersionsResponse)
 
 
@@ -2985,19 +3312,40 @@ def test_list_device_config_versions_from_dict():
     test_list_device_config_versions(request_type=dict)
 
 
+def test_list_device_config_versions_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.list_device_config_versions), "__call__"
+    ) as call:
+        client.list_device_config_versions()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.ListDeviceConfigVersionsRequest()
+
+
 @pytest.mark.asyncio
-async def test_list_device_config_versions_async(transport: str = "grpc_asyncio"):
+async def test_list_device_config_versions_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.ListDeviceConfigVersionsRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.ListDeviceConfigVersionsRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_config_versions), "__call__"
+        type(client.transport.list_device_config_versions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -3010,10 +3358,15 @@ async def test_list_device_config_versions_async(transport: str = "grpc_asyncio"
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.ListDeviceConfigVersionsRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.ListDeviceConfigVersionsResponse)
+
+
+@pytest.mark.asyncio
+async def test_list_device_config_versions_async_from_dict():
+    await test_list_device_config_versions_async(request_type=dict)
 
 
 def test_list_device_config_versions_field_headers():
@@ -3026,7 +3379,7 @@ def test_list_device_config_versions_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_config_versions), "__call__"
+        type(client.transport.list_device_config_versions), "__call__"
     ) as call:
         call.return_value = device_manager.ListDeviceConfigVersionsResponse()
 
@@ -3053,7 +3406,7 @@ async def test_list_device_config_versions_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_config_versions), "__call__"
+        type(client.transport.list_device_config_versions), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.ListDeviceConfigVersionsResponse()
@@ -3076,7 +3429,7 @@ def test_list_device_config_versions_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_config_versions), "__call__"
+        type(client.transport.list_device_config_versions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceConfigVersionsResponse()
@@ -3110,7 +3463,7 @@ async def test_list_device_config_versions_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_config_versions), "__call__"
+        type(client.transport.list_device_config_versions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceConfigVersionsResponse()
@@ -3155,7 +3508,7 @@ def test_list_device_states(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_states), "__call__"
+        type(client.transport.list_device_states), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceStatesResponse()
@@ -3169,6 +3522,7 @@ def test_list_device_states(
         assert args[0] == device_manager.ListDeviceStatesRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, device_manager.ListDeviceStatesResponse)
 
 
@@ -3176,19 +3530,39 @@ def test_list_device_states_from_dict():
     test_list_device_states(request_type=dict)
 
 
+def test_list_device_states_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.list_device_states), "__call__"
+    ) as call:
+        client.list_device_states()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.ListDeviceStatesRequest()
+
+
 @pytest.mark.asyncio
-async def test_list_device_states_async(transport: str = "grpc_asyncio"):
+async def test_list_device_states_async(
+    transport: str = "grpc_asyncio", request_type=device_manager.ListDeviceStatesRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.ListDeviceStatesRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_states), "__call__"
+        type(client.transport.list_device_states), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -3201,10 +3575,15 @@ async def test_list_device_states_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.ListDeviceStatesRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.ListDeviceStatesResponse)
+
+
+@pytest.mark.asyncio
+async def test_list_device_states_async_from_dict():
+    await test_list_device_states_async(request_type=dict)
 
 
 def test_list_device_states_field_headers():
@@ -3217,7 +3596,7 @@ def test_list_device_states_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_states), "__call__"
+        type(client.transport.list_device_states), "__call__"
     ) as call:
         call.return_value = device_manager.ListDeviceStatesResponse()
 
@@ -3244,7 +3623,7 @@ async def test_list_device_states_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_states), "__call__"
+        type(client.transport.list_device_states), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.ListDeviceStatesResponse()
@@ -3267,7 +3646,7 @@ def test_list_device_states_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.list_device_states), "__call__"
+        type(client.transport.list_device_states), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceStatesResponse()
@@ -3301,7 +3680,7 @@ async def test_list_device_states_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.list_device_states), "__call__"
+        type(client.transport.list_device_states), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.ListDeviceStatesResponse()
@@ -3345,7 +3724,7 @@ def test_set_iam_policy(
     request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.set_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy(version=774, etag=b"etag_blob",)
 
@@ -3358,6 +3737,7 @@ def test_set_iam_policy(
         assert args[0] == iam_policy.SetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, policy.Policy)
 
     assert response.version == 774
@@ -3369,20 +3749,36 @@ def test_set_iam_policy_from_dict():
     test_set_iam_policy(request_type=dict)
 
 
+def test_set_iam_policy_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
+        client.set_iam_policy()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == iam_policy.SetIamPolicyRequest()
+
+
 @pytest.mark.asyncio
-async def test_set_iam_policy_async(transport: str = "grpc_asyncio"):
+async def test_set_iam_policy_async(
+    transport: str = "grpc_asyncio", request_type=iam_policy.SetIamPolicyRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = iam_policy.SetIamPolicyRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.set_iam_policy), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             policy.Policy(version=774, etag=b"etag_blob",)
@@ -3394,7 +3790,7 @@ async def test_set_iam_policy_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == iam_policy.SetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, policy.Policy)
@@ -3402,6 +3798,11 @@ async def test_set_iam_policy_async(transport: str = "grpc_asyncio"):
     assert response.version == 774
 
     assert response.etag == b"etag_blob"
+
+
+@pytest.mark.asyncio
+async def test_set_iam_policy_async_from_dict():
+    await test_set_iam_policy_async(request_type=dict)
 
 
 def test_set_iam_policy_field_headers():
@@ -3413,7 +3814,7 @@ def test_set_iam_policy_field_headers():
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.set_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         call.return_value = policy.Policy()
 
         client.set_iam_policy(request)
@@ -3438,9 +3839,7 @@ async def test_set_iam_policy_field_headers_async():
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.set_iam_policy), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(policy.Policy())
 
         await client.set_iam_policy(request)
@@ -3455,10 +3854,10 @@ async def test_set_iam_policy_field_headers_async():
     assert ("x-goog-request-params", "resource=resource/value",) in kw["metadata"]
 
 
-def test_set_iam_policy_from_dict():
+def test_set_iam_policy_from_dict_foreign():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.set_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy()
 
@@ -3475,7 +3874,7 @@ def test_set_iam_policy_flattened():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.set_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy()
 
@@ -3507,9 +3906,7 @@ async def test_set_iam_policy_flattened_async():
     client = DeviceManagerAsyncClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.set_iam_policy), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.set_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy()
 
@@ -3550,7 +3947,7 @@ def test_get_iam_policy(
     request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.get_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy(version=774, etag=b"etag_blob",)
 
@@ -3563,6 +3960,7 @@ def test_get_iam_policy(
         assert args[0] == iam_policy.GetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, policy.Policy)
 
     assert response.version == 774
@@ -3574,20 +3972,36 @@ def test_get_iam_policy_from_dict():
     test_get_iam_policy(request_type=dict)
 
 
+def test_get_iam_policy_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
+        client.get_iam_policy()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == iam_policy.GetIamPolicyRequest()
+
+
 @pytest.mark.asyncio
-async def test_get_iam_policy_async(transport: str = "grpc_asyncio"):
+async def test_get_iam_policy_async(
+    transport: str = "grpc_asyncio", request_type=iam_policy.GetIamPolicyRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = iam_policy.GetIamPolicyRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.get_iam_policy), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             policy.Policy(version=774, etag=b"etag_blob",)
@@ -3599,7 +4013,7 @@ async def test_get_iam_policy_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == iam_policy.GetIamPolicyRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, policy.Policy)
@@ -3607,6 +4021,11 @@ async def test_get_iam_policy_async(transport: str = "grpc_asyncio"):
     assert response.version == 774
 
     assert response.etag == b"etag_blob"
+
+
+@pytest.mark.asyncio
+async def test_get_iam_policy_async_from_dict():
+    await test_get_iam_policy_async(request_type=dict)
 
 
 def test_get_iam_policy_field_headers():
@@ -3618,7 +4037,7 @@ def test_get_iam_policy_field_headers():
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.get_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         call.return_value = policy.Policy()
 
         client.get_iam_policy(request)
@@ -3643,9 +4062,7 @@ async def test_get_iam_policy_field_headers_async():
     request.resource = "resource/value"
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.get_iam_policy), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(policy.Policy())
 
         await client.get_iam_policy(request)
@@ -3660,10 +4077,10 @@ async def test_get_iam_policy_field_headers_async():
     assert ("x-goog-request-params", "resource=resource/value",) in kw["metadata"]
 
 
-def test_get_iam_policy_from_dict():
+def test_get_iam_policy_from_dict_foreign():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.get_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy()
 
@@ -3680,7 +4097,7 @@ def test_get_iam_policy_flattened():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(type(client._transport.get_iam_policy), "__call__") as call:
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy()
 
@@ -3712,9 +4129,7 @@ async def test_get_iam_policy_flattened_async():
     client = DeviceManagerAsyncClient(credentials=credentials.AnonymousCredentials(),)
 
     # Mock the actual call within the gRPC stub, and fake the request.
-    with mock.patch.object(
-        type(client._client._transport.get_iam_policy), "__call__"
-    ) as call:
+    with mock.patch.object(type(client.transport.get_iam_policy), "__call__") as call:
         # Designate an appropriate return value for the call.
         call.return_value = policy.Policy()
 
@@ -3756,7 +4171,7 @@ def test_test_iam_permissions(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.test_iam_permissions), "__call__"
+        type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = iam_policy.TestIamPermissionsResponse(
@@ -3772,6 +4187,7 @@ def test_test_iam_permissions(
         assert args[0] == iam_policy.TestIamPermissionsRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, iam_policy.TestIamPermissionsResponse)
 
     assert response.permissions == ["permissions_value"]
@@ -3781,19 +4197,39 @@ def test_test_iam_permissions_from_dict():
     test_test_iam_permissions(request_type=dict)
 
 
+def test_test_iam_permissions_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.test_iam_permissions), "__call__"
+    ) as call:
+        client.test_iam_permissions()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == iam_policy.TestIamPermissionsRequest()
+
+
 @pytest.mark.asyncio
-async def test_test_iam_permissions_async(transport: str = "grpc_asyncio"):
+async def test_test_iam_permissions_async(
+    transport: str = "grpc_asyncio", request_type=iam_policy.TestIamPermissionsRequest
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = iam_policy.TestIamPermissionsRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.test_iam_permissions), "__call__"
+        type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -3806,12 +4242,17 @@ async def test_test_iam_permissions_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == iam_policy.TestIamPermissionsRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, iam_policy.TestIamPermissionsResponse)
 
     assert response.permissions == ["permissions_value"]
+
+
+@pytest.mark.asyncio
+async def test_test_iam_permissions_async_from_dict():
+    await test_test_iam_permissions_async(request_type=dict)
 
 
 def test_test_iam_permissions_field_headers():
@@ -3824,7 +4265,7 @@ def test_test_iam_permissions_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.test_iam_permissions), "__call__"
+        type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         call.return_value = iam_policy.TestIamPermissionsResponse()
 
@@ -3851,7 +4292,7 @@ async def test_test_iam_permissions_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.test_iam_permissions), "__call__"
+        type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             iam_policy.TestIamPermissionsResponse()
@@ -3869,11 +4310,11 @@ async def test_test_iam_permissions_field_headers_async():
     assert ("x-goog-request-params", "resource=resource/value",) in kw["metadata"]
 
 
-def test_test_iam_permissions_from_dict():
+def test_test_iam_permissions_from_dict_foreign():
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.test_iam_permissions), "__call__"
+        type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = iam_policy.TestIamPermissionsResponse()
@@ -3892,7 +4333,7 @@ def test_test_iam_permissions_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.test_iam_permissions), "__call__"
+        type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = iam_policy.TestIamPermissionsResponse()
@@ -3932,7 +4373,7 @@ async def test_test_iam_permissions_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.test_iam_permissions), "__call__"
+        type(client.transport.test_iam_permissions), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = iam_policy.TestIamPermissionsResponse()
@@ -3983,7 +4424,7 @@ def test_send_command_to_device(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.send_command_to_device), "__call__"
+        type(client.transport.send_command_to_device), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.SendCommandToDeviceResponse()
@@ -3997,6 +4438,7 @@ def test_send_command_to_device(
         assert args[0] == device_manager.SendCommandToDeviceRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, device_manager.SendCommandToDeviceResponse)
 
 
@@ -4004,19 +4446,40 @@ def test_send_command_to_device_from_dict():
     test_send_command_to_device(request_type=dict)
 
 
+def test_send_command_to_device_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.send_command_to_device), "__call__"
+    ) as call:
+        client.send_command_to_device()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.SendCommandToDeviceRequest()
+
+
 @pytest.mark.asyncio
-async def test_send_command_to_device_async(transport: str = "grpc_asyncio"):
+async def test_send_command_to_device_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.SendCommandToDeviceRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.SendCommandToDeviceRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.send_command_to_device), "__call__"
+        type(client.transport.send_command_to_device), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -4029,10 +4492,15 @@ async def test_send_command_to_device_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.SendCommandToDeviceRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.SendCommandToDeviceResponse)
+
+
+@pytest.mark.asyncio
+async def test_send_command_to_device_async_from_dict():
+    await test_send_command_to_device_async(request_type=dict)
 
 
 def test_send_command_to_device_field_headers():
@@ -4045,7 +4513,7 @@ def test_send_command_to_device_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.send_command_to_device), "__call__"
+        type(client.transport.send_command_to_device), "__call__"
     ) as call:
         call.return_value = device_manager.SendCommandToDeviceResponse()
 
@@ -4072,7 +4540,7 @@ async def test_send_command_to_device_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.send_command_to_device), "__call__"
+        type(client.transport.send_command_to_device), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.SendCommandToDeviceResponse()
@@ -4095,7 +4563,7 @@ def test_send_command_to_device_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.send_command_to_device), "__call__"
+        type(client.transport.send_command_to_device), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.SendCommandToDeviceResponse()
@@ -4140,7 +4608,7 @@ async def test_send_command_to_device_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.send_command_to_device), "__call__"
+        type(client.transport.send_command_to_device), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.SendCommandToDeviceResponse()
@@ -4196,7 +4664,7 @@ def test_bind_device_to_gateway(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.bind_device_to_gateway), "__call__"
+        type(client.transport.bind_device_to_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.BindDeviceToGatewayResponse()
@@ -4210,6 +4678,7 @@ def test_bind_device_to_gateway(
         assert args[0] == device_manager.BindDeviceToGatewayRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, device_manager.BindDeviceToGatewayResponse)
 
 
@@ -4217,19 +4686,40 @@ def test_bind_device_to_gateway_from_dict():
     test_bind_device_to_gateway(request_type=dict)
 
 
+def test_bind_device_to_gateway_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.bind_device_to_gateway), "__call__"
+    ) as call:
+        client.bind_device_to_gateway()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.BindDeviceToGatewayRequest()
+
+
 @pytest.mark.asyncio
-async def test_bind_device_to_gateway_async(transport: str = "grpc_asyncio"):
+async def test_bind_device_to_gateway_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.BindDeviceToGatewayRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.BindDeviceToGatewayRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.bind_device_to_gateway), "__call__"
+        type(client.transport.bind_device_to_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -4242,10 +4732,15 @@ async def test_bind_device_to_gateway_async(transport: str = "grpc_asyncio"):
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.BindDeviceToGatewayRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.BindDeviceToGatewayResponse)
+
+
+@pytest.mark.asyncio
+async def test_bind_device_to_gateway_async_from_dict():
+    await test_bind_device_to_gateway_async(request_type=dict)
 
 
 def test_bind_device_to_gateway_field_headers():
@@ -4258,7 +4753,7 @@ def test_bind_device_to_gateway_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.bind_device_to_gateway), "__call__"
+        type(client.transport.bind_device_to_gateway), "__call__"
     ) as call:
         call.return_value = device_manager.BindDeviceToGatewayResponse()
 
@@ -4285,7 +4780,7 @@ async def test_bind_device_to_gateway_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.bind_device_to_gateway), "__call__"
+        type(client.transport.bind_device_to_gateway), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.BindDeviceToGatewayResponse()
@@ -4308,7 +4803,7 @@ def test_bind_device_to_gateway_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.bind_device_to_gateway), "__call__"
+        type(client.transport.bind_device_to_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.BindDeviceToGatewayResponse()
@@ -4353,7 +4848,7 @@ async def test_bind_device_to_gateway_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.bind_device_to_gateway), "__call__"
+        type(client.transport.bind_device_to_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.BindDeviceToGatewayResponse()
@@ -4409,7 +4904,7 @@ def test_unbind_device_from_gateway(
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.unbind_device_from_gateway), "__call__"
+        type(client.transport.unbind_device_from_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.UnbindDeviceFromGatewayResponse()
@@ -4423,6 +4918,7 @@ def test_unbind_device_from_gateway(
         assert args[0] == device_manager.UnbindDeviceFromGatewayRequest()
 
     # Establish that the response is the type that we expect.
+
     assert isinstance(response, device_manager.UnbindDeviceFromGatewayResponse)
 
 
@@ -4430,19 +4926,40 @@ def test_unbind_device_from_gateway_from_dict():
     test_unbind_device_from_gateway(request_type=dict)
 
 
+def test_unbind_device_from_gateway_empty_call():
+    # This test is a coverage failsafe to make sure that totally empty calls,
+    # i.e. request == None and no flattened fields passed, work.
+    client = DeviceManagerClient(
+        credentials=credentials.AnonymousCredentials(), transport="grpc",
+    )
+
+    # Mock the actual call within the gRPC stub, and fake the request.
+    with mock.patch.object(
+        type(client.transport.unbind_device_from_gateway), "__call__"
+    ) as call:
+        client.unbind_device_from_gateway()
+        call.assert_called()
+        _, args, _ = call.mock_calls[0]
+
+        assert args[0] == device_manager.UnbindDeviceFromGatewayRequest()
+
+
 @pytest.mark.asyncio
-async def test_unbind_device_from_gateway_async(transport: str = "grpc_asyncio"):
+async def test_unbind_device_from_gateway_async(
+    transport: str = "grpc_asyncio",
+    request_type=device_manager.UnbindDeviceFromGatewayRequest,
+):
     client = DeviceManagerAsyncClient(
         credentials=credentials.AnonymousCredentials(), transport=transport,
     )
 
     # Everything is optional in proto3 as far as the runtime is concerned,
     # and we are mocking out the actual API, so just send an empty request.
-    request = device_manager.UnbindDeviceFromGatewayRequest()
+    request = request_type()
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.unbind_device_from_gateway), "__call__"
+        type(client.transport.unbind_device_from_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
@@ -4455,10 +4972,15 @@ async def test_unbind_device_from_gateway_async(transport: str = "grpc_asyncio")
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
 
-        assert args[0] == request
+        assert args[0] == device_manager.UnbindDeviceFromGatewayRequest()
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.UnbindDeviceFromGatewayResponse)
+
+
+@pytest.mark.asyncio
+async def test_unbind_device_from_gateway_async_from_dict():
+    await test_unbind_device_from_gateway_async(request_type=dict)
 
 
 def test_unbind_device_from_gateway_field_headers():
@@ -4471,7 +4993,7 @@ def test_unbind_device_from_gateway_field_headers():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.unbind_device_from_gateway), "__call__"
+        type(client.transport.unbind_device_from_gateway), "__call__"
     ) as call:
         call.return_value = device_manager.UnbindDeviceFromGatewayResponse()
 
@@ -4498,7 +5020,7 @@ async def test_unbind_device_from_gateway_field_headers_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.unbind_device_from_gateway), "__call__"
+        type(client.transport.unbind_device_from_gateway), "__call__"
     ) as call:
         call.return_value = grpc_helpers_async.FakeUnaryUnaryCall(
             device_manager.UnbindDeviceFromGatewayResponse()
@@ -4521,7 +5043,7 @@ def test_unbind_device_from_gateway_flattened():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._transport.unbind_device_from_gateway), "__call__"
+        type(client.transport.unbind_device_from_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.UnbindDeviceFromGatewayResponse()
@@ -4566,7 +5088,7 @@ async def test_unbind_device_from_gateway_flattened_async():
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
-        type(client._client._transport.unbind_device_from_gateway), "__call__"
+        type(client.transport.unbind_device_from_gateway), "__call__"
     ) as call:
         # Designate an appropriate return value for the call.
         call.return_value = device_manager.UnbindDeviceFromGatewayResponse()
@@ -4645,7 +5167,7 @@ def test_transport_instance():
         credentials=credentials.AnonymousCredentials(),
     )
     client = DeviceManagerClient(transport=transport)
-    assert client._transport is transport
+    assert client.transport is transport
 
 
 def test_transport_get_channel():
@@ -4663,10 +5185,25 @@ def test_transport_get_channel():
     assert channel
 
 
+@pytest.mark.parametrize(
+    "transport_class",
+    [
+        transports.DeviceManagerGrpcTransport,
+        transports.DeviceManagerGrpcAsyncIOTransport,
+    ],
+)
+def test_transport_adc(transport_class):
+    # Test default credentials are used if not provided.
+    with mock.patch.object(auth, "default") as adc:
+        adc.return_value = (credentials.AnonymousCredentials(), None)
+        transport_class()
+        adc.assert_called_once()
+
+
 def test_transport_grpc_default():
     # A client should use the gRPC transport by default.
     client = DeviceManagerClient(credentials=credentials.AnonymousCredentials(),)
-    assert isinstance(client._transport, transports.DeviceManagerGrpcTransport,)
+    assert isinstance(client.transport, transports.DeviceManagerGrpcTransport,)
 
 
 def test_device_manager_base_transport_error():
@@ -4738,6 +5275,17 @@ def test_device_manager_base_transport_with_credentials_file():
         )
 
 
+def test_device_manager_base_transport_with_adc():
+    # Test the default credentials are used if credentials and credentials_file are None.
+    with mock.patch.object(auth, "default") as adc, mock.patch(
+        "google.cloud.iot_v1.services.device_manager.transports.DeviceManagerTransport._prep_wrapped_messages"
+    ) as Transport:
+        Transport.return_value = None
+        adc.return_value = (credentials.AnonymousCredentials(), None)
+        transport = transports.DeviceManagerTransport()
+        adc.assert_called_once()
+
+
 def test_device_manager_auth_adc():
     # If no credentials are provided, we should use ADC credentials.
     with mock.patch.object(auth, "default") as adc:
@@ -4769,6 +5317,54 @@ def test_device_manager_transport_auth_adc():
         )
 
 
+@pytest.mark.parametrize(
+    "transport_class",
+    [
+        transports.DeviceManagerGrpcTransport,
+        transports.DeviceManagerGrpcAsyncIOTransport,
+    ],
+)
+def test_device_manager_grpc_transport_client_cert_source_for_mtls(transport_class):
+    cred = credentials.AnonymousCredentials()
+
+    # Check ssl_channel_credentials is used if provided.
+    with mock.patch.object(transport_class, "create_channel") as mock_create_channel:
+        mock_ssl_channel_creds = mock.Mock()
+        transport_class(
+            host="squid.clam.whelk",
+            credentials=cred,
+            ssl_channel_credentials=mock_ssl_channel_creds,
+        )
+        mock_create_channel.assert_called_once_with(
+            "squid.clam.whelk:443",
+            credentials=cred,
+            credentials_file=None,
+            scopes=(
+                "https://www.googleapis.com/auth/cloud-platform",
+                "https://www.googleapis.com/auth/cloudiot",
+            ),
+            ssl_credentials=mock_ssl_channel_creds,
+            quota_project_id=None,
+            options=[
+                ("grpc.max_send_message_length", -1),
+                ("grpc.max_receive_message_length", -1),
+            ],
+        )
+
+    # Check if ssl_channel_credentials is not provided, then client_cert_source_for_mtls
+    # is used.
+    with mock.patch.object(transport_class, "create_channel", return_value=mock.Mock()):
+        with mock.patch("grpc.ssl_channel_credentials") as mock_ssl_cred:
+            transport_class(
+                credentials=cred,
+                client_cert_source_for_mtls=client_cert_source_callback,
+            )
+            expected_cert, expected_key = client_cert_source_callback()
+            mock_ssl_cred.assert_called_once_with(
+                certificate_chain=expected_cert, private_key=expected_key
+            )
+
+
 def test_device_manager_host_no_port():
     client = DeviceManagerClient(
         credentials=credentials.AnonymousCredentials(),
@@ -4776,7 +5372,7 @@ def test_device_manager_host_no_port():
             api_endpoint="cloudiot.googleapis.com"
         ),
     )
-    assert client._transport._host == "cloudiot.googleapis.com:443"
+    assert client.transport._host == "cloudiot.googleapis.com:443"
 
 
 def test_device_manager_host_with_port():
@@ -4786,222 +5382,135 @@ def test_device_manager_host_with_port():
             api_endpoint="cloudiot.googleapis.com:8000"
         ),
     )
-    assert client._transport._host == "cloudiot.googleapis.com:8000"
+    assert client.transport._host == "cloudiot.googleapis.com:8000"
 
 
 def test_device_manager_grpc_transport_channel():
-    channel = grpc.insecure_channel("http://localhost/")
+    channel = grpc.secure_channel("http://localhost/", grpc.local_channel_credentials())
 
-    # Check that if channel is provided, mtls endpoint and client_cert_source
-    # won't be used.
-    callback = mock.MagicMock()
+    # Check that channel is used if provided.
     transport = transports.DeviceManagerGrpcTransport(
-        host="squid.clam.whelk",
-        channel=channel,
-        api_mtls_endpoint="mtls.squid.clam.whelk",
-        client_cert_source=callback,
+        host="squid.clam.whelk", channel=channel,
     )
     assert transport.grpc_channel == channel
     assert transport._host == "squid.clam.whelk:443"
-    assert not callback.called
+    assert transport._ssl_channel_credentials == None
 
 
 def test_device_manager_grpc_asyncio_transport_channel():
-    channel = aio.insecure_channel("http://localhost/")
+    channel = aio.secure_channel("http://localhost/", grpc.local_channel_credentials())
 
-    # Check that if channel is provided, mtls endpoint and client_cert_source
-    # won't be used.
-    callback = mock.MagicMock()
+    # Check that channel is used if provided.
     transport = transports.DeviceManagerGrpcAsyncIOTransport(
-        host="squid.clam.whelk",
-        channel=channel,
-        api_mtls_endpoint="mtls.squid.clam.whelk",
-        client_cert_source=callback,
+        host="squid.clam.whelk", channel=channel,
     )
     assert transport.grpc_channel == channel
     assert transport._host == "squid.clam.whelk:443"
-    assert not callback.called
+    assert transport._ssl_channel_credentials == None
 
 
-@mock.patch("grpc.ssl_channel_credentials", autospec=True)
-@mock.patch("google.api_core.grpc_helpers.create_channel", autospec=True)
-def test_device_manager_grpc_transport_channel_mtls_with_client_cert_source(
-    grpc_create_channel, grpc_ssl_channel_cred
-):
-    # Check that if channel is None, but api_mtls_endpoint and client_cert_source
-    # are provided, then a mTLS channel will be created.
-    mock_cred = mock.Mock()
-
-    mock_ssl_cred = mock.Mock()
-    grpc_ssl_channel_cred.return_value = mock_ssl_cred
-
-    mock_grpc_channel = mock.Mock()
-    grpc_create_channel.return_value = mock_grpc_channel
-
-    transport = transports.DeviceManagerGrpcTransport(
-        host="squid.clam.whelk",
-        credentials=mock_cred,
-        api_mtls_endpoint="mtls.squid.clam.whelk",
-        client_cert_source=client_cert_source_callback,
-    )
-    grpc_ssl_channel_cred.assert_called_once_with(
-        certificate_chain=b"cert bytes", private_key=b"key bytes"
-    )
-    grpc_create_channel.assert_called_once_with(
-        "mtls.squid.clam.whelk:443",
-        credentials=mock_cred,
-        credentials_file=None,
-        scopes=(
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloudiot",
-        ),
-        ssl_credentials=mock_ssl_cred,
-        quota_project_id=None,
-    )
-    assert transport.grpc_channel == mock_grpc_channel
-
-
-@mock.patch("grpc.ssl_channel_credentials", autospec=True)
-@mock.patch("google.api_core.grpc_helpers_async.create_channel", autospec=True)
-def test_device_manager_grpc_asyncio_transport_channel_mtls_with_client_cert_source(
-    grpc_create_channel, grpc_ssl_channel_cred
-):
-    # Check that if channel is None, but api_mtls_endpoint and client_cert_source
-    # are provided, then a mTLS channel will be created.
-    mock_cred = mock.Mock()
-
-    mock_ssl_cred = mock.Mock()
-    grpc_ssl_channel_cred.return_value = mock_ssl_cred
-
-    mock_grpc_channel = mock.Mock()
-    grpc_create_channel.return_value = mock_grpc_channel
-
-    transport = transports.DeviceManagerGrpcAsyncIOTransport(
-        host="squid.clam.whelk",
-        credentials=mock_cred,
-        api_mtls_endpoint="mtls.squid.clam.whelk",
-        client_cert_source=client_cert_source_callback,
-    )
-    grpc_ssl_channel_cred.assert_called_once_with(
-        certificate_chain=b"cert bytes", private_key=b"key bytes"
-    )
-    grpc_create_channel.assert_called_once_with(
-        "mtls.squid.clam.whelk:443",
-        credentials=mock_cred,
-        credentials_file=None,
-        scopes=(
-            "https://www.googleapis.com/auth/cloud-platform",
-            "https://www.googleapis.com/auth/cloudiot",
-        ),
-        ssl_credentials=mock_ssl_cred,
-        quota_project_id=None,
-    )
-    assert transport.grpc_channel == mock_grpc_channel
-
-
+# Remove this test when deprecated arguments (api_mtls_endpoint, client_cert_source) are
+# removed from grpc/grpc_asyncio transport constructor.
 @pytest.mark.parametrize(
-    "api_mtls_endpoint", ["mtls.squid.clam.whelk", "mtls.squid.clam.whelk:443"]
+    "transport_class",
+    [
+        transports.DeviceManagerGrpcTransport,
+        transports.DeviceManagerGrpcAsyncIOTransport,
+    ],
 )
-@mock.patch("google.api_core.grpc_helpers.create_channel", autospec=True)
-def test_device_manager_grpc_transport_channel_mtls_with_adc(
-    grpc_create_channel, api_mtls_endpoint
-):
-    # Check that if channel and client_cert_source are None, but api_mtls_endpoint
-    # is provided, then a mTLS channel will be created with SSL ADC.
-    mock_grpc_channel = mock.Mock()
-    grpc_create_channel.return_value = mock_grpc_channel
+def test_device_manager_transport_channel_mtls_with_client_cert_source(transport_class):
+    with mock.patch(
+        "grpc.ssl_channel_credentials", autospec=True
+    ) as grpc_ssl_channel_cred:
+        with mock.patch.object(
+            transport_class, "create_channel"
+        ) as grpc_create_channel:
+            mock_ssl_cred = mock.Mock()
+            grpc_ssl_channel_cred.return_value = mock_ssl_cred
 
-    # Mock google.auth.transport.grpc.SslCredentials class.
+            mock_grpc_channel = mock.Mock()
+            grpc_create_channel.return_value = mock_grpc_channel
+
+            cred = credentials.AnonymousCredentials()
+            with pytest.warns(DeprecationWarning):
+                with mock.patch.object(auth, "default") as adc:
+                    adc.return_value = (cred, None)
+                    transport = transport_class(
+                        host="squid.clam.whelk",
+                        api_mtls_endpoint="mtls.squid.clam.whelk",
+                        client_cert_source=client_cert_source_callback,
+                    )
+                    adc.assert_called_once()
+
+            grpc_ssl_channel_cred.assert_called_once_with(
+                certificate_chain=b"cert bytes", private_key=b"key bytes"
+            )
+            grpc_create_channel.assert_called_once_with(
+                "mtls.squid.clam.whelk:443",
+                credentials=cred,
+                credentials_file=None,
+                scopes=(
+                    "https://www.googleapis.com/auth/cloud-platform",
+                    "https://www.googleapis.com/auth/cloudiot",
+                ),
+                ssl_credentials=mock_ssl_cred,
+                quota_project_id=None,
+                options=[
+                    ("grpc.max_send_message_length", -1),
+                    ("grpc.max_receive_message_length", -1),
+                ],
+            )
+            assert transport.grpc_channel == mock_grpc_channel
+            assert transport._ssl_channel_credentials == mock_ssl_cred
+
+
+# Remove this test when deprecated arguments (api_mtls_endpoint, client_cert_source) are
+# removed from grpc/grpc_asyncio transport constructor.
+@pytest.mark.parametrize(
+    "transport_class",
+    [
+        transports.DeviceManagerGrpcTransport,
+        transports.DeviceManagerGrpcAsyncIOTransport,
+    ],
+)
+def test_device_manager_transport_channel_mtls_with_adc(transport_class):
     mock_ssl_cred = mock.Mock()
     with mock.patch.multiple(
         "google.auth.transport.grpc.SslCredentials",
         __init__=mock.Mock(return_value=None),
         ssl_credentials=mock.PropertyMock(return_value=mock_ssl_cred),
     ):
-        mock_cred = mock.Mock()
-        transport = transports.DeviceManagerGrpcTransport(
-            host="squid.clam.whelk",
-            credentials=mock_cred,
-            api_mtls_endpoint=api_mtls_endpoint,
-            client_cert_source=None,
-        )
-        grpc_create_channel.assert_called_once_with(
-            "mtls.squid.clam.whelk:443",
-            credentials=mock_cred,
-            credentials_file=None,
-            scopes=(
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/cloudiot",
-            ),
-            ssl_credentials=mock_ssl_cred,
-            quota_project_id=None,
-        )
-        assert transport.grpc_channel == mock_grpc_channel
+        with mock.patch.object(
+            transport_class, "create_channel"
+        ) as grpc_create_channel:
+            mock_grpc_channel = mock.Mock()
+            grpc_create_channel.return_value = mock_grpc_channel
+            mock_cred = mock.Mock()
 
+            with pytest.warns(DeprecationWarning):
+                transport = transport_class(
+                    host="squid.clam.whelk",
+                    credentials=mock_cred,
+                    api_mtls_endpoint="mtls.squid.clam.whelk",
+                    client_cert_source=None,
+                )
 
-@pytest.mark.parametrize(
-    "api_mtls_endpoint", ["mtls.squid.clam.whelk", "mtls.squid.clam.whelk:443"]
-)
-@mock.patch("google.api_core.grpc_helpers_async.create_channel", autospec=True)
-def test_device_manager_grpc_asyncio_transport_channel_mtls_with_adc(
-    grpc_create_channel, api_mtls_endpoint
-):
-    # Check that if channel and client_cert_source are None, but api_mtls_endpoint
-    # is provided, then a mTLS channel will be created with SSL ADC.
-    mock_grpc_channel = mock.Mock()
-    grpc_create_channel.return_value = mock_grpc_channel
-
-    # Mock google.auth.transport.grpc.SslCredentials class.
-    mock_ssl_cred = mock.Mock()
-    with mock.patch.multiple(
-        "google.auth.transport.grpc.SslCredentials",
-        __init__=mock.Mock(return_value=None),
-        ssl_credentials=mock.PropertyMock(return_value=mock_ssl_cred),
-    ):
-        mock_cred = mock.Mock()
-        transport = transports.DeviceManagerGrpcAsyncIOTransport(
-            host="squid.clam.whelk",
-            credentials=mock_cred,
-            api_mtls_endpoint=api_mtls_endpoint,
-            client_cert_source=None,
-        )
-        grpc_create_channel.assert_called_once_with(
-            "mtls.squid.clam.whelk:443",
-            credentials=mock_cred,
-            credentials_file=None,
-            scopes=(
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/cloudiot",
-            ),
-            ssl_credentials=mock_ssl_cred,
-            quota_project_id=None,
-        )
-        assert transport.grpc_channel == mock_grpc_channel
-
-
-def test_registry_path():
-    project = "squid"
-    location = "clam"
-    registry = "whelk"
-
-    expected = "projects/{project}/locations/{location}/registries/{registry}".format(
-        project=project, location=location, registry=registry,
-    )
-    actual = DeviceManagerClient.registry_path(project, location, registry)
-    assert expected == actual
-
-
-def test_parse_registry_path():
-    expected = {
-        "project": "octopus",
-        "location": "oyster",
-        "registry": "nudibranch",
-    }
-    path = DeviceManagerClient.registry_path(**expected)
-
-    # Check that the path construction is reversible.
-    actual = DeviceManagerClient.parse_registry_path(path)
-    assert expected == actual
+            grpc_create_channel.assert_called_once_with(
+                "mtls.squid.clam.whelk:443",
+                credentials=mock_cred,
+                credentials_file=None,
+                scopes=(
+                    "https://www.googleapis.com/auth/cloud-platform",
+                    "https://www.googleapis.com/auth/cloudiot",
+                ),
+                ssl_credentials=mock_ssl_cred,
+                quota_project_id=None,
+                options=[
+                    ("grpc.max_send_message_length", -1),
+                    ("grpc.max_receive_message_length", -1),
+                ],
+            )
+            assert transport.grpc_channel == mock_grpc_channel
 
 
 def test_device_path():
@@ -5028,6 +5537,132 @@ def test_parse_device_path():
 
     # Check that the path construction is reversible.
     actual = DeviceManagerClient.parse_device_path(path)
+    assert expected == actual
+
+
+def test_registry_path():
+    project = "winkle"
+    location = "nautilus"
+    registry = "scallop"
+
+    expected = "projects/{project}/locations/{location}/registries/{registry}".format(
+        project=project, location=location, registry=registry,
+    )
+    actual = DeviceManagerClient.registry_path(project, location, registry)
+    assert expected == actual
+
+
+def test_parse_registry_path():
+    expected = {
+        "project": "abalone",
+        "location": "squid",
+        "registry": "clam",
+    }
+    path = DeviceManagerClient.registry_path(**expected)
+
+    # Check that the path construction is reversible.
+    actual = DeviceManagerClient.parse_registry_path(path)
+    assert expected == actual
+
+
+def test_common_billing_account_path():
+    billing_account = "whelk"
+
+    expected = "billingAccounts/{billing_account}".format(
+        billing_account=billing_account,
+    )
+    actual = DeviceManagerClient.common_billing_account_path(billing_account)
+    assert expected == actual
+
+
+def test_parse_common_billing_account_path():
+    expected = {
+        "billing_account": "octopus",
+    }
+    path = DeviceManagerClient.common_billing_account_path(**expected)
+
+    # Check that the path construction is reversible.
+    actual = DeviceManagerClient.parse_common_billing_account_path(path)
+    assert expected == actual
+
+
+def test_common_folder_path():
+    folder = "oyster"
+
+    expected = "folders/{folder}".format(folder=folder,)
+    actual = DeviceManagerClient.common_folder_path(folder)
+    assert expected == actual
+
+
+def test_parse_common_folder_path():
+    expected = {
+        "folder": "nudibranch",
+    }
+    path = DeviceManagerClient.common_folder_path(**expected)
+
+    # Check that the path construction is reversible.
+    actual = DeviceManagerClient.parse_common_folder_path(path)
+    assert expected == actual
+
+
+def test_common_organization_path():
+    organization = "cuttlefish"
+
+    expected = "organizations/{organization}".format(organization=organization,)
+    actual = DeviceManagerClient.common_organization_path(organization)
+    assert expected == actual
+
+
+def test_parse_common_organization_path():
+    expected = {
+        "organization": "mussel",
+    }
+    path = DeviceManagerClient.common_organization_path(**expected)
+
+    # Check that the path construction is reversible.
+    actual = DeviceManagerClient.parse_common_organization_path(path)
+    assert expected == actual
+
+
+def test_common_project_path():
+    project = "winkle"
+
+    expected = "projects/{project}".format(project=project,)
+    actual = DeviceManagerClient.common_project_path(project)
+    assert expected == actual
+
+
+def test_parse_common_project_path():
+    expected = {
+        "project": "nautilus",
+    }
+    path = DeviceManagerClient.common_project_path(**expected)
+
+    # Check that the path construction is reversible.
+    actual = DeviceManagerClient.parse_common_project_path(path)
+    assert expected == actual
+
+
+def test_common_location_path():
+    project = "scallop"
+    location = "abalone"
+
+    expected = "projects/{project}/locations/{location}".format(
+        project=project, location=location,
+    )
+    actual = DeviceManagerClient.common_location_path(project, location)
+    assert expected == actual
+
+
+def test_parse_common_location_path():
+    expected = {
+        "project": "squid",
+        "location": "clam",
+    }
+    path = DeviceManagerClient.common_location_path(**expected)
+
+    # Check that the path construction is reversible.
+    actual = DeviceManagerClient.parse_common_location_path(path)
     assert expected == actual
 
 

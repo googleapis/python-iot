@@ -61,7 +61,7 @@ class CreateDeviceRegistryRequest(proto.Message):
             Required. The project and cloud region where this device
             registry must be created. For example,
             ``projects/example-project/locations/us-central1``.
-        device_registry (~.resources.DeviceRegistry):
+        device_registry (google.cloud.iot_v1.types.DeviceRegistry):
             Required. The device registry. The field ``name`` must be
             empty. The server will generate that field from the device
             registry ``id`` provided and the ``parent`` field.
@@ -102,12 +102,12 @@ class UpdateDeviceRegistryRequest(proto.Message):
     r"""Request for ``UpdateDeviceRegistry``.
 
     Attributes:
-        device_registry (~.resources.DeviceRegistry):
+        device_registry (google.cloud.iot_v1.types.DeviceRegistry):
             Required. The new values for the device registry. The ``id``
             field must be empty, and the ``name`` field must indicate
             the path of the resource. For example,
             ``projects/example-project/locations/us-central1/registries/my-registry``.
-        update_mask (~.gp_field_mask.FieldMask):
+        update_mask (google.protobuf.field_mask_pb2.FieldMask):
             Required. Only updates the ``device_registry`` fields
             indicated by this mask. The field mask must not be empty,
             and it must not contain fields that are immutable or only
@@ -154,7 +154,7 @@ class ListDeviceRegistriesResponse(proto.Message):
     r"""Response for ``ListDeviceRegistries``.
 
     Attributes:
-        device_registries (Sequence[~.resources.DeviceRegistry]):
+        device_registries (Sequence[google.cloud.iot_v1.types.DeviceRegistry]):
             The registries that matched the query.
         next_page_token (str):
             If not empty, indicates that there may be more registries
@@ -181,7 +181,7 @@ class CreateDeviceRequest(proto.Message):
             Required. The name of the device registry where this device
             should be created. For example,
             ``projects/example-project/locations/us-central1/registries/my-registry``.
-        device (~.resources.Device):
+        device (google.cloud.iot_v1.types.Device):
             Required. The device registration details. The field
             ``name`` must be empty. The server generates ``name`` from
             the device registry ``id`` and the ``parent`` field.
@@ -201,10 +201,11 @@ class GetDeviceRequest(proto.Message):
             ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
             or
             ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
-        field_mask (~.gp_field_mask.FieldMask):
+        field_mask (google.protobuf.field_mask_pb2.FieldMask):
             The fields of the ``Device`` resource to be returned in the
             response. If the field mask is unset or empty, all fields
-            are returned.
+            are returned. Fields have to be provided in snake_case
+            format, for example: ``last_heartbeat_time``.
     """
 
     name = proto.Field(proto.STRING, number=1)
@@ -216,13 +217,13 @@ class UpdateDeviceRequest(proto.Message):
     r"""Request for ``UpdateDevice``.
 
     Attributes:
-        device (~.resources.Device):
+        device (google.cloud.iot_v1.types.Device):
             Required. The new values for the device. The ``id`` and
             ``num_id`` fields must be empty, and the field ``name`` must
             specify the name path. For example,
             ``projects/p0/locations/us-central1/registries/registry0/devices/device0``\ or
             ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
-        update_mask (~.gp_field_mask.FieldMask):
+        update_mask (google.protobuf.field_mask_pb2.FieldMask):
             Required. Only updates the ``device`` fields indicated by
             this mask. The field mask must not be empty, and it must not
             contain fields that are immutable or only set by the server.
@@ -263,11 +264,12 @@ class ListDevicesRequest(proto.Message):
             A list of device string IDs. For example,
             ``['device0', 'device12']``. If empty, this field is
             ignored. Maximum IDs: 10,000
-        field_mask (~.gp_field_mask.FieldMask):
+        field_mask (google.protobuf.field_mask_pb2.FieldMask):
             The fields of the ``Device`` resource to be returned in the
             response. The fields ``id`` and ``num_id`` are always
-            returned, along with any other fields specified.
-        gateway_list_options (~.device_manager.GatewayListOptions):
+            returned, along with any other fields specified in
+            snake_case format, for example: ``last_heartbeat_time``.
+        gateway_list_options (google.cloud.iot_v1.types.GatewayListOptions):
             Options related to gateways.
         page_size (int):
             The maximum number of devices to return in the response. If
@@ -304,7 +306,7 @@ class GatewayListOptions(proto.Message):
     associations.
 
     Attributes:
-        gateway_type (~.resources.GatewayType):
+        gateway_type (google.cloud.iot_v1.types.GatewayType):
             If ``GATEWAY`` is specified, only gateways are returned. If
             ``NON_GATEWAY`` is specified, only non-gateway devices are
             returned. If ``GATEWAY_TYPE_UNSPECIFIED`` is specified, all
@@ -336,7 +338,7 @@ class ListDevicesResponse(proto.Message):
     r"""Response for ``ListDevices``.
 
     Attributes:
-        devices (Sequence[~.resources.Device]):
+        devices (Sequence[google.cloud.iot_v1.types.Device]):
             The devices that match the request.
         next_page_token (str):
             If not empty, indicates that there may be more devices that
@@ -409,7 +411,7 @@ class ListDeviceConfigVersionsResponse(proto.Message):
     r"""Response for ``ListDeviceConfigVersions``.
 
     Attributes:
-        device_configs (Sequence[~.resources.DeviceConfig]):
+        device_configs (Sequence[google.cloud.iot_v1.types.DeviceConfig]):
             The device configuration for the last few
             versions. Versions are listed in decreasing
             order, starting from the most recent one.
@@ -446,7 +448,7 @@ class ListDeviceStatesResponse(proto.Message):
     r"""Response for ``ListDeviceStates``.
 
     Attributes:
-        device_states (Sequence[~.resources.DeviceState]):
+        device_states (Sequence[google.cloud.iot_v1.types.DeviceState]):
             The last few device states. States are listed
             in descending order of server update time,
             starting from the most recent one.

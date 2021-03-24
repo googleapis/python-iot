@@ -16,17 +16,19 @@
 #
 
 from collections import OrderedDict
+from distutils import util
 import os
 import re
-from typing import Callable, Dict, Sequence, Tuple, Type, Union
+from typing import Callable, Dict, Optional, Sequence, Tuple, Type, Union
 import pkg_resources
 
-import google.api_core.client_options as ClientOptions  # type: ignore
+from google.api_core import client_options as client_options_lib  # type: ignore
 from google.api_core import exceptions  # type: ignore
 from google.api_core import gapic_v1  # type: ignore
 from google.api_core import retry as retries  # type: ignore
 from google.auth import credentials  # type: ignore
 from google.auth.transport import mtls  # type: ignore
+from google.auth.transport.grpc import SslCredentials  # type: ignore
 from google.auth.exceptions import MutualTLSChannelError  # type: ignore
 from google.oauth2 import service_account  # type: ignore
 
@@ -115,6 +117,22 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     )
 
     @classmethod
+    def from_service_account_info(cls, info: dict, *args, **kwargs):
+        """Creates an instance of this client using the provided credentials info.
+
+        Args:
+            info (dict): The service account private key info.
+            args: Additional arguments to pass to the constructor.
+            kwargs: Additional arguments to pass to the constructor.
+
+        Returns:
+            DeviceManagerClient: The constructed client.
+        """
+        credentials = service_account.Credentials.from_service_account_info(info)
+        kwargs["credentials"] = credentials
+        return cls(*args, **kwargs)
+
+    @classmethod
     def from_service_account_file(cls, filename: str, *args, **kwargs):
         """Creates an instance of this client using the provided credentials
         file.
@@ -126,13 +144,22 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
             kwargs: Additional arguments to pass to the constructor.
 
         Returns:
-            {@api.name}: The constructed client.
+            DeviceManagerClient: The constructed client.
         """
         credentials = service_account.Credentials.from_service_account_file(filename)
         kwargs["credentials"] = credentials
         return cls(*args, **kwargs)
 
     from_service_account_json = from_service_account_file
+
+    @property
+    def transport(self) -> DeviceManagerTransport:
+        """Return the transport used by the client instance.
+
+        Returns:
+            DeviceManagerTransport: The transport used by the client instance.
+        """
+        return self._transport
 
     @staticmethod
     def device_path(project: str, location: str, registry: str, device: str,) -> str:
@@ -166,12 +193,71 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         )
         return m.groupdict() if m else {}
 
+    @staticmethod
+    def common_billing_account_path(billing_account: str,) -> str:
+        """Return a fully-qualified billing_account string."""
+        return "billingAccounts/{billing_account}".format(
+            billing_account=billing_account,
+        )
+
+    @staticmethod
+    def parse_common_billing_account_path(path: str) -> Dict[str, str]:
+        """Parse a billing_account path into its component segments."""
+        m = re.match(r"^billingAccounts/(?P<billing_account>.+?)$", path)
+        return m.groupdict() if m else {}
+
+    @staticmethod
+    def common_folder_path(folder: str,) -> str:
+        """Return a fully-qualified folder string."""
+        return "folders/{folder}".format(folder=folder,)
+
+    @staticmethod
+    def parse_common_folder_path(path: str) -> Dict[str, str]:
+        """Parse a folder path into its component segments."""
+        m = re.match(r"^folders/(?P<folder>.+?)$", path)
+        return m.groupdict() if m else {}
+
+    @staticmethod
+    def common_organization_path(organization: str,) -> str:
+        """Return a fully-qualified organization string."""
+        return "organizations/{organization}".format(organization=organization,)
+
+    @staticmethod
+    def parse_common_organization_path(path: str) -> Dict[str, str]:
+        """Parse a organization path into its component segments."""
+        m = re.match(r"^organizations/(?P<organization>.+?)$", path)
+        return m.groupdict() if m else {}
+
+    @staticmethod
+    def common_project_path(project: str,) -> str:
+        """Return a fully-qualified project string."""
+        return "projects/{project}".format(project=project,)
+
+    @staticmethod
+    def parse_common_project_path(path: str) -> Dict[str, str]:
+        """Parse a project path into its component segments."""
+        m = re.match(r"^projects/(?P<project>.+?)$", path)
+        return m.groupdict() if m else {}
+
+    @staticmethod
+    def common_location_path(project: str, location: str,) -> str:
+        """Return a fully-qualified location string."""
+        return "projects/{project}/locations/{location}".format(
+            project=project, location=location,
+        )
+
+    @staticmethod
+    def parse_common_location_path(path: str) -> Dict[str, str]:
+        """Parse a location path into its component segments."""
+        m = re.match(r"^projects/(?P<project>.+?)/locations/(?P<location>.+?)$", path)
+        return m.groupdict() if m else {}
+
     def __init__(
         self,
         *,
-        credentials: credentials.Credentials = None,
-        transport: Union[str, DeviceManagerTransport] = None,
-        client_options: ClientOptions = None,
+        credentials: Optional[credentials.Credentials] = None,
+        transport: Union[str, DeviceManagerTransport, None] = None,
+        client_options: Optional[client_options_lib.ClientOptions] = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
     ) -> None:
         """Instantiate the device manager client.
@@ -182,26 +268,29 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 credentials identify the application to the service; if none
                 are specified, the client will attempt to ascertain the
                 credentials from the environment.
-            transport (Union[str, ~.DeviceManagerTransport]): The
+            transport (Union[str, DeviceManagerTransport]): The
                 transport to use. If set to None, a transport is chosen
                 automatically.
-            client_options (ClientOptions): Custom options for the client. It
-                won't take effect if a ``transport`` instance is provided.
+            client_options (google.api_core.client_options.ClientOptions): Custom options for the
+                client. It won't take effect if a ``transport`` instance is provided.
                 (1) The ``api_endpoint`` property can be used to override the
-                default endpoint provided by the client. GOOGLE_API_USE_MTLS
+                default endpoint provided by the client. GOOGLE_API_USE_MTLS_ENDPOINT
                 environment variable can also be used to override the endpoint:
                 "always" (always use the default mTLS endpoint), "never" (always
-                use the default regular endpoint, this is the default value for
-                the environment variable) and "auto" (auto switch to the default
-                mTLS endpoint if client SSL credentials is present). However,
-                the ``api_endpoint`` property takes precedence if provided.
-                (2) The ``client_cert_source`` property is used to provide client
-                SSL credentials for mutual TLS transport. If not provided, the
-                default SSL credentials will be used if present.
-            client_info (google.api_core.gapic_v1.client_info.ClientInfo):	
-                The client info used to send a user-agent string along with	
-                API requests. If ``None``, then default info will be used.	
-                Generally, you only need to set this if you're developing	
+                use the default regular endpoint) and "auto" (auto switch to the
+                default mTLS endpoint if client certificate is present, this is
+                the default value). However, the ``api_endpoint`` property takes
+                precedence if provided.
+                (2) If GOOGLE_API_USE_CLIENT_CERTIFICATE environment variable
+                is "true", then the ``client_cert_source`` property can be used
+                to provide client certificate for mutual TLS transport. If
+                not provided, the default SSL client certificate will be used if
+                present. If GOOGLE_API_USE_CLIENT_CERTIFICATE is "false" or not
+                set, no client certificate will be used.
+            client_info (google.api_core.gapic_v1.client_info.ClientInfo):
+                The client info used to send a user-agent string along with
+                API requests. If ``None``, then default info will be used.
+                Generally, you only need to set this if you're developing
                 your own client library.
 
         Raises:
@@ -209,29 +298,43 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 creation failed for any reason.
         """
         if isinstance(client_options, dict):
-            client_options = ClientOptions.from_dict(client_options)
+            client_options = client_options_lib.from_dict(client_options)
         if client_options is None:
-            client_options = ClientOptions.ClientOptions()
+            client_options = client_options_lib.ClientOptions()
 
-        if client_options.api_endpoint is None:
-            use_mtls_env = os.getenv("GOOGLE_API_USE_MTLS", "never")
-            if use_mtls_env == "never":
-                client_options.api_endpoint = self.DEFAULT_ENDPOINT
-            elif use_mtls_env == "always":
-                client_options.api_endpoint = self.DEFAULT_MTLS_ENDPOINT
-            elif use_mtls_env == "auto":
-                has_client_cert_source = (
-                    client_options.client_cert_source is not None
-                    or mtls.has_default_client_cert_source()
+        # Create SSL credentials for mutual TLS if needed.
+        use_client_cert = bool(
+            util.strtobool(os.getenv("GOOGLE_API_USE_CLIENT_CERTIFICATE", "false"))
+        )
+
+        client_cert_source_func = None
+        is_mtls = False
+        if use_client_cert:
+            if client_options.client_cert_source:
+                is_mtls = True
+                client_cert_source_func = client_options.client_cert_source
+            else:
+                is_mtls = mtls.has_default_client_cert_source()
+                client_cert_source_func = (
+                    mtls.default_client_cert_source() if is_mtls else None
                 )
-                client_options.api_endpoint = (
-                    self.DEFAULT_MTLS_ENDPOINT
-                    if has_client_cert_source
-                    else self.DEFAULT_ENDPOINT
+
+        # Figure out which api endpoint to use.
+        if client_options.api_endpoint is not None:
+            api_endpoint = client_options.api_endpoint
+        else:
+            use_mtls_env = os.getenv("GOOGLE_API_USE_MTLS_ENDPOINT", "auto")
+            if use_mtls_env == "never":
+                api_endpoint = self.DEFAULT_ENDPOINT
+            elif use_mtls_env == "always":
+                api_endpoint = self.DEFAULT_MTLS_ENDPOINT
+            elif use_mtls_env == "auto":
+                api_endpoint = (
+                    self.DEFAULT_MTLS_ENDPOINT if is_mtls else self.DEFAULT_ENDPOINT
                 )
             else:
                 raise MutualTLSChannelError(
-                    "Unsupported GOOGLE_API_USE_MTLS value. Accepted values: never, auto, always"
+                    "Unsupported GOOGLE_API_USE_MTLS_ENDPOINT value. Accepted values: never, auto, always"
                 )
 
         # Save or instantiate the transport.
@@ -255,10 +358,9 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
             self._transport = Transport(
                 credentials=credentials,
                 credentials_file=client_options.credentials_file,
-                host=client_options.api_endpoint,
+                host=api_endpoint,
                 scopes=client_options.scopes,
-                api_mtls_endpoint=client_options.api_endpoint,
-                client_cert_source=client_options.client_cert_source,
+                client_cert_source_for_mtls=client_cert_source_func,
                 quota_project_id=client_options.quota_project_id,
                 client_info=client_info,
             )
@@ -276,20 +378,22 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Creates a device registry that contains devices.
 
         Args:
-            request (:class:`~.device_manager.CreateDeviceRegistryRequest`):
+            request (google.cloud.iot_v1.types.CreateDeviceRegistryRequest):
                 The request object. Request for `CreateDeviceRegistry`.
-            parent (:class:`str`):
+            parent (str):
                 Required. The project and cloud region where this device
                 registry must be created. For example,
                 ``projects/example-project/locations/us-central1``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            device_registry (:class:`~.resources.DeviceRegistry`):
+            device_registry (google.cloud.iot_v1.types.DeviceRegistry):
                 Required. The device registry. The field ``name`` must
                 be empty. The server will generate that field from the
                 device registry ``id`` provided and the ``parent``
                 field.
+
                 This corresponds to the ``device_registry`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -301,7 +405,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceRegistry:
+            google.cloud.iot_v1.types.DeviceRegistry:
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
@@ -357,11 +461,12 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Gets a device registry configuration.
 
         Args:
-            request (:class:`~.device_manager.GetDeviceRegistryRequest`):
+            request (google.cloud.iot_v1.types.GetDeviceRegistryRequest):
                 The request object. Request for `GetDeviceRegistry`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -373,7 +478,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceRegistry:
+            google.cloud.iot_v1.types.DeviceRegistry:
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
@@ -428,23 +533,25 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Updates a device registry configuration.
 
         Args:
-            request (:class:`~.device_manager.UpdateDeviceRegistryRequest`):
+            request (google.cloud.iot_v1.types.UpdateDeviceRegistryRequest):
                 The request object. Request for `UpdateDeviceRegistry`.
-            device_registry (:class:`~.resources.DeviceRegistry`):
+            device_registry (google.cloud.iot_v1.types.DeviceRegistry):
                 Required. The new values for the device registry. The
                 ``id`` field must be empty, and the ``name`` field must
                 indicate the path of the resource. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``device_registry`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            update_mask (:class:`~.field_mask.FieldMask`):
+            update_mask (google.protobuf.field_mask_pb2.FieldMask):
                 Required. Only updates the ``device_registry`` fields
                 indicated by this mask. The field mask must not be
                 empty, and it must not contain fields that are immutable
                 or only set by the server. Mutable top-level fields:
                 ``event_notification_config``, ``http_config``,
                 ``mqtt_config``, and ``state_notification_config``.
+
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -456,7 +563,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceRegistry:
+            google.cloud.iot_v1.types.DeviceRegistry:
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
@@ -514,11 +621,12 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Deletes a device registry configuration.
 
         Args:
-            request (:class:`~.device_manager.DeleteDeviceRegistryRequest`):
+            request (google.cloud.iot_v1.types.DeleteDeviceRegistryRequest):
                 The request object. Request for `DeleteDeviceRegistry`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -579,12 +687,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Lists device registries.
 
         Args:
-            request (:class:`~.device_manager.ListDeviceRegistriesRequest`):
+            request (google.cloud.iot_v1.types.ListDeviceRegistriesRequest):
                 The request object. Request for `ListDeviceRegistries`.
-            parent (:class:`str`):
+            parent (str):
                 Required. The project and cloud region path. For
                 example,
                 ``projects/example-project/locations/us-central1``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -596,8 +705,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.pagers.ListDeviceRegistriesPager:
-                Response for ``ListDeviceRegistries``.
+            google.cloud.iot_v1.services.device_manager.pagers.ListDeviceRegistriesPager:
+                Response for ListDeviceRegistries.
 
                 Iterating over this object will yield results and
                 resolve additional pages automatically.
@@ -661,20 +770,22 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Creates a device in a device registry.
 
         Args:
-            request (:class:`~.device_manager.CreateDeviceRequest`):
+            request (google.cloud.iot_v1.types.CreateDeviceRequest):
                 The request object. Request for `CreateDevice`.
-            parent (:class:`str`):
+            parent (str):
                 Required. The name of the device registry where this
                 device should be created. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            device (:class:`~.resources.Device`):
+            device (google.cloud.iot_v1.types.Device):
                 Required. The device registration details. The field
                 ``name`` must be empty. The server generates ``name``
                 from the device registry ``id`` and the ``parent``
                 field.
+
                 This corresponds to the ``device`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -686,7 +797,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.Device:
+            google.cloud.iot_v1.types.Device:
                 The device resource.
         """
         # Create or coerce a protobuf request object.
@@ -742,13 +853,14 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Gets details about a device.
 
         Args:
-            request (:class:`~.device_manager.GetDeviceRequest`):
+            request (google.cloud.iot_v1.types.GetDeviceRequest):
                 The request object. Request for `GetDevice`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -760,7 +872,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.Device:
+            google.cloud.iot_v1.types.Device:
                 The device resource.
         """
         # Create or coerce a protobuf request object.
@@ -815,23 +927,25 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Updates a device.
 
         Args:
-            request (:class:`~.device_manager.UpdateDeviceRequest`):
+            request (google.cloud.iot_v1.types.UpdateDeviceRequest):
                 The request object. Request for `UpdateDevice`.
-            device (:class:`~.resources.Device`):
+            device (google.cloud.iot_v1.types.Device):
                 Required. The new values for the device. The ``id`` and
                 ``num_id`` fields must be empty, and the field ``name``
                 must specify the name path. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``\ or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``device`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            update_mask (:class:`~.field_mask.FieldMask`):
+            update_mask (google.protobuf.field_mask_pb2.FieldMask):
                 Required. Only updates the ``device`` fields indicated
                 by this mask. The field mask must not be empty, and it
                 must not contain fields that are immutable or only set
                 by the server. Mutable top-level fields:
                 ``credentials``, ``blocked``, and ``metadata``
+
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -843,7 +957,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.Device:
+            google.cloud.iot_v1.types.Device:
                 The device resource.
         """
         # Create or coerce a protobuf request object.
@@ -901,13 +1015,14 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Deletes a device.
 
         Args:
-            request (:class:`~.device_manager.DeleteDeviceRequest`):
+            request (google.cloud.iot_v1.types.DeleteDeviceRequest):
                 The request object. Request for `DeleteDevice`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -968,12 +1083,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""List devices in a device registry.
 
         Args:
-            request (:class:`~.device_manager.ListDevicesRequest`):
+            request (google.cloud.iot_v1.types.ListDevicesRequest):
                 The request object. Request for `ListDevices`.
-            parent (:class:`str`):
+            parent (str):
                 Required. The device registry path. Required. For
                 example,
                 ``projects/my-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -985,8 +1101,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.pagers.ListDevicesPager:
-                Response for ``ListDevices``.
+            google.cloud.iot_v1.services.device_manager.pagers.ListDevicesPager:
+                Response for ListDevices.
 
                 Iterating over this object will yield results and
                 resolve additional pages automatically.
@@ -1052,20 +1168,22 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         the modified configuration version and its metadata.
 
         Args:
-            request (:class:`~.device_manager.ModifyCloudToDeviceConfigRequest`):
+            request (google.cloud.iot_v1.types.ModifyCloudToDeviceConfigRequest):
                 The request object. Request for
                 `ModifyCloudToDeviceConfig`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            binary_data (:class:`bytes`):
+            binary_data (bytes):
                 Required. The configuration data for
                 the device.
+
                 This corresponds to the ``binary_data`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1077,7 +1195,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceConfig:
+            google.cloud.iot_v1.types.DeviceConfig:
                 The device configuration. Eventually
                 delivered to devices.
 
@@ -1138,14 +1256,15 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         configuration in descending order (i.e.: newest first).
 
         Args:
-            request (:class:`~.device_manager.ListDeviceConfigVersionsRequest`):
+            request (google.cloud.iot_v1.types.ListDeviceConfigVersionsRequest):
                 The request object. Request for
                 `ListDeviceConfigVersions`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1157,8 +1276,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.ListDeviceConfigVersionsResponse:
-                Response for ``ListDeviceConfigVersions``.
+            google.cloud.iot_v1.types.ListDeviceConfigVersionsResponse:
+                Response for ListDeviceConfigVersions.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
@@ -1214,13 +1333,14 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         descending order (i.e.: newest first).
 
         Args:
-            request (:class:`~.device_manager.ListDeviceStatesRequest`):
+            request (google.cloud.iot_v1.types.ListDeviceStatesRequest):
                 The request object. Request for `ListDeviceStates`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1232,8 +1352,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.ListDeviceStatesResponse:
-                Response for ``ListDeviceStates``.
+            google.cloud.iot_v1.types.ListDeviceStatesResponse:
+                Response for ListDeviceStates.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
@@ -1287,14 +1407,15 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         resource. Replaces any existing policy.
 
         Args:
-            request (:class:`~.iam_policy.SetIamPolicyRequest`):
+            request (google.iam.v1.iam_policy_pb2.SetIamPolicyRequest):
                 The request object. Request message for `SetIamPolicy`
                 method.
-            resource (:class:`str`):
+            resource (str):
                 REQUIRED: The resource for which the
                 policy is being specified. See the
                 operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1306,72 +1427,62 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.policy.Policy:
-                Defines an Identity and Access Management (IAM) policy.
-                It is used to specify access control policies for Cloud
-                Platform resources.
+            google.iam.v1.policy_pb2.Policy:
+                Defines an Identity and Access Management (IAM) policy. It is used to
+                   specify access control policies for Cloud Platform
+                   resources.
 
-                A ``Policy`` is a collection of ``bindings``. A
-                ``binding`` binds one or more ``members`` to a single
-                ``role``. Members can be user accounts, service
-                accounts, Google groups, and domains (such as G Suite).
-                A ``role`` is a named list of permissions (defined by
-                IAM or configured by users). A ``binding`` can
-                optionally specify a ``condition``, which is a logic
-                expression that further constrains the role binding
-                based on attributes about the request and/or target
-                resource.
+                   A Policy is a collection of bindings. A binding binds
+                   one or more members to a single role. Members can be
+                   user accounts, service accounts, Google groups, and
+                   domains (such as G Suite). A role is a named list of
+                   permissions (defined by IAM or configured by users).
+                   A binding can optionally specify a condition, which
+                   is a logic expression that further constrains the
+                   role binding based on attributes about the request
+                   and/or target resource.
 
-                **JSON Example**
+                   **JSON Example**
 
-                ::
+                      {
+                         "bindings": [
+                            {
+                               "role":
+                               "roles/resourcemanager.organizationAdmin",
+                               "members": [ "user:mike@example.com",
+                               "group:admins@example.com",
+                               "domain:google.com",
+                               "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+                               ]
 
-                    {
-                      "bindings": [
-                        {
-                          "role": "roles/resourcemanager.organizationAdmin",
-                          "members": [
-                            "user:mike@example.com",
-                            "group:admins@example.com",
-                            "domain:google.com",
-                            "serviceAccount:my-project-id@appspot.gserviceaccount.com"
-                          ]
-                        },
-                        {
-                          "role": "roles/resourcemanager.organizationViewer",
-                          "members": ["user:eve@example.com"],
-                          "condition": {
-                            "title": "expirable access",
-                            "description": "Does not grant access after Sep 2020",
-                            "expression": "request.time <
-                            timestamp('2020-10-01T00:00:00.000Z')",
-                          }
-                        }
-                      ]
-                    }
+                            }, { "role":
+                            "roles/resourcemanager.organizationViewer",
+                            "members": ["user:eve@example.com"],
+                            "condition": { "title": "expirable access",
+                            "description": "Does not grant access after
+                            Sep 2020", "expression": "request.time <
+                            timestamp('2020-10-01T00:00:00.000Z')", } }
 
-                **YAML Example**
+                         ]
 
-                ::
+                      }
 
-                    bindings:
-                    - members:
-                      - user:mike@example.com
-                      - group:admins@example.com
-                      - domain:google.com
-                      - serviceAccount:my-project-id@appspot.gserviceaccount.com
-                      role: roles/resourcemanager.organizationAdmin
-                    - members:
-                      - user:eve@example.com
-                      role: roles/resourcemanager.organizationViewer
-                      condition:
-                        title: expirable access
-                        description: Does not grant access after Sep 2020
-                        expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+                   **YAML Example**
 
-                For a description of IAM and its features, see the `IAM
-                developer's
-                guide <https://cloud.google.com/iam/docs>`__.
+                      bindings: - members: - user:\ mike@example.com -
+                      group:\ admins@example.com - domain:google.com -
+                      serviceAccount:\ my-project-id@appspot.gserviceaccount.com
+                      role: roles/resourcemanager.organizationAdmin -
+                      members: - user:\ eve@example.com role:
+                      roles/resourcemanager.organizationViewer
+                      condition: title: expirable access description:
+                      Does not grant access after Sep 2020 expression:
+                      request.time <
+                      timestamp('2020-10-01T00:00:00.000Z')
+
+                   For a description of IAM and its features, see the
+                   [IAM developer's
+                   guide](\ https://cloud.google.com/iam/docs).
 
         """
         # Create or coerce a protobuf request object.
@@ -1384,16 +1495,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 "the individual field arguments should be set."
             )
 
-        # The request isn't a proto-plus wrapped type,
-        # so it must be constructed via keyword expansion.
         if isinstance(request, dict):
+            # The request isn't a proto-plus wrapped type,
+            # so it must be constructed via keyword expansion.
             request = iam_policy.SetIamPolicyRequest(**request)
-
         elif not request:
+            # Null request, just make one.
             request = iam_policy.SetIamPolicyRequest()
-
-            # If we have keyword arguments corresponding to fields on the
-            # request, apply these.
 
             if resource is not None:
                 request.resource = resource
@@ -1428,14 +1536,15 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         not have a policy set.
 
         Args:
-            request (:class:`~.iam_policy.GetIamPolicyRequest`):
+            request (google.iam.v1.iam_policy_pb2.GetIamPolicyRequest):
                 The request object. Request message for `GetIamPolicy`
                 method.
-            resource (:class:`str`):
+            resource (str):
                 REQUIRED: The resource for which the
                 policy is being requested. See the
                 operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1447,72 +1556,62 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.policy.Policy:
-                Defines an Identity and Access Management (IAM) policy.
-                It is used to specify access control policies for Cloud
-                Platform resources.
+            google.iam.v1.policy_pb2.Policy:
+                Defines an Identity and Access Management (IAM) policy. It is used to
+                   specify access control policies for Cloud Platform
+                   resources.
 
-                A ``Policy`` is a collection of ``bindings``. A
-                ``binding`` binds one or more ``members`` to a single
-                ``role``. Members can be user accounts, service
-                accounts, Google groups, and domains (such as G Suite).
-                A ``role`` is a named list of permissions (defined by
-                IAM or configured by users). A ``binding`` can
-                optionally specify a ``condition``, which is a logic
-                expression that further constrains the role binding
-                based on attributes about the request and/or target
-                resource.
+                   A Policy is a collection of bindings. A binding binds
+                   one or more members to a single role. Members can be
+                   user accounts, service accounts, Google groups, and
+                   domains (such as G Suite). A role is a named list of
+                   permissions (defined by IAM or configured by users).
+                   A binding can optionally specify a condition, which
+                   is a logic expression that further constrains the
+                   role binding based on attributes about the request
+                   and/or target resource.
 
-                **JSON Example**
+                   **JSON Example**
 
-                ::
+                      {
+                         "bindings": [
+                            {
+                               "role":
+                               "roles/resourcemanager.organizationAdmin",
+                               "members": [ "user:mike@example.com",
+                               "group:admins@example.com",
+                               "domain:google.com",
+                               "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+                               ]
 
-                    {
-                      "bindings": [
-                        {
-                          "role": "roles/resourcemanager.organizationAdmin",
-                          "members": [
-                            "user:mike@example.com",
-                            "group:admins@example.com",
-                            "domain:google.com",
-                            "serviceAccount:my-project-id@appspot.gserviceaccount.com"
-                          ]
-                        },
-                        {
-                          "role": "roles/resourcemanager.organizationViewer",
-                          "members": ["user:eve@example.com"],
-                          "condition": {
-                            "title": "expirable access",
-                            "description": "Does not grant access after Sep 2020",
-                            "expression": "request.time <
-                            timestamp('2020-10-01T00:00:00.000Z')",
-                          }
-                        }
-                      ]
-                    }
+                            }, { "role":
+                            "roles/resourcemanager.organizationViewer",
+                            "members": ["user:eve@example.com"],
+                            "condition": { "title": "expirable access",
+                            "description": "Does not grant access after
+                            Sep 2020", "expression": "request.time <
+                            timestamp('2020-10-01T00:00:00.000Z')", } }
 
-                **YAML Example**
+                         ]
 
-                ::
+                      }
 
-                    bindings:
-                    - members:
-                      - user:mike@example.com
-                      - group:admins@example.com
-                      - domain:google.com
-                      - serviceAccount:my-project-id@appspot.gserviceaccount.com
-                      role: roles/resourcemanager.organizationAdmin
-                    - members:
-                      - user:eve@example.com
-                      role: roles/resourcemanager.organizationViewer
-                      condition:
-                        title: expirable access
-                        description: Does not grant access after Sep 2020
-                        expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+                   **YAML Example**
 
-                For a description of IAM and its features, see the `IAM
-                developer's
-                guide <https://cloud.google.com/iam/docs>`__.
+                      bindings: - members: - user:\ mike@example.com -
+                      group:\ admins@example.com - domain:google.com -
+                      serviceAccount:\ my-project-id@appspot.gserviceaccount.com
+                      role: roles/resourcemanager.organizationAdmin -
+                      members: - user:\ eve@example.com role:
+                      roles/resourcemanager.organizationViewer
+                      condition: title: expirable access description:
+                      Does not grant access after Sep 2020 expression:
+                      request.time <
+                      timestamp('2020-10-01T00:00:00.000Z')
+
+                   For a description of IAM and its features, see the
+                   [IAM developer's
+                   guide](\ https://cloud.google.com/iam/docs).
 
         """
         # Create or coerce a protobuf request object.
@@ -1525,16 +1624,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 "the individual field arguments should be set."
             )
 
-        # The request isn't a proto-plus wrapped type,
-        # so it must be constructed via keyword expansion.
         if isinstance(request, dict):
+            # The request isn't a proto-plus wrapped type,
+            # so it must be constructed via keyword expansion.
             request = iam_policy.GetIamPolicyRequest(**request)
-
         elif not request:
+            # Null request, just make one.
             request = iam_policy.GetIamPolicyRequest()
-
-            # If we have keyword arguments corresponding to fields on the
-            # request, apply these.
 
             if resource is not None:
                 request.resource = resource
@@ -1570,22 +1666,24 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         permissions, not a NOT_FOUND error.
 
         Args:
-            request (:class:`~.iam_policy.TestIamPermissionsRequest`):
+            request (google.iam.v1.iam_policy_pb2.TestIamPermissionsRequest):
                 The request object. Request message for
                 `TestIamPermissions` method.
-            resource (:class:`str`):
+            resource (str):
                 REQUIRED: The resource for which the
                 policy detail is being requested. See
                 the operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            permissions (:class:`Sequence[str]`):
+            permissions (Sequence[str]):
                 The set of permissions to check for the ``resource``.
                 Permissions with wildcards (such as '*' or 'storage.*')
                 are not allowed. For more information see `IAM
                 Overview <https://cloud.google.com/iam/docs/overview#permissions>`__.
+
                 This corresponds to the ``permissions`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1597,8 +1695,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.iam_policy.TestIamPermissionsResponse:
-                Response message for ``TestIamPermissions`` method.
+            google.iam.v1.iam_policy_pb2.TestIamPermissionsResponse:
+                Response message for TestIamPermissions method.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
@@ -1610,16 +1708,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 "the individual field arguments should be set."
             )
 
-        # The request isn't a proto-plus wrapped type,
-        # so it must be constructed via keyword expansion.
         if isinstance(request, dict):
+            # The request isn't a proto-plus wrapped type,
+            # so it must be constructed via keyword expansion.
             request = iam_policy.TestIamPermissionsRequest(**request)
-
         elif not request:
+            # Null request, just make one.
             request = iam_policy.TestIamPermissionsRequest()
-
-            # If we have keyword arguments corresponding to fields on the
-            # request, apply these.
 
             if resource is not None:
                 request.resource = resource
@@ -1673,23 +1768,25 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
            from the device.
 
         Args:
-            request (:class:`~.device_manager.SendCommandToDeviceRequest`):
+            request (google.cloud.iot_v1.types.SendCommandToDeviceRequest):
                 The request object. Request for `SendCommandToDevice`.
-            name (:class:`str`):
+            name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            binary_data (:class:`bytes`):
+            binary_data (bytes):
                 Required. The command data to send to
                 the device.
+
                 This corresponds to the ``binary_data`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            subfolder (:class:`str`):
+            subfolder (str):
                 Optional subfolder for the command.
                 If empty, the command will be delivered
                 to the /devices/{device-id}/commands
@@ -1700,6 +1797,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 must not have more than 256 characters,
                 and must not contain any MQTT wildcards
                 ("+" or "#") or null characters.
+
                 This corresponds to the ``subfolder`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1711,8 +1809,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.SendCommandToDeviceResponse:
-                Response for ``SendCommandToDevice``.
+            google.cloud.iot_v1.types.SendCommandToDeviceResponse:
+                Response for SendCommandToDevice.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
@@ -1771,24 +1869,27 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         r"""Associates the device with the gateway.
 
         Args:
-            request (:class:`~.device_manager.BindDeviceToGatewayRequest`):
+            request (google.cloud.iot_v1.types.BindDeviceToGatewayRequest):
                 The request object. Request for `BindDeviceToGateway`.
-            parent (:class:`str`):
+            parent (str):
                 Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            gateway_id (:class:`str`):
+            gateway_id (str):
                 Required. The value of ``gateway_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``gateway_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            device_id (:class:`str`):
+            device_id (str):
                 Required. The device to associate with the specified
                 gateway. The value of ``device_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``device_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1800,8 +1901,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.BindDeviceToGatewayResponse:
-                Response for ``BindDeviceToGateway``.
+            google.cloud.iot_v1.types.BindDeviceToGatewayResponse:
+                Response for BindDeviceToGateway.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
@@ -1861,25 +1962,28 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         gateway.
 
         Args:
-            request (:class:`~.device_manager.UnbindDeviceFromGatewayRequest`):
+            request (google.cloud.iot_v1.types.UnbindDeviceFromGatewayRequest):
                 The request object. Request for
                 `UnbindDeviceFromGateway`.
-            parent (:class:`str`):
+            parent (str):
                 Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            gateway_id (:class:`str`):
+            gateway_id (str):
                 Required. The value of ``gateway_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``gateway_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            device_id (:class:`str`):
+            device_id (str):
                 Required. The device to disassociate from the specified
                 gateway. The value of ``device_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``device_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1891,8 +1995,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.UnbindDeviceFromGatewayResponse:
-                Response for ``UnbindDeviceFromGateway``.
+            google.cloud.iot_v1.types.UnbindDeviceFromGatewayResponse:
+                Response for UnbindDeviceFromGateway.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
