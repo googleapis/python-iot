@@ -42,6 +42,13 @@ templated_files = common.py_library(
 )
 s.move(templated_files, excludes=[".coveragerc"])  # microgenerator has a good .coveragerc file
 
+# Rename `format_` to `format` to avoid breaking change
+s.replace(
+    "google/cloud/**/types/resources.py",
+    "format_",
+    "format"
+)
+
 # ----------------------------------------------------------------------------
 # Samples templates
 # ----------------------------------------------------------------------------

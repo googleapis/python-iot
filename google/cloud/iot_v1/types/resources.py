@@ -492,7 +492,7 @@ class PublicKeyCertificate(proto.Message):
     r"""A public key certificate format and data.
 
     Attributes:
-        format_ (google.cloud.iot_v1.types.PublicKeyCertificateFormat):
+        format (google.cloud.iot_v1.types.PublicKeyCertificateFormat):
             The certificate format.
         certificate (str):
             The certificate data.
@@ -501,7 +501,7 @@ class PublicKeyCertificate(proto.Message):
             certificates.
     """
 
-    format_ = proto.Field(proto.ENUM, number=1, enum="PublicKeyCertificateFormat",)
+    format = proto.Field(proto.ENUM, number=1, enum="PublicKeyCertificateFormat",)
 
     certificate = proto.Field(proto.STRING, number=2)
 
@@ -549,13 +549,13 @@ class PublicKeyCredential(proto.Message):
     r"""A public key format and data.
 
     Attributes:
-        format_ (google.cloud.iot_v1.types.PublicKeyFormat):
+        format (google.cloud.iot_v1.types.PublicKeyFormat):
             The format of the key.
         key (str):
             The key data.
     """
 
-    format_ = proto.Field(proto.ENUM, number=1, enum="PublicKeyFormat",)
+    format = proto.Field(proto.ENUM, number=1, enum="PublicKeyFormat",)
 
     key = proto.Field(proto.STRING, number=2)
 
