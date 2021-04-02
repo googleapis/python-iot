@@ -52,12 +52,80 @@ class DeviceManagerAsyncClient:
     DEFAULT_ENDPOINT = DeviceManagerClient.DEFAULT_ENDPOINT
     DEFAULT_MTLS_ENDPOINT = DeviceManagerClient.DEFAULT_MTLS_ENDPOINT
 
-    registry_path = staticmethod(DeviceManagerClient.registry_path)
-
     device_path = staticmethod(DeviceManagerClient.device_path)
+    parse_device_path = staticmethod(DeviceManagerClient.parse_device_path)
+    registry_path = staticmethod(DeviceManagerClient.registry_path)
+    parse_registry_path = staticmethod(DeviceManagerClient.parse_registry_path)
 
-    from_service_account_file = DeviceManagerClient.from_service_account_file
+    common_billing_account_path = staticmethod(
+        DeviceManagerClient.common_billing_account_path
+    )
+    parse_common_billing_account_path = staticmethod(
+        DeviceManagerClient.parse_common_billing_account_path
+    )
+
+    common_folder_path = staticmethod(DeviceManagerClient.common_folder_path)
+    parse_common_folder_path = staticmethod(
+        DeviceManagerClient.parse_common_folder_path
+    )
+
+    common_organization_path = staticmethod(
+        DeviceManagerClient.common_organization_path
+    )
+    parse_common_organization_path = staticmethod(
+        DeviceManagerClient.parse_common_organization_path
+    )
+
+    common_project_path = staticmethod(DeviceManagerClient.common_project_path)
+    parse_common_project_path = staticmethod(
+        DeviceManagerClient.parse_common_project_path
+    )
+
+    common_location_path = staticmethod(DeviceManagerClient.common_location_path)
+    parse_common_location_path = staticmethod(
+        DeviceManagerClient.parse_common_location_path
+    )
+
+    @classmethod
+    def from_service_account_info(cls, info: dict, *args, **kwargs):
+        """Creates an instance of this client using the provided credentials info.
+
+        Args:
+            info (dict): The service account private key info.
+            args: Additional arguments to pass to the constructor.
+            kwargs: Additional arguments to pass to the constructor.
+
+        Returns:
+            DeviceManagerAsyncClient: The constructed client.
+        """
+        return DeviceManagerClient.from_service_account_info.__func__(DeviceManagerAsyncClient, info, *args, **kwargs)  # type: ignore
+
+    @classmethod
+    def from_service_account_file(cls, filename: str, *args, **kwargs):
+        """Creates an instance of this client using the provided credentials
+        file.
+
+        Args:
+            filename (str): The path to the service account private key json
+                file.
+            args: Additional arguments to pass to the constructor.
+            kwargs: Additional arguments to pass to the constructor.
+
+        Returns:
+            DeviceManagerAsyncClient: The constructed client.
+        """
+        return DeviceManagerClient.from_service_account_file.__func__(DeviceManagerAsyncClient, filename, *args, **kwargs)  # type: ignore
+
     from_service_account_json = from_service_account_file
+
+    @property
+    def transport(self) -> DeviceManagerTransport:
+        """Return the transport used by the client instance.
+
+        Returns:
+            DeviceManagerTransport: The transport used by the client instance.
+        """
+        return self._client.transport
 
     get_transport_class = functools.partial(
         type(DeviceManagerClient).get_transport_class, type(DeviceManagerClient)
@@ -85,16 +153,19 @@ class DeviceManagerAsyncClient:
             client_options (ClientOptions): Custom options for the client. It
                 won't take effect if a ``transport`` instance is provided.
                 (1) The ``api_endpoint`` property can be used to override the
-                default endpoint provided by the client. GOOGLE_API_USE_MTLS
+                default endpoint provided by the client. GOOGLE_API_USE_MTLS_ENDPOINT
                 environment variable can also be used to override the endpoint:
                 "always" (always use the default mTLS endpoint), "never" (always
-                use the default regular endpoint, this is the default value for
-                the environment variable) and "auto" (auto switch to the default
-                mTLS endpoint if client SSL credentials is present). However,
-                the ``api_endpoint`` property takes precedence if provided.
-                (2) The ``client_cert_source`` property is used to provide client
-                SSL credentials for mutual TLS transport. If not provided, the
-                default SSL credentials will be used if present.
+                use the default regular endpoint) and "auto" (auto switch to the
+                default mTLS endpoint if client certificate is present, this is
+                the default value). However, the ``api_endpoint`` property takes
+                precedence if provided.
+                (2) If GOOGLE_API_USE_CLIENT_CERTIFICATE environment variable
+                is "true", then the ``client_cert_source`` property can be used
+                to provide client certificate for mutual TLS transport. If
+                not provided, the default SSL client certificate will be used if
+                present. If GOOGLE_API_USE_CLIENT_CERTIFICATE is "false" or not
+                set, no client certificate will be used.
 
         Raises:
             google.auth.exceptions.MutualTlsChannelError: If mutual TLS transport
@@ -121,20 +192,22 @@ class DeviceManagerAsyncClient:
         r"""Creates a device registry that contains devices.
 
         Args:
-            request (:class:`~.device_manager.CreateDeviceRegistryRequest`):
+            request (:class:`google.cloud.iot_v1.types.CreateDeviceRegistryRequest`):
                 The request object. Request for `CreateDeviceRegistry`.
             parent (:class:`str`):
                 Required. The project and cloud region where this device
                 registry must be created. For example,
                 ``projects/example-project/locations/us-central1``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            device_registry (:class:`~.resources.DeviceRegistry`):
+            device_registry (:class:`google.cloud.iot_v1.types.DeviceRegistry`):
                 Required. The device registry. The field ``name`` must
                 be empty. The server will generate that field from the
                 device registry ``id`` provided and the ``parent``
                 field.
+
                 This corresponds to the ``device_registry`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -146,13 +219,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceRegistry:
+            google.cloud.iot_v1.types.DeviceRegistry:
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([parent, device_registry]):
+        has_flattened_params = any([parent, device_registry])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -200,11 +274,12 @@ class DeviceManagerAsyncClient:
         r"""Gets a device registry configuration.
 
         Args:
-            request (:class:`~.device_manager.GetDeviceRegistryRequest`):
+            request (:class:`google.cloud.iot_v1.types.GetDeviceRegistryRequest`):
                 The request object. Request for `GetDeviceRegistry`.
             name (:class:`str`):
                 Required. The name of the device registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -216,13 +291,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceRegistry:
+            google.cloud.iot_v1.types.DeviceRegistry:
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name]):
+        has_flattened_params = any([name])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -245,8 +321,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -277,23 +354,25 @@ class DeviceManagerAsyncClient:
         r"""Updates a device registry configuration.
 
         Args:
-            request (:class:`~.device_manager.UpdateDeviceRegistryRequest`):
+            request (:class:`google.cloud.iot_v1.types.UpdateDeviceRegistryRequest`):
                 The request object. Request for `UpdateDeviceRegistry`.
-            device_registry (:class:`~.resources.DeviceRegistry`):
+            device_registry (:class:`google.cloud.iot_v1.types.DeviceRegistry`):
                 Required. The new values for the device registry. The
                 ``id`` field must be empty, and the ``name`` field must
                 indicate the path of the resource. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``device_registry`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            update_mask (:class:`~.field_mask.FieldMask`):
+            update_mask (:class:`google.protobuf.field_mask_pb2.FieldMask`):
                 Required. Only updates the ``device_registry`` fields
                 indicated by this mask. The field mask must not be
                 empty, and it must not contain fields that are immutable
                 or only set by the server. Mutable top-level fields:
                 ``event_notification_config``, ``http_config``,
                 ``mqtt_config``, and ``state_notification_config``.
+
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -305,13 +384,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceRegistry:
+            google.cloud.iot_v1.types.DeviceRegistry:
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([device_registry, update_mask]):
+        has_flattened_params = any([device_registry, update_mask])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -361,11 +441,12 @@ class DeviceManagerAsyncClient:
         r"""Deletes a device registry configuration.
 
         Args:
-            request (:class:`~.device_manager.DeleteDeviceRegistryRequest`):
+            request (:class:`google.cloud.iot_v1.types.DeleteDeviceRegistryRequest`):
                 The request object. Request for `DeleteDeviceRegistry`.
             name (:class:`str`):
                 Required. The name of the device registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -379,7 +460,8 @@ class DeviceManagerAsyncClient:
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name]):
+        has_flattened_params = any([name])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -402,8 +484,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -432,12 +515,13 @@ class DeviceManagerAsyncClient:
         r"""Lists device registries.
 
         Args:
-            request (:class:`~.device_manager.ListDeviceRegistriesRequest`):
+            request (:class:`google.cloud.iot_v1.types.ListDeviceRegistriesRequest`):
                 The request object. Request for `ListDeviceRegistries`.
             parent (:class:`str`):
                 Required. The project and cloud region path. For
                 example,
                 ``projects/example-project/locations/us-central1``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -449,8 +533,8 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.pagers.ListDeviceRegistriesAsyncPager:
-                Response for ``ListDeviceRegistries``.
+            google.cloud.iot_v1.services.device_manager.pagers.ListDeviceRegistriesAsyncPager:
+                Response for ListDeviceRegistries.
 
                 Iterating over this object will yield results and
                 resolve additional pages automatically.
@@ -459,7 +543,8 @@ class DeviceManagerAsyncClient:
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([parent]):
+        has_flattened_params = any([parent])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -482,8 +567,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -520,20 +606,22 @@ class DeviceManagerAsyncClient:
         r"""Creates a device in a device registry.
 
         Args:
-            request (:class:`~.device_manager.CreateDeviceRequest`):
+            request (:class:`google.cloud.iot_v1.types.CreateDeviceRequest`):
                 The request object. Request for `CreateDevice`.
             parent (:class:`str`):
                 Required. The name of the device registry where this
                 device should be created. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            device (:class:`~.resources.Device`):
+            device (:class:`google.cloud.iot_v1.types.Device`):
                 Required. The device registration details. The field
                 ``name`` must be empty. The server generates ``name``
                 from the device registry ``id`` and the ``parent``
                 field.
+
                 This corresponds to the ``device`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -545,13 +633,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.Device:
+            google.cloud.iot_v1.types.Device:
                 The device resource.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([parent, device]):
+        has_flattened_params = any([parent, device])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -599,13 +688,14 @@ class DeviceManagerAsyncClient:
         r"""Gets details about a device.
 
         Args:
-            request (:class:`~.device_manager.GetDeviceRequest`):
+            request (:class:`google.cloud.iot_v1.types.GetDeviceRequest`):
                 The request object. Request for `GetDevice`.
             name (:class:`str`):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -617,13 +707,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.Device:
+            google.cloud.iot_v1.types.Device:
                 The device resource.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name]):
+        has_flattened_params = any([name])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -646,8 +737,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -678,23 +770,25 @@ class DeviceManagerAsyncClient:
         r"""Updates a device.
 
         Args:
-            request (:class:`~.device_manager.UpdateDeviceRequest`):
+            request (:class:`google.cloud.iot_v1.types.UpdateDeviceRequest`):
                 The request object. Request for `UpdateDevice`.
-            device (:class:`~.resources.Device`):
+            device (:class:`google.cloud.iot_v1.types.Device`):
                 Required. The new values for the device. The ``id`` and
                 ``num_id`` fields must be empty, and the field ``name``
                 must specify the name path. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``\ or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``device`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            update_mask (:class:`~.field_mask.FieldMask`):
+            update_mask (:class:`google.protobuf.field_mask_pb2.FieldMask`):
                 Required. Only updates the ``device`` fields indicated
                 by this mask. The field mask must not be empty, and it
                 must not contain fields that are immutable or only set
                 by the server. Mutable top-level fields:
                 ``credentials``, ``blocked``, and ``metadata``
+
                 This corresponds to the ``update_mask`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -706,13 +800,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.Device:
+            google.cloud.iot_v1.types.Device:
                 The device resource.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([device, update_mask]):
+        has_flattened_params = any([device, update_mask])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -762,13 +857,14 @@ class DeviceManagerAsyncClient:
         r"""Deletes a device.
 
         Args:
-            request (:class:`~.device_manager.DeleteDeviceRequest`):
+            request (:class:`google.cloud.iot_v1.types.DeleteDeviceRequest`):
                 The request object. Request for `DeleteDevice`.
             name (:class:`str`):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -782,7 +878,8 @@ class DeviceManagerAsyncClient:
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name]):
+        has_flattened_params = any([name])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -805,8 +902,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -835,12 +933,13 @@ class DeviceManagerAsyncClient:
         r"""List devices in a device registry.
 
         Args:
-            request (:class:`~.device_manager.ListDevicesRequest`):
+            request (:class:`google.cloud.iot_v1.types.ListDevicesRequest`):
                 The request object. Request for `ListDevices`.
             parent (:class:`str`):
                 Required. The device registry path. Required. For
                 example,
                 ``projects/my-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -852,8 +951,8 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.pagers.ListDevicesAsyncPager:
-                Response for ``ListDevices``.
+            google.cloud.iot_v1.services.device_manager.pagers.ListDevicesAsyncPager:
+                Response for ListDevices.
 
                 Iterating over this object will yield results and
                 resolve additional pages automatically.
@@ -862,7 +961,8 @@ class DeviceManagerAsyncClient:
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([parent]):
+        has_flattened_params = any([parent])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -885,8 +985,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -925,7 +1026,7 @@ class DeviceManagerAsyncClient:
         the modified configuration version and its metadata.
 
         Args:
-            request (:class:`~.device_manager.ModifyCloudToDeviceConfigRequest`):
+            request (:class:`google.cloud.iot_v1.types.ModifyCloudToDeviceConfigRequest`):
                 The request object. Request for
                 `ModifyCloudToDeviceConfig`.
             name (:class:`str`):
@@ -933,12 +1034,14 @@ class DeviceManagerAsyncClient:
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             binary_data (:class:`bytes`):
                 Required. The configuration data for
                 the device.
+
                 This corresponds to the ``binary_data`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -950,7 +1053,7 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.resources.DeviceConfig:
+            google.cloud.iot_v1.types.DeviceConfig:
                 The device configuration. Eventually
                 delivered to devices.
 
@@ -958,7 +1061,8 @@ class DeviceManagerAsyncClient:
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name, binary_data]):
+        has_flattened_params = any([name, binary_data])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -983,10 +1087,11 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
+                    exceptions.DeadlineExceeded,
                     exceptions.ResourceExhausted,
                     exceptions.ServiceUnavailable,
-                    exceptions.DeadlineExceeded,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -1017,7 +1122,7 @@ class DeviceManagerAsyncClient:
         configuration in descending order (i.e.: newest first).
 
         Args:
-            request (:class:`~.device_manager.ListDeviceConfigVersionsRequest`):
+            request (:class:`google.cloud.iot_v1.types.ListDeviceConfigVersionsRequest`):
                 The request object. Request for
                 `ListDeviceConfigVersions`.
             name (:class:`str`):
@@ -1025,6 +1130,7 @@ class DeviceManagerAsyncClient:
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1036,13 +1142,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.ListDeviceConfigVersionsResponse:
-                Response for ``ListDeviceConfigVersions``.
+            google.cloud.iot_v1.types.ListDeviceConfigVersionsResponse:
+                Response for ListDeviceConfigVersions.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name]):
+        has_flattened_params = any([name])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -1065,8 +1172,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -1097,13 +1205,14 @@ class DeviceManagerAsyncClient:
         descending order (i.e.: newest first).
 
         Args:
-            request (:class:`~.device_manager.ListDeviceStatesRequest`):
+            request (:class:`google.cloud.iot_v1.types.ListDeviceStatesRequest`):
                 The request object. Request for `ListDeviceStates`.
             name (:class:`str`):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1115,13 +1224,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.ListDeviceStatesResponse:
-                Response for ``ListDeviceStates``.
+            google.cloud.iot_v1.types.ListDeviceStatesResponse:
+                Response for ListDeviceStates.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name]):
+        has_flattened_params = any([name])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -1144,8 +1254,9 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
-                    exceptions.ServiceUnavailable, exceptions.DeadlineExceeded,
+                    exceptions.DeadlineExceeded, exceptions.ServiceUnavailable,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -1176,7 +1287,7 @@ class DeviceManagerAsyncClient:
         resource. Replaces any existing policy.
 
         Args:
-            request (:class:`~.iam_policy.SetIamPolicyRequest`):
+            request (:class:`google.iam.v1.iam_policy_pb2.SetIamPolicyRequest`):
                 The request object. Request message for `SetIamPolicy`
                 method.
             resource (:class:`str`):
@@ -1184,6 +1295,7 @@ class DeviceManagerAsyncClient:
                 policy is being specified. See the
                 operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1195,78 +1307,69 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.policy.Policy:
-                Defines an Identity and Access Management (IAM) policy.
-                It is used to specify access control policies for Cloud
-                Platform resources.
+            google.iam.v1.policy_pb2.Policy:
+                Defines an Identity and Access Management (IAM) policy. It is used to
+                   specify access control policies for Cloud Platform
+                   resources.
 
-                A ``Policy`` is a collection of ``bindings``. A
-                ``binding`` binds one or more ``members`` to a single
-                ``role``. Members can be user accounts, service
-                accounts, Google groups, and domains (such as G Suite).
-                A ``role`` is a named list of permissions (defined by
-                IAM or configured by users). A ``binding`` can
-                optionally specify a ``condition``, which is a logic
-                expression that further constrains the role binding
-                based on attributes about the request and/or target
-                resource.
+                   A Policy is a collection of bindings. A binding binds
+                   one or more members to a single role. Members can be
+                   user accounts, service accounts, Google groups, and
+                   domains (such as G Suite). A role is a named list of
+                   permissions (defined by IAM or configured by users).
+                   A binding can optionally specify a condition, which
+                   is a logic expression that further constrains the
+                   role binding based on attributes about the request
+                   and/or target resource.
 
-                **JSON Example**
+                   **JSON Example**
 
-                ::
+                      {
+                         "bindings": [
+                            {
+                               "role":
+                               "roles/resourcemanager.organizationAdmin",
+                               "members": [ "user:mike@example.com",
+                               "group:admins@example.com",
+                               "domain:google.com",
+                               "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+                               ]
 
-                    {
-                      "bindings": [
-                        {
-                          "role": "roles/resourcemanager.organizationAdmin",
-                          "members": [
-                            "user:mike@example.com",
-                            "group:admins@example.com",
-                            "domain:google.com",
-                            "serviceAccount:my-project-id@appspot.gserviceaccount.com"
-                          ]
-                        },
-                        {
-                          "role": "roles/resourcemanager.organizationViewer",
-                          "members": ["user:eve@example.com"],
-                          "condition": {
-                            "title": "expirable access",
-                            "description": "Does not grant access after Sep 2020",
-                            "expression": "request.time <
-                            timestamp('2020-10-01T00:00:00.000Z')",
-                          }
-                        }
-                      ]
-                    }
+                            }, { "role":
+                            "roles/resourcemanager.organizationViewer",
+                            "members": ["user:eve@example.com"],
+                            "condition": { "title": "expirable access",
+                            "description": "Does not grant access after
+                            Sep 2020", "expression": "request.time <
+                            timestamp('2020-10-01T00:00:00.000Z')", } }
 
-                **YAML Example**
+                         ]
 
-                ::
+                      }
 
-                    bindings:
-                    - members:
-                      - user:mike@example.com
-                      - group:admins@example.com
-                      - domain:google.com
-                      - serviceAccount:my-project-id@appspot.gserviceaccount.com
-                      role: roles/resourcemanager.organizationAdmin
-                    - members:
-                      - user:eve@example.com
-                      role: roles/resourcemanager.organizationViewer
-                      condition:
-                        title: expirable access
-                        description: Does not grant access after Sep 2020
-                        expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+                   **YAML Example**
 
-                For a description of IAM and its features, see the `IAM
-                developer's
-                guide <https://cloud.google.com/iam/docs>`__.
+                      bindings: - members: - user:\ mike@example.com -
+                      group:\ admins@example.com - domain:google.com -
+                      serviceAccount:\ my-project-id@appspot.gserviceaccount.com
+                      role: roles/resourcemanager.organizationAdmin -
+                      members: - user:\ eve@example.com role:
+                      roles/resourcemanager.organizationViewer
+                      condition: title: expirable access description:
+                      Does not grant access after Sep 2020 expression:
+                      request.time <
+                      timestamp('2020-10-01T00:00:00.000Z')
+
+                   For a description of IAM and its features, see the
+                   [IAM developer's
+                   guide](\ https://cloud.google.com/iam/docs).
 
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([resource]):
+        has_flattened_params = any([resource])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -1278,13 +1381,7 @@ class DeviceManagerAsyncClient:
             request = iam_policy.SetIamPolicyRequest(**request)
 
         elif not request:
-            request = iam_policy.SetIamPolicyRequest()
-
-        # If we have keyword arguments corresponding to fields on the
-        # request, apply these.
-
-        if resource is not None:
-            request.resource = resource
+            request = iam_policy.SetIamPolicyRequest(resource=resource,)
 
         # Wrap the RPC method; this adds retry and timeout information,
         # and friendly error handling.
@@ -1320,7 +1417,7 @@ class DeviceManagerAsyncClient:
         not have a policy set.
 
         Args:
-            request (:class:`~.iam_policy.GetIamPolicyRequest`):
+            request (:class:`google.iam.v1.iam_policy_pb2.GetIamPolicyRequest`):
                 The request object. Request message for `GetIamPolicy`
                 method.
             resource (:class:`str`):
@@ -1328,6 +1425,7 @@ class DeviceManagerAsyncClient:
                 policy is being requested. See the
                 operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1339,78 +1437,69 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.policy.Policy:
-                Defines an Identity and Access Management (IAM) policy.
-                It is used to specify access control policies for Cloud
-                Platform resources.
+            google.iam.v1.policy_pb2.Policy:
+                Defines an Identity and Access Management (IAM) policy. It is used to
+                   specify access control policies for Cloud Platform
+                   resources.
 
-                A ``Policy`` is a collection of ``bindings``. A
-                ``binding`` binds one or more ``members`` to a single
-                ``role``. Members can be user accounts, service
-                accounts, Google groups, and domains (such as G Suite).
-                A ``role`` is a named list of permissions (defined by
-                IAM or configured by users). A ``binding`` can
-                optionally specify a ``condition``, which is a logic
-                expression that further constrains the role binding
-                based on attributes about the request and/or target
-                resource.
+                   A Policy is a collection of bindings. A binding binds
+                   one or more members to a single role. Members can be
+                   user accounts, service accounts, Google groups, and
+                   domains (such as G Suite). A role is a named list of
+                   permissions (defined by IAM or configured by users).
+                   A binding can optionally specify a condition, which
+                   is a logic expression that further constrains the
+                   role binding based on attributes about the request
+                   and/or target resource.
 
-                **JSON Example**
+                   **JSON Example**
 
-                ::
+                      {
+                         "bindings": [
+                            {
+                               "role":
+                               "roles/resourcemanager.organizationAdmin",
+                               "members": [ "user:mike@example.com",
+                               "group:admins@example.com",
+                               "domain:google.com",
+                               "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+                               ]
 
-                    {
-                      "bindings": [
-                        {
-                          "role": "roles/resourcemanager.organizationAdmin",
-                          "members": [
-                            "user:mike@example.com",
-                            "group:admins@example.com",
-                            "domain:google.com",
-                            "serviceAccount:my-project-id@appspot.gserviceaccount.com"
-                          ]
-                        },
-                        {
-                          "role": "roles/resourcemanager.organizationViewer",
-                          "members": ["user:eve@example.com"],
-                          "condition": {
-                            "title": "expirable access",
-                            "description": "Does not grant access after Sep 2020",
-                            "expression": "request.time <
-                            timestamp('2020-10-01T00:00:00.000Z')",
-                          }
-                        }
-                      ]
-                    }
+                            }, { "role":
+                            "roles/resourcemanager.organizationViewer",
+                            "members": ["user:eve@example.com"],
+                            "condition": { "title": "expirable access",
+                            "description": "Does not grant access after
+                            Sep 2020", "expression": "request.time <
+                            timestamp('2020-10-01T00:00:00.000Z')", } }
 
-                **YAML Example**
+                         ]
 
-                ::
+                      }
 
-                    bindings:
-                    - members:
-                      - user:mike@example.com
-                      - group:admins@example.com
-                      - domain:google.com
-                      - serviceAccount:my-project-id@appspot.gserviceaccount.com
-                      role: roles/resourcemanager.organizationAdmin
-                    - members:
-                      - user:eve@example.com
-                      role: roles/resourcemanager.organizationViewer
-                      condition:
-                        title: expirable access
-                        description: Does not grant access after Sep 2020
-                        expression: request.time < timestamp('2020-10-01T00:00:00.000Z')
+                   **YAML Example**
 
-                For a description of IAM and its features, see the `IAM
-                developer's
-                guide <https://cloud.google.com/iam/docs>`__.
+                      bindings: - members: - user:\ mike@example.com -
+                      group:\ admins@example.com - domain:google.com -
+                      serviceAccount:\ my-project-id@appspot.gserviceaccount.com
+                      role: roles/resourcemanager.organizationAdmin -
+                      members: - user:\ eve@example.com role:
+                      roles/resourcemanager.organizationViewer
+                      condition: title: expirable access description:
+                      Does not grant access after Sep 2020 expression:
+                      request.time <
+                      timestamp('2020-10-01T00:00:00.000Z')
+
+                   For a description of IAM and its features, see the
+                   [IAM developer's
+                   guide](\ https://cloud.google.com/iam/docs).
 
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([resource]):
+        has_flattened_params = any([resource])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -1422,13 +1511,7 @@ class DeviceManagerAsyncClient:
             request = iam_policy.GetIamPolicyRequest(**request)
 
         elif not request:
-            request = iam_policy.GetIamPolicyRequest()
-
-        # If we have keyword arguments corresponding to fields on the
-        # request, apply these.
-
-        if resource is not None:
-            request.resource = resource
+            request = iam_policy.GetIamPolicyRequest(resource=resource,)
 
         # Wrap the RPC method; this adds retry and timeout information,
         # and friendly error handling.
@@ -1465,7 +1548,7 @@ class DeviceManagerAsyncClient:
         permissions, not a NOT_FOUND error.
 
         Args:
-            request (:class:`~.iam_policy.TestIamPermissionsRequest`):
+            request (:class:`google.iam.v1.iam_policy_pb2.TestIamPermissionsRequest`):
                 The request object. Request message for
                 `TestIamPermissions` method.
             resource (:class:`str`):
@@ -1473,6 +1556,7 @@ class DeviceManagerAsyncClient:
                 policy detail is being requested. See
                 the operation documentation for the
                 appropriate value for this field.
+
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1481,6 +1565,7 @@ class DeviceManagerAsyncClient:
                 Permissions with wildcards (such as '*' or 'storage.*')
                 are not allowed. For more information see `IAM
                 Overview <https://cloud.google.com/iam/docs/overview#permissions>`__.
+
                 This corresponds to the ``permissions`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1492,13 +1577,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.iam_policy.TestIamPermissionsResponse:
-                Response message for ``TestIamPermissions`` method.
+            google.iam.v1.iam_policy_pb2.TestIamPermissionsResponse:
+                Response message for TestIamPermissions method.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([resource, permissions]):
+        has_flattened_params = any([resource, permissions])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -1510,16 +1596,9 @@ class DeviceManagerAsyncClient:
             request = iam_policy.TestIamPermissionsRequest(**request)
 
         elif not request:
-            request = iam_policy.TestIamPermissionsRequest()
-
-        # If we have keyword arguments corresponding to fields on the
-        # request, apply these.
-
-        if resource is not None:
-            request.resource = resource
-
-        if permissions:
-            request.permissions.extend(permissions)
+            request = iam_policy.TestIamPermissionsRequest(
+                resource=resource, permissions=permissions,
+            )
 
         # Wrap the RPC method; this adds retry and timeout information,
         # and friendly error handling.
@@ -1571,19 +1650,21 @@ class DeviceManagerAsyncClient:
            from the device.
 
         Args:
-            request (:class:`~.device_manager.SendCommandToDeviceRequest`):
+            request (:class:`google.cloud.iot_v1.types.SendCommandToDeviceRequest`):
                 The request object. Request for `SendCommandToDevice`.
             name (:class:`str`):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
                 or
                 ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
+
                 This corresponds to the ``name`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             binary_data (:class:`bytes`):
                 Required. The command data to send to
                 the device.
+
                 This corresponds to the ``binary_data`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1598,6 +1679,7 @@ class DeviceManagerAsyncClient:
                 must not have more than 256 characters,
                 and must not contain any MQTT wildcards
                 ("+" or "#") or null characters.
+
                 This corresponds to the ``subfolder`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1609,13 +1691,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.SendCommandToDeviceResponse:
-                Response for ``SendCommandToDevice``.
+            google.cloud.iot_v1.types.SendCommandToDeviceResponse:
+                Response for SendCommandToDevice.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([name, binary_data, subfolder]):
+        has_flattened_params = any([name, binary_data, subfolder])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -1642,10 +1725,11 @@ class DeviceManagerAsyncClient:
                 maximum=60.0,
                 multiplier=1.3,
                 predicate=retries.if_exception_type(
+                    exceptions.DeadlineExceeded,
                     exceptions.ResourceExhausted,
                     exceptions.ServiceUnavailable,
-                    exceptions.DeadlineExceeded,
                 ),
+                deadline=120.0,
             ),
             default_timeout=120.0,
             client_info=DEFAULT_CLIENT_INFO,
@@ -1677,17 +1761,19 @@ class DeviceManagerAsyncClient:
         r"""Associates the device with the gateway.
 
         Args:
-            request (:class:`~.device_manager.BindDeviceToGatewayRequest`):
+            request (:class:`google.cloud.iot_v1.types.BindDeviceToGatewayRequest`):
                 The request object. Request for `BindDeviceToGateway`.
             parent (:class:`str`):
                 Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             gateway_id (:class:`str`):
                 Required. The value of ``gateway_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``gateway_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1695,6 +1781,7 @@ class DeviceManagerAsyncClient:
                 Required. The device to associate with the specified
                 gateway. The value of ``device_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``device_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1706,13 +1793,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.BindDeviceToGatewayResponse:
-                Response for ``BindDeviceToGateway``.
+            google.cloud.iot_v1.types.BindDeviceToGatewayResponse:
+                Response for BindDeviceToGateway.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([parent, gateway_id, device_id]):
+        has_flattened_params = any([parent, gateway_id, device_id])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."
@@ -1765,18 +1853,20 @@ class DeviceManagerAsyncClient:
         gateway.
 
         Args:
-            request (:class:`~.device_manager.UnbindDeviceFromGatewayRequest`):
+            request (:class:`google.cloud.iot_v1.types.UnbindDeviceFromGatewayRequest`):
                 The request object. Request for
                 `UnbindDeviceFromGateway`.
             parent (:class:`str`):
                 Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
+
                 This corresponds to the ``parent`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
             gateway_id (:class:`str`):
                 Required. The value of ``gateway_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``gateway_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1784,6 +1874,7 @@ class DeviceManagerAsyncClient:
                 Required. The device to disassociate from the specified
                 gateway. The value of ``device_id`` can be either the
                 device numeric ID or the user-defined device identifier.
+
                 This corresponds to the ``device_id`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
@@ -1795,13 +1886,14 @@ class DeviceManagerAsyncClient:
                 sent along with the request as metadata.
 
         Returns:
-            ~.device_manager.UnbindDeviceFromGatewayResponse:
-                Response for ``UnbindDeviceFromGateway``.
+            google.cloud.iot_v1.types.UnbindDeviceFromGatewayResponse:
+                Response for UnbindDeviceFromGateway.
         """
         # Create or coerce a protobuf request object.
         # Sanity check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
-        if request is not None and any([parent, gateway_id, device_id]):
+        has_flattened_params = any([parent, gateway_id, device_id])
+        if request is not None and has_flattened_params:
             raise ValueError(
                 "If the `request` argument is set, then none of "
                 "the individual field arguments should be set."

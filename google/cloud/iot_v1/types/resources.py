@@ -135,7 +135,7 @@ class Device(proto.Message):
             [Output only] A server-defined unique numeric ID for the
             device. This is a more compact way to identify devices, and
             it is globally unique.
-        credentials (Sequence[~.resources.DeviceCredential]):
+        credentials (Sequence[google.cloud.iot_v1.types.DeviceCredential]):
             The credentials used to authenticate this device. To allow
             credential rotation without interruption, multiple device
             credentials can be bound to this device. No more than 3
@@ -143,26 +143,26 @@ class Device(proto.Message):
             new credentials are added to a device, they are verified
             against the registry credentials. For details, see the
             description of the ``DeviceRegistry.credentials`` field.
-        last_heartbeat_time (~.timestamp.Timestamp):
+        last_heartbeat_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The last time an MQTT ``PINGREQ`` was
             received. This field applies only to devices connecting
             through MQTT. MQTT clients usually only send ``PINGREQ``
             messages if the connection is idle, and no other messages
             have been sent. Timestamps are periodically collected and
             written to storage; they may be stale by a few minutes.
-        last_event_time (~.timestamp.Timestamp):
+        last_event_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The last time a telemetry event was received.
             Timestamps are periodically collected and written to
             storage; they may be stale by a few minutes.
-        last_state_time (~.timestamp.Timestamp):
+        last_state_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The last time a state event was received.
             Timestamps are periodically collected and written to
             storage; they may be stale by a few minutes.
-        last_config_ack_time (~.timestamp.Timestamp):
+        last_config_ack_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The last time a cloud-to-device config version
             acknowledgment was received from the device. This field is
             only for configurations sent through MQTT.
-        last_config_send_time (~.timestamp.Timestamp):
+        last_config_send_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The last time a cloud-to-device config version
             was sent to the device.
         blocked (bool):
@@ -171,34 +171,34 @@ class Device(proto.Message):
             to temporarily prevent the device from
             connecting if, for example, the sensor is
             generating bad data and needs maintenance.
-        last_error_time (~.timestamp.Timestamp):
+        last_error_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The time the most recent error occurred, such
             as a failure to publish to Cloud Pub/Sub. This field is the
             timestamp of 'last_error_status'.
-        last_error_status (~.status.Status):
+        last_error_status (google.rpc.status_pb2.Status):
             [Output only] The error message of the most recent error,
             such as a failure to publish to Cloud Pub/Sub.
             'last_error_time' is the timestamp of this field. If no
             errors have occurred, this field has an empty message and
             the status code 0 == OK. Otherwise, this field is expected
             to have a status code other than OK.
-        config (~.resources.DeviceConfig):
+        config (google.cloud.iot_v1.types.DeviceConfig):
             The most recent device configuration, which is eventually
             sent from Cloud IoT Core to the device. If not present on
             creation, the configuration will be initialized with an
             empty payload and version value of ``1``. To update this
             field after creation, use the
             ``DeviceManager.ModifyCloudToDeviceConfig`` method.
-        state (~.resources.DeviceState):
+        state (google.cloud.iot_v1.types.DeviceState):
             [Output only] The state most recently received from the
             device. If no state has been reported, this field is not
             present.
-        log_level (~.resources.LogLevel):
+        log_level (google.cloud.iot_v1.types.LogLevel):
             **Beta Feature**
 
             The logging verbosity for device activity. If unspecified,
             DeviceRegistry.log_level will be used.
-        metadata (Sequence[~.resources.Device.MetadataEntry]):
+        metadata (Sequence[google.cloud.iot_v1.types.Device.MetadataEntry]):
             The metadata key-value pairs assigned to the device. This
             metadata is not interpreted or indexed by Cloud IoT Core. It
             can be used to add contextual information for the device.
@@ -212,7 +212,7 @@ class Device(proto.Message):
 
             The total size of all keys and values must be less than 256
             KB, and the maximum number of key-value pairs is 500.
-        gateway_config (~.resources.GatewayConfig):
+        gateway_config (google.cloud.iot_v1.types.GatewayConfig):
             Gateway-related configuration and state.
     """
 
@@ -267,15 +267,15 @@ class GatewayConfig(proto.Message):
     r"""Gateway-related configuration and state.
 
     Attributes:
-        gateway_type (~.resources.GatewayType):
+        gateway_type (google.cloud.iot_v1.types.GatewayType):
             Indicates whether the device is a gateway.
-        gateway_auth_method (~.resources.GatewayAuthMethod):
+        gateway_auth_method (google.cloud.iot_v1.types.GatewayAuthMethod):
             Indicates how to authorize and/or
             authenticate devices to access the gateway.
         last_accessed_gateway_id (str):
             [Output only] The ID of the gateway the device accessed most
             recently.
-        last_accessed_gateway_time (~.timestamp.Timestamp):
+        last_accessed_gateway_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The most recent time at which the device
             accessed the gateway specified in ``last_accessed_gateway``.
     """
@@ -301,7 +301,7 @@ class DeviceRegistry(proto.Message):
         name (str):
             The resource path name. For example,
             ``projects/example-project/locations/us-central1/registries/my-registry``.
-        event_notification_configs (Sequence[~.resources.EventNotificationConfig]):
+        event_notification_configs (Sequence[google.cloud.iot_v1.types.EventNotificationConfig]):
             The configuration for notification of
             telemetry events received from the device. All
             telemetry events that were successfully
@@ -316,7 +316,7 @@ class DeviceRegistry(proto.Message):
             to do so using an HTTP connection, an error is
             returned. Up to 10 configurations may be
             provided.
-        state_notification_config (~.resources.StateNotificationConfig):
+        state_notification_config (google.cloud.iot_v1.types.StateNotificationConfig):
             The configuration for notification of new
             states received from the device. State updates
             are guaranteed to be stored in the state
@@ -325,19 +325,19 @@ class DeviceRegistry(proto.Message):
             misconfigured or the specified topic doesn't
             exist, no notification will be published but the
             state will still be stored in Cloud IoT Core.
-        mqtt_config (~.resources.MqttConfig):
+        mqtt_config (google.cloud.iot_v1.types.MqttConfig):
             The MQTT configuration for this device
             registry.
-        http_config (~.resources.HttpConfig):
+        http_config (google.cloud.iot_v1.types.HttpConfig):
             The DeviceService (HTTP) configuration for
             this device registry.
-        log_level (~.resources.LogLevel):
+        log_level (google.cloud.iot_v1.types.LogLevel):
             **Beta Feature**
 
             The default logging verbosity for activity from devices in
             this registry. The verbosity level can be overridden by
             Device.log_level.
-        credentials (Sequence[~.resources.RegistryCredential]):
+        credentials (Sequence[google.cloud.iot_v1.types.RegistryCredential]):
             The credentials used to verify the device
             credentials. No more than 10 credentials can be
             bound to a single registry at a time. The
@@ -383,7 +383,7 @@ class MqttConfig(proto.Message):
     r"""The configuration of MQTT for a device registry.
 
     Attributes:
-        mqtt_enabled_state (~.resources.MqttState):
+        mqtt_enabled_state (google.cloud.iot_v1.types.MqttState):
             If enabled, allows connections using the MQTT
             protocol. Otherwise, MQTT connections to this
             registry will fail.
@@ -396,7 +396,7 @@ class HttpConfig(proto.Message):
     r"""The configuration of the HTTP bridge for a device registry.
 
     Attributes:
-        http_enabled_state (~.resources.HttpState):
+        http_enabled_state (google.cloud.iot_v1.types.HttpState):
             If enabled, allows devices to use
             DeviceService via the HTTP protocol. Otherwise,
             any requests to DeviceService will fail for this
@@ -445,7 +445,7 @@ class RegistryCredential(proto.Message):
     credentials.
 
     Attributes:
-        public_key_certificate (~.resources.PublicKeyCertificate):
+        public_key_certificate (google.cloud.iot_v1.types.PublicKeyCertificate):
             A public key certificate used to verify the
             device credentials.
     """
@@ -465,9 +465,9 @@ class X509CertificateDetails(proto.Message):
         subject (str):
             The entity the certificate and public key
             belong to.
-        start_time (~.timestamp.Timestamp):
+        start_time (google.protobuf.timestamp_pb2.Timestamp):
             The time the certificate becomes valid.
-        expiry_time (~.timestamp.Timestamp):
+        expiry_time (google.protobuf.timestamp_pb2.Timestamp):
             The time the certificate becomes invalid.
         signature_algorithm (str):
             The algorithm used to sign the certificate.
@@ -492,11 +492,11 @@ class PublicKeyCertificate(proto.Message):
     r"""A public key certificate format and data.
 
     Attributes:
-        format (~.resources.PublicKeyCertificateFormat):
+        format (google.cloud.iot_v1.types.PublicKeyCertificateFormat):
             The certificate format.
         certificate (str):
             The certificate data.
-        x509_details (~.resources.X509CertificateDetails):
+        x509_details (google.cloud.iot_v1.types.X509CertificateDetails):
             [Output only] The certificate details. Used only for X.509
             certificates.
     """
@@ -505,14 +505,16 @@ class PublicKeyCertificate(proto.Message):
 
     certificate = proto.Field(proto.STRING, number=2)
 
-    x509_details = proto.Field(proto.MESSAGE, number=3, message=X509CertificateDetails,)
+    x509_details = proto.Field(
+        proto.MESSAGE, number=3, message="X509CertificateDetails",
+    )
 
 
 class DeviceCredential(proto.Message):
     r"""A server-stored device credential used for authentication.
 
     Attributes:
-        public_key (~.resources.PublicKeyCredential):
+        public_key (google.cloud.iot_v1.types.PublicKeyCredential):
             A public key used to verify the signature of
             JSON Web Tokens (JWTs). When adding a new device
             credential, either via device creation or via
@@ -529,7 +531,7 @@ class DeviceCredential(proto.Message):
             keys will be accepted. New device credentials
             must be different from every registry-level
             certificate.
-        expiration_time (~.timestamp.Timestamp):
+        expiration_time (google.protobuf.timestamp_pb2.Timestamp):
             [Optional] The time at which this credential becomes
             invalid. This credential will be ignored for new client
             authentication requests after this timestamp; however, it
@@ -547,7 +549,7 @@ class PublicKeyCredential(proto.Message):
     r"""A public key format and data.
 
     Attributes:
-        format (~.resources.PublicKeyFormat):
+        format (google.cloud.iot_v1.types.PublicKeyFormat):
             The format of the key.
         key (str):
             The key data.
@@ -568,11 +570,11 @@ class DeviceConfig(proto.Message):
             after device creation. The version must be 0 on the
             ``CreateDevice`` request if a ``config`` is specified; the
             response of ``CreateDevice`` will always have a value of 1.
-        cloud_update_time (~.timestamp.Timestamp):
+        cloud_update_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The time at which this configuration version
             was updated in Cloud IoT Core. This timestamp is set by the
             server.
-        device_ack_time (~.timestamp.Timestamp):
+        device_ack_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The time at which Cloud IoT Core received the
             acknowledgment from the device, indicating that the device
             has received this configuration version. If this field is
@@ -603,7 +605,7 @@ class DeviceState(proto.Message):
     r"""The device state, as reported by the device.
 
     Attributes:
-        update_time (~.timestamp.Timestamp):
+        update_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The time at which this state version was
             updated in Cloud IoT Core.
         binary_data (bytes):
