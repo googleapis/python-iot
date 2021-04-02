@@ -1,6 +1,6 @@
 Services for Google Cloud Iot v1 API
 ====================================
+.. toctree::
+    :maxdepth: 2
 
-.. automodule:: google.cloud.iot_v1.services.device_manager
-    :members:
-    :inherited-members:
+    device_manager

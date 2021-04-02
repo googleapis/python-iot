@@ -15,7 +15,16 @@
 # limitations under the License.
 #
 
-from typing import Any, AsyncIterable, Awaitable, Callable, Iterable, Sequence, Tuple
+from typing import (
+    Any,
+    AsyncIterable,
+    Awaitable,
+    Callable,
+    Iterable,
+    Sequence,
+    Tuple,
+    Optional,
+)
 
 from google.cloud.iot_v1.types import device_manager
 from google.cloud.iot_v1.types import resources
@@ -25,7 +34,7 @@ class ListDeviceRegistriesPager:
     """A pager for iterating through ``list_device_registries`` requests.
 
     This class thinly wraps an initial
-    :class:`~.device_manager.ListDeviceRegistriesResponse` object, and
+    :class:`google.cloud.iot_v1.types.ListDeviceRegistriesResponse` object, and
     provides an ``__iter__`` method to iterate through its
     ``device_registries`` field.
 
@@ -34,7 +43,7 @@ class ListDeviceRegistriesPager:
     through the ``device_registries`` field on the
     corresponding responses.
 
-    All the usual :class:`~.device_manager.ListDeviceRegistriesResponse`
+    All the usual :class:`google.cloud.iot_v1.types.ListDeviceRegistriesResponse`
     attributes are available on the pager. If multiple requests are made, only
     the most recent response is retained, and thus used for attribute lookup.
     """
@@ -52,9 +61,9 @@ class ListDeviceRegistriesPager:
         Args:
             method (Callable): The method that was originally called, and
                 which instantiated this pager.
-            request (:class:`~.device_manager.ListDeviceRegistriesRequest`):
+            request (google.cloud.iot_v1.types.ListDeviceRegistriesRequest):
                 The initial request object.
-            response (:class:`~.device_manager.ListDeviceRegistriesResponse`):
+            response (google.cloud.iot_v1.types.ListDeviceRegistriesResponse):
                 The initial response object.
             metadata (Sequence[Tuple[str, str]]): Strings which should be
                 sent along with the request as metadata.
@@ -87,7 +96,7 @@ class ListDeviceRegistriesAsyncPager:
     """A pager for iterating through ``list_device_registries`` requests.
 
     This class thinly wraps an initial
-    :class:`~.device_manager.ListDeviceRegistriesResponse` object, and
+    :class:`google.cloud.iot_v1.types.ListDeviceRegistriesResponse` object, and
     provides an ``__aiter__`` method to iterate through its
     ``device_registries`` field.
 
@@ -96,7 +105,7 @@ class ListDeviceRegistriesAsyncPager:
     through the ``device_registries`` field on the
     corresponding responses.
 
-    All the usual :class:`~.device_manager.ListDeviceRegistriesResponse`
+    All the usual :class:`google.cloud.iot_v1.types.ListDeviceRegistriesResponse`
     attributes are available on the pager. If multiple requests are made, only
     the most recent response is retained, and thus used for attribute lookup.
     """
@@ -114,9 +123,9 @@ class ListDeviceRegistriesAsyncPager:
         Args:
             method (Callable): The method that was originally called, and
                 which instantiated this pager.
-            request (:class:`~.device_manager.ListDeviceRegistriesRequest`):
+            request (google.cloud.iot_v1.types.ListDeviceRegistriesRequest):
                 The initial request object.
-            response (:class:`~.device_manager.ListDeviceRegistriesResponse`):
+            response (google.cloud.iot_v1.types.ListDeviceRegistriesResponse):
                 The initial response object.
             metadata (Sequence[Tuple[str, str]]): Strings which should be
                 sent along with the request as metadata.
@@ -153,7 +162,7 @@ class ListDevicesPager:
     """A pager for iterating through ``list_devices`` requests.
 
     This class thinly wraps an initial
-    :class:`~.device_manager.ListDevicesResponse` object, and
+    :class:`google.cloud.iot_v1.types.ListDevicesResponse` object, and
     provides an ``__iter__`` method to iterate through its
     ``devices`` field.
 
@@ -162,7 +171,7 @@ class ListDevicesPager:
     through the ``devices`` field on the
     corresponding responses.
 
-    All the usual :class:`~.device_manager.ListDevicesResponse`
+    All the usual :class:`google.cloud.iot_v1.types.ListDevicesResponse`
     attributes are available on the pager. If multiple requests are made, only
     the most recent response is retained, and thus used for attribute lookup.
     """
@@ -180,9 +189,9 @@ class ListDevicesPager:
         Args:
             method (Callable): The method that was originally called, and
                 which instantiated this pager.
-            request (:class:`~.device_manager.ListDevicesRequest`):
+            request (google.cloud.iot_v1.types.ListDevicesRequest):
                 The initial request object.
-            response (:class:`~.device_manager.ListDevicesResponse`):
+            response (google.cloud.iot_v1.types.ListDevicesResponse):
                 The initial response object.
             metadata (Sequence[Tuple[str, str]]): Strings which should be
                 sent along with the request as metadata.
@@ -215,7 +224,7 @@ class ListDevicesAsyncPager:
     """A pager for iterating through ``list_devices`` requests.
 
     This class thinly wraps an initial
-    :class:`~.device_manager.ListDevicesResponse` object, and
+    :class:`google.cloud.iot_v1.types.ListDevicesResponse` object, and
     provides an ``__aiter__`` method to iterate through its
     ``devices`` field.
 
@@ -224,7 +233,7 @@ class ListDevicesAsyncPager:
     through the ``devices`` field on the
     corresponding responses.
 
-    All the usual :class:`~.device_manager.ListDevicesResponse`
+    All the usual :class:`google.cloud.iot_v1.types.ListDevicesResponse`
     attributes are available on the pager. If multiple requests are made, only
     the most recent response is retained, and thus used for attribute lookup.
     """
@@ -242,9 +251,9 @@ class ListDevicesAsyncPager:
         Args:
             method (Callable): The method that was originally called, and
                 which instantiated this pager.
-            request (:class:`~.device_manager.ListDevicesRequest`):
+            request (google.cloud.iot_v1.types.ListDevicesRequest):
                 The initial request object.
-            response (:class:`~.device_manager.ListDevicesResponse`):
+            response (google.cloud.iot_v1.types.ListDevicesResponse):
                 The initial response object.
             metadata (Sequence[Tuple[str, str]]): Strings which should be
                 sent along with the request as metadata.
