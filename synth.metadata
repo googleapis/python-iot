@@ -4,15 +4,15 @@
       "git": {
         "name": ".",
         "remote": "https://github.com/googleapis/python-iot.git",
-        "sha": "af130f4f45356086d934569adf101bce1073971c"
+        "sha": "ec0c6f2aa68d29e08a78297c0d4cf666dbabd77c"
       }
     },
     {
       "git": {
         "name": "googleapis",
         "remote": "https://github.com/googleapis/googleapis.git",
-        "sha": "8ff7d794576311d3d68d4df2ac6da93bbfcd7476",
-        "internalRef": "366472163"
+        "sha": "2490be32f08cccc870862ea86920f58325795c89",
+        "internalRef": "366826395"
       }
     },
     {

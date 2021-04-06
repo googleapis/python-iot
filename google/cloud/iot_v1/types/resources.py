@@ -135,7 +135,7 @@ class Device(proto.Message):
             [Output only] A server-defined unique numeric ID for the
             device. This is a more compact way to identify devices, and
             it is globally unique.
-        credentials (Sequence[google.cloud.iot_v1.types.DeviceCredential]):
+        credentials_ (Sequence[google.cloud.iot_v1.types.DeviceCredential]):
             The credentials used to authenticate this device. To allow
             credential rotation without interruption, multiple device
             credentials can be bound to this device. No more than 3
@@ -222,7 +222,7 @@ class Device(proto.Message):
 
     num_id = proto.Field(proto.UINT64, number=3)
 
-    credentials = proto.RepeatedField(
+    credentials_ = proto.RepeatedField(
         proto.MESSAGE, number=12, message="DeviceCredential",
     )
 
@@ -337,7 +337,7 @@ class DeviceRegistry(proto.Message):
             The default logging verbosity for activity from devices in
             this registry. The verbosity level can be overridden by
             Device.log_level.
-        credentials (Sequence[google.cloud.iot_v1.types.RegistryCredential]):
+        credentials_ (Sequence[google.cloud.iot_v1.types.RegistryCredential]):
             The credentials used to verify the device
             credentials. No more than 10 credentials can be
             bound to a single registry at a time. The
@@ -374,7 +374,7 @@ class DeviceRegistry(proto.Message):
 
     log_level = proto.Field(proto.ENUM, number=11, enum="LogLevel",)
 
-    credentials = proto.RepeatedField(
+    credentials_ = proto.RepeatedField(
         proto.MESSAGE, number=8, message="RegistryCredential",
     )
 

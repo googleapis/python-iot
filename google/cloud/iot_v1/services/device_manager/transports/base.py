@@ -28,7 +28,7 @@ from google.auth import credentials  # type: ignore
 from google.cloud.iot_v1.types import device_manager
 from google.cloud.iot_v1.types import resources
 from google.iam.v1 import iam_policy_pb2 as iam_policy  # type: ignore
-from google.iam.v1 import policy_pb2 as policy  # type: ignore
+from google.iam.v1 import policy_pb2 as gi_policy  # type: ignore
 from google.protobuf import empty_pb2 as empty  # type: ignore
 
 
@@ -434,7 +434,7 @@ class DeviceManagerTransport(abc.ABC):
         self,
     ) -> typing.Callable[
         [iam_policy.SetIamPolicyRequest],
-        typing.Union[policy.Policy, typing.Awaitable[policy.Policy]],
+        typing.Union[gi_policy.Policy, typing.Awaitable[gi_policy.Policy]],
     ]:
         raise NotImplementedError()
 
@@ -443,7 +443,7 @@ class DeviceManagerTransport(abc.ABC):
         self,
     ) -> typing.Callable[
         [iam_policy.GetIamPolicyRequest],
-        typing.Union[policy.Policy, typing.Awaitable[policy.Policy]],
+        typing.Union[gi_policy.Policy, typing.Awaitable[gi_policy.Policy]],
     ]:
         raise NotImplementedError()
 
