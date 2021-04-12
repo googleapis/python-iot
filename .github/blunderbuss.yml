@@ -1,0 +1,13 @@
+assign_issues_by:
+- labels:
+  - 'api: cloudiot'
+  to:
+  - fjanosi-google
+  - joeklemm
+
+assign_prs_by:
+- labels:
+  - 'api: cloudiot'
+  to:
+  - fjanosi-google
+  - joeklemm
