@@ -17,20 +17,21 @@ import synthtool as s
 from synthtool import gcp
 from synthtool.languages import python
 
-gapic = gcp.GAPICBazel()
 common = gcp.CommonTemplates()
-excludes = ["README.rst", "setup.py", "nox*.py", "docs/index.rst"]
 
-# ----------------------------------------------------------------------------
-# Generate iot GAPIC layer
-# ----------------------------------------------------------------------------
-library = gapic.py_library(
-    service="iot",
-    version="v1",
-    bazel_target="//google/cloud/iot/v1:iot-v1-py",
-    include_protos=True,
-)
-s.copy(library, excludes=excludes)
+default_version = "v1"
+
+for library in s.get_staging_dirs(default_version):
+    # Rename `format_` to `format` to avoid breaking change
+    s.replace(
+        library / "google/cloud/**/types/resources.py",
+        "format_",
+        "format"
+    )
+    excludes = ["README.rst", "setup.py", "nox*.py", "docs/index.rst"]
+    s.move(library, excludes=excludes)
+
+s.remove_staging_dirs()
 
 # ----------------------------------------------------------------------------
 # Add templated files
@@ -41,13 +42,6 @@ templated_files = common.py_library(
     cov_level=98,
 )
 s.move(templated_files, excludes=[".coveragerc"])  # microgenerator has a good .coveragerc file
-
-# Rename `format_` to `format` to avoid breaking change
-s.replace(
-    "google/cloud/**/types/resources.py",
-    "format_",
-    "format"
-)
 
 # ----------------------------------------------------------------------------
 # Samples templates
