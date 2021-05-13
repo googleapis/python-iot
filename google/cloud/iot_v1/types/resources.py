@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 import proto  # type: ignore
 
-
-from google.protobuf import timestamp_pb2 as timestamp  # type: ignore
-from google.rpc import status_pb2 as status  # type: ignore
+from google.protobuf import timestamp_pb2  # type: ignore
+from google.rpc import status_pb2  # type: ignore
 
 
 __protobuf__ = proto.module(
@@ -118,7 +115,6 @@ class PublicKeyFormat(proto.Enum):
 
 class Device(proto.Message):
     r"""The device resource.
-
     Attributes:
         id (str):
             The user-defined device identifier. The
@@ -216,56 +212,43 @@ class Device(proto.Message):
             Gateway-related configuration and state.
     """
 
-    id = proto.Field(proto.STRING, number=1)
-
-    name = proto.Field(proto.STRING, number=2)
-
-    num_id = proto.Field(proto.UINT64, number=3)
-
+    id = proto.Field(proto.STRING, number=1,)
+    name = proto.Field(proto.STRING, number=2,)
+    num_id = proto.Field(proto.UINT64, number=3,)
     credentials = proto.RepeatedField(
         proto.MESSAGE, number=12, message="DeviceCredential",
     )
-
     last_heartbeat_time = proto.Field(
-        proto.MESSAGE, number=7, message=timestamp.Timestamp,
+        proto.MESSAGE, number=7, message=timestamp_pb2.Timestamp,
     )
-
-    last_event_time = proto.Field(proto.MESSAGE, number=8, message=timestamp.Timestamp,)
-
+    last_event_time = proto.Field(
+        proto.MESSAGE, number=8, message=timestamp_pb2.Timestamp,
+    )
     last_state_time = proto.Field(
-        proto.MESSAGE, number=20, message=timestamp.Timestamp,
+        proto.MESSAGE, number=20, message=timestamp_pb2.Timestamp,
     )
-
     last_config_ack_time = proto.Field(
-        proto.MESSAGE, number=14, message=timestamp.Timestamp,
+        proto.MESSAGE, number=14, message=timestamp_pb2.Timestamp,
     )
-
     last_config_send_time = proto.Field(
-        proto.MESSAGE, number=18, message=timestamp.Timestamp,
+        proto.MESSAGE, number=18, message=timestamp_pb2.Timestamp,
     )
-
-    blocked = proto.Field(proto.BOOL, number=19)
-
+    blocked = proto.Field(proto.BOOL, number=19,)
     last_error_time = proto.Field(
-        proto.MESSAGE, number=10, message=timestamp.Timestamp,
+        proto.MESSAGE, number=10, message=timestamp_pb2.Timestamp,
     )
-
-    last_error_status = proto.Field(proto.MESSAGE, number=11, message=status.Status,)
-
+    last_error_status = proto.Field(
+        proto.MESSAGE, number=11, message=status_pb2.Status,
+    )
     config = proto.Field(proto.MESSAGE, number=13, message="DeviceConfig",)
-
     state = proto.Field(proto.MESSAGE, number=16, message="DeviceState",)
-
     log_level = proto.Field(proto.ENUM, number=21, enum="LogLevel",)
-
-    metadata = proto.MapField(proto.STRING, proto.STRING, number=17)
-
+    metadata = proto.MapField(proto.STRING, proto.STRING, number=17,)
     gateway_config = proto.Field(proto.MESSAGE, number=24, message="GatewayConfig",)
 
 
 class GatewayConfig(proto.Message):
     r"""Gateway-related configuration and state.
-
     Attributes:
         gateway_type (google.cloud.iot_v1.types.GatewayType):
             Indicates whether the device is a gateway.
@@ -281,19 +264,15 @@ class GatewayConfig(proto.Message):
     """
 
     gateway_type = proto.Field(proto.ENUM, number=1, enum="GatewayType",)
-
     gateway_auth_method = proto.Field(proto.ENUM, number=2, enum="GatewayAuthMethod",)
-
-    last_accessed_gateway_id = proto.Field(proto.STRING, number=3)
-
+    last_accessed_gateway_id = proto.Field(proto.STRING, number=3,)
     last_accessed_gateway_time = proto.Field(
-        proto.MESSAGE, number=4, message=timestamp.Timestamp,
+        proto.MESSAGE, number=4, message=timestamp_pb2.Timestamp,
     )
 
 
 class DeviceRegistry(proto.Message):
     r"""A container for a group of devices.
-
     Attributes:
         id (str):
             The identifier of this device registry. For example,
@@ -356,24 +335,17 @@ class DeviceRegistry(proto.Message):
             are revoked, deleted, or modified.
     """
 
-    id = proto.Field(proto.STRING, number=1)
-
-    name = proto.Field(proto.STRING, number=2)
-
+    id = proto.Field(proto.STRING, number=1,)
+    name = proto.Field(proto.STRING, number=2,)
     event_notification_configs = proto.RepeatedField(
         proto.MESSAGE, number=10, message="EventNotificationConfig",
     )
-
     state_notification_config = proto.Field(
         proto.MESSAGE, number=7, message="StateNotificationConfig",
     )
-
     mqtt_config = proto.Field(proto.MESSAGE, number=4, message="MqttConfig",)
-
     http_config = proto.Field(proto.MESSAGE, number=9, message="HttpConfig",)
-
     log_level = proto.Field(proto.ENUM, number=11, enum="LogLevel",)
-
     credentials = proto.RepeatedField(
         proto.MESSAGE, number=8, message="RegistryCredential",
     )
@@ -381,7 +353,6 @@ class DeviceRegistry(proto.Message):
 
 class MqttConfig(proto.Message):
     r"""The configuration of MQTT for a device registry.
-
     Attributes:
         mqtt_enabled_state (google.cloud.iot_v1.types.MqttState):
             If enabled, allows connections using the MQTT
@@ -394,7 +365,6 @@ class MqttConfig(proto.Message):
 
 class HttpConfig(proto.Message):
     r"""The configuration of the HTTP bridge for a device registry.
-
     Attributes:
         http_enabled_state (google.cloud.iot_v1.types.HttpState):
             If enabled, allows devices to use
@@ -408,7 +378,6 @@ class HttpConfig(proto.Message):
 
 class EventNotificationConfig(proto.Message):
     r"""The configuration for forwarding telemetry events.
-
     Attributes:
         subfolder_matches (str):
             If the subfolder name matches this string
@@ -422,9 +391,8 @@ class EventNotificationConfig(proto.Message):
             ``projects/myProject/topics/deviceEvents``.
     """
 
-    subfolder_matches = proto.Field(proto.STRING, number=2)
-
-    pubsub_topic_name = proto.Field(proto.STRING, number=1)
+    subfolder_matches = proto.Field(proto.STRING, number=2,)
+    pubsub_topic_name = proto.Field(proto.STRING, number=1,)
 
 
 class StateNotificationConfig(proto.Message):
@@ -437,7 +405,7 @@ class StateNotificationConfig(proto.Message):
             ``projects/myProject/topics/deviceEvents``.
     """
 
-    pubsub_topic_name = proto.Field(proto.STRING, number=1)
+    pubsub_topic_name = proto.Field(proto.STRING, number=1,)
 
 
 class RegistryCredential(proto.Message):
@@ -475,22 +443,16 @@ class X509CertificateDetails(proto.Message):
             The type of public key in the certificate.
     """
 
-    issuer = proto.Field(proto.STRING, number=1)
-
-    subject = proto.Field(proto.STRING, number=2)
-
-    start_time = proto.Field(proto.MESSAGE, number=3, message=timestamp.Timestamp,)
-
-    expiry_time = proto.Field(proto.MESSAGE, number=4, message=timestamp.Timestamp,)
-
-    signature_algorithm = proto.Field(proto.STRING, number=5)
-
-    public_key_type = proto.Field(proto.STRING, number=6)
+    issuer = proto.Field(proto.STRING, number=1,)
+    subject = proto.Field(proto.STRING, number=2,)
+    start_time = proto.Field(proto.MESSAGE, number=3, message=timestamp_pb2.Timestamp,)
+    expiry_time = proto.Field(proto.MESSAGE, number=4, message=timestamp_pb2.Timestamp,)
+    signature_algorithm = proto.Field(proto.STRING, number=5,)
+    public_key_type = proto.Field(proto.STRING, number=6,)
 
 
 class PublicKeyCertificate(proto.Message):
     r"""A public key certificate format and data.
-
     Attributes:
         format (google.cloud.iot_v1.types.PublicKeyCertificateFormat):
             The certificate format.
@@ -502,9 +464,7 @@ class PublicKeyCertificate(proto.Message):
     """
 
     format = proto.Field(proto.ENUM, number=1, enum="PublicKeyCertificateFormat",)
-
-    certificate = proto.Field(proto.STRING, number=2)
-
+    certificate = proto.Field(proto.STRING, number=2,)
     x509_details = proto.Field(
         proto.MESSAGE, number=3, message="X509CertificateDetails",
     )
@@ -512,7 +472,6 @@ class PublicKeyCertificate(proto.Message):
 
 class DeviceCredential(proto.Message):
     r"""A server-stored device credential used for authentication.
-
     Attributes:
         public_key (google.cloud.iot_v1.types.PublicKeyCredential):
             A public key used to verify the signature of
@@ -541,13 +500,13 @@ class DeviceCredential(proto.Message):
     public_key = proto.Field(
         proto.MESSAGE, number=2, oneof="credential", message="PublicKeyCredential",
     )
-
-    expiration_time = proto.Field(proto.MESSAGE, number=6, message=timestamp.Timestamp,)
+    expiration_time = proto.Field(
+        proto.MESSAGE, number=6, message=timestamp_pb2.Timestamp,
+    )
 
 
 class PublicKeyCredential(proto.Message):
     r"""A public key format and data.
-
     Attributes:
         format (google.cloud.iot_v1.types.PublicKeyFormat):
             The format of the key.
@@ -556,13 +515,11 @@ class PublicKeyCredential(proto.Message):
     """
 
     format = proto.Field(proto.ENUM, number=1, enum="PublicKeyFormat",)
-
-    key = proto.Field(proto.STRING, number=2)
+    key = proto.Field(proto.STRING, number=2,)
 
 
 class DeviceConfig(proto.Message):
     r"""The device configuration. Eventually delivered to devices.
-
     Attributes:
         version (int):
             [Output only] The version of this update. The version number
@@ -590,20 +547,18 @@ class DeviceConfig(proto.Message):
             The device configuration data.
     """
 
-    version = proto.Field(proto.INT64, number=1)
-
+    version = proto.Field(proto.INT64, number=1,)
     cloud_update_time = proto.Field(
-        proto.MESSAGE, number=2, message=timestamp.Timestamp,
+        proto.MESSAGE, number=2, message=timestamp_pb2.Timestamp,
     )
-
-    device_ack_time = proto.Field(proto.MESSAGE, number=3, message=timestamp.Timestamp,)
-
-    binary_data = proto.Field(proto.BYTES, number=4)
+    device_ack_time = proto.Field(
+        proto.MESSAGE, number=3, message=timestamp_pb2.Timestamp,
+    )
+    binary_data = proto.Field(proto.BYTES, number=4,)
 
 
 class DeviceState(proto.Message):
     r"""The device state, as reported by the device.
-
     Attributes:
         update_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The time at which this state version was
@@ -612,9 +567,8 @@ class DeviceState(proto.Message):
             The device state data.
     """
 
-    update_time = proto.Field(proto.MESSAGE, number=1, message=timestamp.Timestamp,)
-
-    binary_data = proto.Field(proto.BYTES, number=2)
+    update_time = proto.Field(proto.MESSAGE, number=1, message=timestamp_pb2.Timestamp,)
+    binary_data = proto.Field(proto.BYTES, number=2,)
 
 
 __all__ = tuple(sorted(__protobuf__.manifest))
