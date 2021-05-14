@@ -13,10 +13,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .client import DeviceManagerClient
-from .async_client import DeviceManagerAsyncClient
-
-__all__ = (
-    'DeviceManagerClient',
-    'DeviceManagerAsyncClient',
-)
