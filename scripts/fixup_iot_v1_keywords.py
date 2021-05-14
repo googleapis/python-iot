@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 import argparse
 import os
 import libcst as cst
@@ -41,26 +39,25 @@ def partition(
 class iotCallTransformer(cst.CSTTransformer):
     CTRL_PARAMS: Tuple[str] = ('retry', 'timeout', 'metadata')
     METHOD_TO_PARAMS: Dict[str, Tuple[str]] = {
-    'bind_device_to_gateway': ('parent', 'gateway_id', 'device_id', ),
-    'create_device': ('parent', 'device', ),
-    'create_device_registry': ('parent', 'device_registry', ),
-    'delete_device': ('name', ),
-    'delete_device_registry': ('name', ),
-    'get_device': ('name', 'field_mask', ),
-    'get_device_registry': ('name', ),
-    'get_iam_policy': ('resource', 'options', ),
-    'list_device_config_versions': ('name', 'num_versions', ),
-    'list_device_registries': ('parent', 'page_size', 'page_token', ),
-    'list_devices': ('parent', 'device_num_ids', 'device_ids', 'field_mask', 'gateway_list_options', 'page_size', 'page_token', ),
-    'list_device_states': ('name', 'num_states', ),
-    'modify_cloud_to_device_config': ('name', 'binary_data', 'version_to_update', ),
-    'send_command_to_device': ('name', 'binary_data', 'subfolder', ),
-    'set_iam_policy': ('resource', 'policy', ),
-    'test_iam_permissions': ('resource', 'permissions', ),
-    'unbind_device_from_gateway': ('parent', 'gateway_id', 'device_id', ),
-    'update_device': ('device', 'update_mask', ),
-    'update_device_registry': ('device_registry', 'update_mask', ),
-
+          'bind_device_to_gateway': ('parent', 'gateway_id', 'device_id', ),
+          'create_device': ('parent', 'device', ),
+          'create_device_registry': ('parent', 'device_registry', ),
+          'delete_device': ('name', ),
+          'delete_device_registry': ('name', ),
+          'get_device': ('name', 'field_mask', ),
+          'get_device_registry': ('name', ),
+          'get_iam_policy': ('resource', 'options', ),
+          'list_device_config_versions': ('name', 'num_versions', ),
+          'list_device_registries': ('parent', 'page_size', 'page_token', ),
+          'list_devices': ('parent', 'device_num_ids', 'device_ids', 'field_mask', 'gateway_list_options', 'page_size', 'page_token', ),
+          'list_device_states': ('name', 'num_states', ),
+          'modify_cloud_to_device_config': ('name', 'binary_data', 'version_to_update', ),
+          'send_command_to_device': ('name', 'binary_data', 'subfolder', ),
+          'set_iam_policy': ('resource', 'policy', ),
+          'test_iam_permissions': ('resource', 'permissions', ),
+          'unbind_device_from_gateway': ('parent', 'gateway_id', 'device_id', ),
+          'update_device': ('device', 'update_mask', ),
+          'update_device_registry': ('device_registry', 'update_mask', ),
     }
 
     def leave_Call(self, original: cst.Call, updated: cst.Call) -> cst.CSTNode:
@@ -91,7 +88,7 @@ class iotCallTransformer(cst.CSTTransformer):
             value=cst.Dict([
                 cst.DictElement(
                     cst.SimpleString("'{}'".format(name)),
-                    cst.Element(value=arg.value)
+cst.Element(value=arg.value)
                 )
                 # Note: the args + kwargs looks silly, but keep in mind that
                 # the control parameters had to be stripped out, and that

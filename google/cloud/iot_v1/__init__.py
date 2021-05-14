@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +15,8 @@
 #
 
 from .services.device_manager import DeviceManagerClient
+from .services.device_manager import DeviceManagerAsyncClient
+
 from .types.device_manager import BindDeviceToGatewayRequest
 from .types.device_manager import BindDeviceToGatewayResponse
 from .types.device_manager import CreateDeviceRegistryRequest
@@ -29,10 +30,10 @@ from .types.device_manager import ListDeviceConfigVersionsRequest
 from .types.device_manager import ListDeviceConfigVersionsResponse
 from .types.device_manager import ListDeviceRegistriesRequest
 from .types.device_manager import ListDeviceRegistriesResponse
-from .types.device_manager import ListDeviceStatesRequest
-from .types.device_manager import ListDeviceStatesResponse
 from .types.device_manager import ListDevicesRequest
 from .types.device_manager import ListDevicesResponse
+from .types.device_manager import ListDeviceStatesRequest
+from .types.device_manager import ListDeviceStatesResponse
 from .types.device_manager import ModifyCloudToDeviceConfigRequest
 from .types.device_manager import SendCommandToDeviceRequest
 from .types.device_manager import SendCommandToDeviceResponse
@@ -46,24 +47,24 @@ from .types.resources import DeviceCredential
 from .types.resources import DeviceRegistry
 from .types.resources import DeviceState
 from .types.resources import EventNotificationConfig
-from .types.resources import GatewayAuthMethod
 from .types.resources import GatewayConfig
-from .types.resources import GatewayType
 from .types.resources import HttpConfig
-from .types.resources import HttpState
-from .types.resources import LogLevel
 from .types.resources import MqttConfig
-from .types.resources import MqttState
 from .types.resources import PublicKeyCertificate
-from .types.resources import PublicKeyCertificateFormat
 from .types.resources import PublicKeyCredential
-from .types.resources import PublicKeyFormat
 from .types.resources import RegistryCredential
 from .types.resources import StateNotificationConfig
 from .types.resources import X509CertificateDetails
-
+from .types.resources import GatewayAuthMethod
+from .types.resources import GatewayType
+from .types.resources import HttpState
+from .types.resources import LogLevel
+from .types.resources import MqttState
+from .types.resources import PublicKeyCertificateFormat
+from .types.resources import PublicKeyFormat
 
 __all__ = (
+    "DeviceManagerAsyncClient",
     "BindDeviceToGatewayRequest",
     "BindDeviceToGatewayResponse",
     "CreateDeviceRegistryRequest",
@@ -73,6 +74,7 @@ __all__ = (
     "Device",
     "DeviceConfig",
     "DeviceCredential",
+    "DeviceManagerClient",
     "DeviceRegistry",
     "DeviceState",
     "EventNotificationConfig",
@@ -109,5 +111,4 @@ __all__ = (
     "UpdateDeviceRegistryRequest",
     "UpdateDeviceRequest",
     "X509CertificateDetails",
-    "DeviceManagerClient",
 )

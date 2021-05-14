@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +14,11 @@
 # limitations under the License.
 #
 
+from google.cloud.iot_v1.services.device_manager.client import DeviceManagerClient
 from google.cloud.iot_v1.services.device_manager.async_client import (
     DeviceManagerAsyncClient,
 )
-from google.cloud.iot_v1.services.device_manager.client import DeviceManagerClient
+
 from google.cloud.iot_v1.types.device_manager import BindDeviceToGatewayRequest
 from google.cloud.iot_v1.types.device_manager import BindDeviceToGatewayResponse
 from google.cloud.iot_v1.types.device_manager import CreateDeviceRegistryRequest
@@ -32,10 +32,10 @@ from google.cloud.iot_v1.types.device_manager import ListDeviceConfigVersionsReq
 from google.cloud.iot_v1.types.device_manager import ListDeviceConfigVersionsResponse
 from google.cloud.iot_v1.types.device_manager import ListDeviceRegistriesRequest
 from google.cloud.iot_v1.types.device_manager import ListDeviceRegistriesResponse
-from google.cloud.iot_v1.types.device_manager import ListDeviceStatesRequest
-from google.cloud.iot_v1.types.device_manager import ListDeviceStatesResponse
 from google.cloud.iot_v1.types.device_manager import ListDevicesRequest
 from google.cloud.iot_v1.types.device_manager import ListDevicesResponse
+from google.cloud.iot_v1.types.device_manager import ListDeviceStatesRequest
+from google.cloud.iot_v1.types.device_manager import ListDeviceStatesResponse
 from google.cloud.iot_v1.types.device_manager import ModifyCloudToDeviceConfigRequest
 from google.cloud.iot_v1.types.device_manager import SendCommandToDeviceRequest
 from google.cloud.iot_v1.types.device_manager import SendCommandToDeviceResponse
@@ -49,68 +49,68 @@ from google.cloud.iot_v1.types.resources import DeviceCredential
 from google.cloud.iot_v1.types.resources import DeviceRegistry
 from google.cloud.iot_v1.types.resources import DeviceState
 from google.cloud.iot_v1.types.resources import EventNotificationConfig
-from google.cloud.iot_v1.types.resources import GatewayAuthMethod
 from google.cloud.iot_v1.types.resources import GatewayConfig
-from google.cloud.iot_v1.types.resources import GatewayType
 from google.cloud.iot_v1.types.resources import HttpConfig
-from google.cloud.iot_v1.types.resources import HttpState
-from google.cloud.iot_v1.types.resources import LogLevel
 from google.cloud.iot_v1.types.resources import MqttConfig
-from google.cloud.iot_v1.types.resources import MqttState
 from google.cloud.iot_v1.types.resources import PublicKeyCertificate
-from google.cloud.iot_v1.types.resources import PublicKeyCertificateFormat
 from google.cloud.iot_v1.types.resources import PublicKeyCredential
-from google.cloud.iot_v1.types.resources import PublicKeyFormat
 from google.cloud.iot_v1.types.resources import RegistryCredential
 from google.cloud.iot_v1.types.resources import StateNotificationConfig
 from google.cloud.iot_v1.types.resources import X509CertificateDetails
+from google.cloud.iot_v1.types.resources import GatewayAuthMethod
+from google.cloud.iot_v1.types.resources import GatewayType
+from google.cloud.iot_v1.types.resources import HttpState
+from google.cloud.iot_v1.types.resources import LogLevel
+from google.cloud.iot_v1.types.resources import MqttState
+from google.cloud.iot_v1.types.resources import PublicKeyCertificateFormat
+from google.cloud.iot_v1.types.resources import PublicKeyFormat
 
 __all__ = (
+    "DeviceManagerClient",
+    "DeviceManagerAsyncClient",
     "BindDeviceToGatewayRequest",
     "BindDeviceToGatewayResponse",
     "CreateDeviceRegistryRequest",
     "CreateDeviceRequest",
     "DeleteDeviceRegistryRequest",
     "DeleteDeviceRequest",
-    "Device",
-    "DeviceConfig",
-    "DeviceCredential",
-    "DeviceManagerAsyncClient",
-    "DeviceManagerClient",
-    "DeviceRegistry",
-    "DeviceState",
-    "EventNotificationConfig",
-    "GatewayAuthMethod",
-    "GatewayConfig",
     "GatewayListOptions",
-    "GatewayType",
     "GetDeviceRegistryRequest",
     "GetDeviceRequest",
-    "HttpConfig",
-    "HttpState",
     "ListDeviceConfigVersionsRequest",
     "ListDeviceConfigVersionsResponse",
     "ListDeviceRegistriesRequest",
     "ListDeviceRegistriesResponse",
-    "ListDeviceStatesRequest",
-    "ListDeviceStatesResponse",
     "ListDevicesRequest",
     "ListDevicesResponse",
-    "LogLevel",
+    "ListDeviceStatesRequest",
+    "ListDeviceStatesResponse",
     "ModifyCloudToDeviceConfigRequest",
-    "MqttConfig",
-    "MqttState",
-    "PublicKeyCertificate",
-    "PublicKeyCertificateFormat",
-    "PublicKeyCredential",
-    "PublicKeyFormat",
-    "RegistryCredential",
     "SendCommandToDeviceRequest",
     "SendCommandToDeviceResponse",
-    "StateNotificationConfig",
     "UnbindDeviceFromGatewayRequest",
     "UnbindDeviceFromGatewayResponse",
     "UpdateDeviceRegistryRequest",
     "UpdateDeviceRequest",
+    "Device",
+    "DeviceConfig",
+    "DeviceCredential",
+    "DeviceRegistry",
+    "DeviceState",
+    "EventNotificationConfig",
+    "GatewayConfig",
+    "HttpConfig",
+    "MqttConfig",
+    "PublicKeyCertificate",
+    "PublicKeyCredential",
+    "RegistryCredential",
+    "StateNotificationConfig",
     "X509CertificateDetails",
+    "GatewayAuthMethod",
+    "GatewayType",
+    "HttpState",
+    "LogLevel",
+    "MqttState",
+    "PublicKeyCertificateFormat",
+    "PublicKeyFormat",
 )
