@@ -4,6 +4,20 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.1.0](https://www.github.com/googleapis/python-iot/compare/v2.0.2...v2.1.0) (2021-06-16)
+
+
+### Features
+
+* add `from_service_account_info` ([af130f4](https://www.github.com/googleapis/python-iot/commit/af130f4f45356086d934569adf101bce1073971c))
+* add blunderbuss config to cloud iot label ([#91](https://www.github.com/googleapis/python-iot/issues/91)) ([efd4d1b](https://www.github.com/googleapis/python-iot/commit/efd4d1ba2cb55e37e7b5efbd42a1bac1a10ce0d0))
+
+
+### Bug Fixes
+
+* **deps:** add packaging requirement ([#112](https://www.github.com/googleapis/python-iot/issues/112)) ([7bb82a7](https://www.github.com/googleapis/python-iot/commit/7bb82a76b2ac008b3f6310bd050e10c503eb5d09))
+* use correct retry deadlines ([#81](https://www.github.com/googleapis/python-iot/issues/81)) ([af130f4](https://www.github.com/googleapis/python-iot/commit/af130f4f45356086d934569adf101bce1073971c))
+
 ### [2.0.2](https://www.github.com/googleapis/python-iot/compare/v2.0.1...v2.0.2) (2021-02-05)
 
 
