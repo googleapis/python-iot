@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [2.1.1](https://www.github.com/googleapis/python-iot/compare/v2.1.0...v2.1.1) (2021-06-22)
+
+
+### Documentation
+
+* omit mention of Python 2.7 in 'CONTRIBUTING.rst' ([#1127](https://www.github.com/googleapis/python-iot/issues/1127)) ([#124](https://www.github.com/googleapis/python-iot/issues/124)) ([8eadfe7](https://www.github.com/googleapis/python-iot/commit/8eadfe797a9f05463068d2be4aed9773ed37e55b)), closes [#1126](https://www.github.com/googleapis/python-iot/issues/1126)
+
 ## [2.1.0](https://www.github.com/googleapis/python-iot/compare/v2.0.2...v2.1.0) (2021-06-16)
 
 
