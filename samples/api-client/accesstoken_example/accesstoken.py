@@ -96,7 +96,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken".format(
         HOST, project_id, cloud_region, registry_id, device_id
     )
-    payload = {}
+    payload = {'scope': scopes}
     headers = {"authorization": "Bearer {}".format(jwt_token)}
     resp = req.post(url=request_path, data=payload, headers=headers)
     print(resp.raise_for_status())
