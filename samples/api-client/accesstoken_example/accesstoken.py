@@ -62,7 +62,7 @@ def generate_gcp_token(
         cloud_region, project_id, registry_id, device_id, jwt_token, scope
     )
     return token
-    # [END generate_gcp_token]
+    # [END iot_generate_gcp_token]
 
 
 def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
@@ -81,7 +81,7 @@ def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
         private_key_bytes = f.read()
     encoded_jwt = jwt.encode(jwt_payload, private_key_bytes, algorithm=algorithm)
     return encoded_jwt
-    # [END generate_iot_jwt_token]
+    # [END iot_generate_iot_jwt_token]
 
 
 def exchange_iot_jwt_token_with_gcp_token(
@@ -103,7 +103,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     resp = req.post(url=request_path, data=payload, headers=headers)
     print(resp.raise_for_status())
     return resp.json()
-    # [END exchange_iot_jwt_token_with_gcp_token]
+    # [END iot_exchange_iot_jwt_token_with_gcp_token]
 
 
 def parse_command_line_args():
