@@ -1,4 +1,34 @@
+#!/usr/bin/env python
 
+# Copyright 2017 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
+"""
+Example of using the Google Cloud IoT Core access_token to generate
+gcp compatible token.
+
+Usage example:
+
+    python access.py \\
+      --project_id=my-project-id \\
+      --cloud_region=us-central1 \\
+      --registry_id=my-registry-id \\
+      --device_id=my-device-id \\
+      --certificate_path=/my-certificate.pem \\
+      --scope="scope1 scope2"
+"""
 import argparse
 import io
 import os
@@ -12,42 +42,67 @@ import requests as req
 
 HOST = ""
 
-def generate_gcp_token(project_id,
-    cloud_region,
-    registry_id,
-    device_id,
-    scope,
-    algorithm,
-    certificate_path):
-  jwt_token = generate_jwt_token(
-    project_id,
-     algorithm,
-     certificate_path
-     )
-  token = exchange_jwt_token_with_gcp_token(cloud_region,
-   project_id,
-   registry_id,
-  device_id,
-  jwt_token,
-  scope)
-  return token
 
-def generate_jwt_token(project_id, algorithm, path_to_private_certificate):
-  jwt_payload = "{{'iat':{},'exp':{},'aud':{}}}".format(time.time(), time.mktime((datetime.now() + timedelta(hours=6)).timetuple()),project_id);
-  private_key_bytes = ""
-  with io.open(path_to_private_certificate) as f:
+def generate_gcp_token(
+    project_id, cloud_region, registry_id, device_id, scope, algorithm, certificate_file
+):
+    """Generate GCP access token."""
+    # [START generate_gcp_token]
+    # project_id = 'YOUR_PROJECT_ID'
+    # cloud_region = 'us-central1'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # scope = 'scope1 scope2'
+    # algorithm = 'RS256'
+    # certificate_file = 'path/to/certificate.pem'
+
+    jwt_token = generate_iot_jwt_token(project_id, algorithm, certificate_file)
+    token = exchange_iot_jwt_token_with_gcp_token(
+        cloud_region, project_id, registry_id, device_id, jwt_token, scope
+    )
+    return token
+    # [END generate_gcp_token]
+
+
+def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
+    """Generate cloud iot jwt token."""
+    # [START generate_iot_jwt_token]
+    # project_id = 'YOUR_PROJECT_ID'
+    # algorithm = 'RS256'
+    # certificate_file = 'path/to/certificate.pem'
+    jwt_payload = "{{'iat':{},'exp':{},'aud':{}}}".format(
+        time.time(),
+        time.mktime((datetime.now() + timedelta(hours=6)).timetuple()),
+        project_id,
+    )
+    private_key_bytes = ""
+    with io.open(path_to_private_certificate) as f:
         private_key_bytes = f.read()
-  encoded_jwt = jwt.encode(jwt_payload, private_key_bytes, algorithm=algorithm);
-  return encoded_jwt
+    encoded_jwt = jwt.encode(jwt_payload, private_key_bytes, algorithm=algorithm)
+    return encoded_jwt
+    # [END generate_iot_jwt_token]
 
+def exchange_iot_jwt_token_with_gcp_token(
+    cloud_region, project_id, registry_id, device_id, jwt_token, scopes
+):
+    """Exchange iot jwt token for gcp token."""
+    # [START exchange_iot_jwt_token_with_gcp_token]
+    # cloud_region = 'us-central1'
+    # project_id = 'YOUR_PROJECT_ID'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # jwt_token = 'CLOUD_IOT_GENERATE_JWT_TOKEN'
+    # scopes = 'scope1 scope2'
+    request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken".format(
+        HOST, project_id, cloud_region, registry_id, device_id
+    )
+    payload = {}
+    headers = {"authorization": "Bearer {}".format(jwt_token)}
+    resp = req.post(url=request_path, data=payload, headers=headers)
+    print(resp.raise_for_status())
+    return resp.json()
+    # [END exchange_iot_jwt_token_with_gcp_token]
 
-def exchange_jwt_token_with_gcp_token(cloud_region, project_id, registry_id, device_id, jwt_token, scopes):
-  request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken".format(HOST,project_id, cloud_region,registry_id, device_id )
-  payload = {}
-  headers = {'authorization' : "Bearer {}".format(jwt_token)}
-  resp = req.post(url = request_path, data = payload, headers = headers)
-  print(resp.raise_for_status())
-  return resp.json()
 
 def parse_command_line_args():
     """Parse command line arguments."""
@@ -55,7 +110,7 @@ def parse_command_line_args():
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    # Optional arguments
+
     parser.add_argument(
         "--algorithm",
         default="RS256",
@@ -68,7 +123,9 @@ def parse_command_line_args():
     )
 
     parser.add_argument("--device_id", default=None, help="Device id.")
-    parser.add_argument("--scope", default=None, help="Scope for GCP token. Space delimited strings")
+    parser.add_argument(
+        "--scope", default=None, help="Scope for GCP token. Space delimited strings"
+    )
 
     parser.add_argument(
         "--project_id",
@@ -82,29 +139,32 @@ def parse_command_line_args():
     )
     return parser.parse_args()
 
+
 def run_program(args):
-    """Calls the program using the specified command."""
+    """Calls the program."""
     if args.registry_id is None:
-      print("You must specify a registry ID.")
-      return
+        print("You must specify a registry ID.")
+        return
     if args.project_id is None:
-      print("You must specify a project ID or set the environment variable.")
-      return
+        print("You must specify a project ID or set the environment variable.")
+        return
     if args.device_id is None:
-      print("You must specify a device ID.")
+        print("You must specify a device ID.")
     if args.certificate_path is None:
-      print("You must specify a certificate file.")
-      return
+        print("You must specify a certificate file.")
+        return
     if args.scope is None:
-      print("You must specify the scope.")
-      return
-    token = generate_gcp_token(args.project_id,
-    args.cloud_region,
-    args.registry_id,
-    args.device_id,
-    args.scope,
-    args.algorithm,
-    args.certificate_path)
+        print("You must specify the scope.")
+        return
+    token = generate_gcp_token(
+        args.project_id,
+        args.cloud_region,
+        args.registry_id,
+        args.device_id,
+        args.scope,
+        args.algorithm,
+        args.certificate_path,
+    )
     print("Generated GCP compatible token: ", token)
 
 
