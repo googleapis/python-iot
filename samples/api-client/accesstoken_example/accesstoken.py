@@ -48,7 +48,7 @@ def generate_gcp_token(
     project_id, cloud_region, registry_id, device_id, scope, algorithm, certificate_file
 ):
     """Generate GCP access token."""
-    # [START generate_gcp_token]
+    # [START iot_generate_gcp_token]
     # project_id = 'YOUR_PROJECT_ID'
     # cloud_region = 'us-central1'
     # registry_id = 'your-registry-id'
@@ -67,7 +67,7 @@ def generate_gcp_token(
 
 def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
     """Generate cloud iot jwt token."""
-    # [START generate_iot_jwt_token]
+    # [START iot_generate_iot_jwt_token]
     # project_id = 'YOUR_PROJECT_ID'
     # algorithm = 'RS256'
     # certificate_file = 'path/to/certificate.pem'
@@ -88,7 +88,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     cloud_region, project_id, registry_id, device_id, jwt_token, scopes
 ):
     """Exchange iot jwt token for gcp token."""
-    # [START exchange_iot_jwt_token_with_gcp_token]
+    # [START iot_exchange_iot_jwt_token_with_gcp_token]
     # cloud_region = 'us-central1'
     # project_id = 'YOUR_PROJECT_ID'
     # registry_id = 'your-registry-id'
