@@ -12,13 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
 import sys
 import time
 import uuid
-
-import pytest
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "mqtt_example"))  # noqa
@@ -75,3 +72,4 @@ def test_generate_gcp_jwt_token():
     )
 
     manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
+    return token

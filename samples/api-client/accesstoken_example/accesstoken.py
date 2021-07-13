@@ -31,9 +31,10 @@ Usage example:
 """
 import argparse
 import io
+from datetime import datetime, timedelta
 import os
 import time
-from datetime import datetime, timedelta
+
 
 import jwt
 
@@ -82,6 +83,7 @@ def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
     return encoded_jwt
     # [END generate_iot_jwt_token]
 
+
 def exchange_iot_jwt_token_with_gcp_token(
     cloud_region, project_id, registry_id, device_id, jwt_token, scopes
 ):
@@ -96,7 +98,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken".format(
         HOST, project_id, cloud_region, registry_id, device_id
     )
-    payload = {'scope': scopes}
+    payload = {"scope": scopes}
     headers = {"authorization": "Bearer {}".format(jwt_token)}
     resp = req.post(url=request_path, data=payload, headers=headers)
     print(resp.raise_for_status())
@@ -109,7 +111,6 @@ def parse_command_line_args():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-
 
     parser.add_argument(
         "--algorithm",
