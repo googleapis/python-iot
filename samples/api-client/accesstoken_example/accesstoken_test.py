@@ -18,14 +18,12 @@ import sys
 import time
 import uuid
 
-from google.cloud import pubsub
 import pytest
 
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "mqtt_example"))  # noqa
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))
 import accesstoken  # noqa
-import cloudiot_mqtt_example  # noqa
 import manager  # noqa
 
 
@@ -71,6 +69,7 @@ def test_generate_gcp_jwt_token():
         "RSA256",
         rsa_private_path,
     )
+    # clean up
     manager.delete_device(
         service_account_json, project_id, cloud_region, registry_id, device_id
     )
