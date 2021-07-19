@@ -72,7 +72,7 @@ def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
     # project_id = 'YOUR_PROJECT_ID'
     # algorithm = 'RS256'
     # certificate_file = 'path/to/certificate.pem'
-    jwt_payload = '{{"iat":{},"exp":{},"aud":{}}}'.format(
+    jwt_payload = '{{"iat":{},"exp":{},"aud":"{}"}}'.format(
         time.time(),
         time.mktime((datetime.now() + timedelta(hours=6)).timetuple()),
         project_id,
