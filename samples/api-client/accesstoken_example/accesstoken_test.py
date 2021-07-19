@@ -63,7 +63,7 @@ def test_generate_gcp_jwt_token():
         registry_id,
         device_id,
         scope,
-        "RSA256",
+        "RS256",
         rsa_private_path,
     )
     # clean up
