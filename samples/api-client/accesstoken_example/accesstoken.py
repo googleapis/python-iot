@@ -31,6 +31,7 @@ Usage example:
 """
 import argparse
 import io
+import json
 from datetime import datetime, timedelta
 import os
 import time
@@ -79,7 +80,7 @@ def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
     private_key_bytes = ""
     with io.open(path_to_private_certificate) as f:
         private_key_bytes = f.read()
-    encoded_jwt = jwt.encode(jwt_payload, private_key_bytes, algorithm=algorithm)
+    encoded_jwt = jwt.encode(json.loads(jwt_payload), private_key_bytes, algorithm=algorithm)
     return encoded_jwt
     # [END iot_generate_iot_jwt_token]
 
