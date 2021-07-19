@@ -20,9 +20,9 @@ import uuid
 # Add command receiver for bootstrapping device registry / device for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "mqtt_example"))  # noqa
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))
-import accesstoken  # noqa
 import manager  # noqa
 
+import accesstoken  # noqa
 
 cloud_region = "us-central1"
 device_id_template = "test-device-{}"
