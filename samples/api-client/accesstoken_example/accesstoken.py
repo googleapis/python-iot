@@ -42,7 +42,7 @@ import jwt
 import requests as req
 
 
-HOST = ""
+HOST = "https://cloudiottoken.googleapis.com"
 
 
 def generate_gcp_token(
@@ -96,6 +96,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     # device_id = 'your-device-id'
     # jwt_token = 'CLOUD_IOT_GENERATE_JWT_TOKEN'
     # scopes = 'scope1 scope2'
+    global HOST
     request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken".format(
         HOST, project_id, cloud_region, registry_id, device_id
     )
