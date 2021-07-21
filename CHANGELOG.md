@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [2.2.1](https://www.github.com/googleapis/python-iot/compare/v2.2.0...v2.2.1) (2021-07-21)
+
+
+### Bug Fixes
+
+* **deps:** pin 'google-{api,cloud}-core', 'google-auth' to allow 2.x versions ([#153](https://www.github.com/googleapis/python-iot/issues/153)) ([9050b55](https://www.github.com/googleapis/python-iot/commit/9050b55fda8871de2948feb8fb8d301a3222ec46))
+
 ## [2.2.0](https://www.github.com/googleapis/python-iot/compare/v2.1.0...v2.2.0) (2021-07-07)
 
 
