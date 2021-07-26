@@ -4,6 +4,19 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.3.0](https://www.github.com/googleapis/python-iot/compare/v2.2.0...v2.3.0) (2021-07-26)
+
+
+### Features
+
+* add Samples section to CONTRIBUTING.rst ([#154](https://www.github.com/googleapis/python-iot/issues/154)) ([418f8f0](https://www.github.com/googleapis/python-iot/commit/418f8f0865b84dd2193d4f2baa86060069a892ad))
+
+
+### Bug Fixes
+
+* **deps:** pin 'google-{api,cloud}-core', 'google-auth' to allow 2.x versions ([#153](https://www.github.com/googleapis/python-iot/issues/153)) ([9050b55](https://www.github.com/googleapis/python-iot/commit/9050b55fda8871de2948feb8fb8d301a3222ec46))
+* enable self signed jwt for grpc ([#160](https://www.github.com/googleapis/python-iot/issues/160)) ([4cab54a](https://www.github.com/googleapis/python-iot/commit/4cab54a57d1c62b0909dc378b2478bb266103ee2))
+
 ## [2.2.0](https://www.github.com/googleapis/python-iot/compare/v2.1.0...v2.2.0) (2021-07-07)
 
 
