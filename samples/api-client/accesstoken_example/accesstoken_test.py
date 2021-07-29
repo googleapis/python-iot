@@ -40,7 +40,7 @@ registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
 def test_generate_gcp_jwt_token():
     device_id = device_id_template.format("RSA256")
-    scope = "scope1 scope2 "
+    scope = "scope1 scope2 scope3"
     manager.open_registry(
         service_account_json, project_id, cloud_region, pubsub_topic, registry_id
     )
