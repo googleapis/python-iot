@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2017 Google Inc. All Rights Reserved.
+# Copyright 2021 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ from datetime import datetime, timedelta
 import jwt
 import requests as req
 
-HOST = "https://cloudiottoken.googleapis.com"
+HOST = "https://staging-cloudiottoken.sandbox.googleapis.com"
 
 
 def generate_gcp_token(
@@ -96,12 +96,11 @@ def exchange_iot_jwt_token_with_gcp_token(
     # jwt_token = 'CLOUD_IOT_GENERATE_JWT_TOKEN'
     # scopes = 'scope1 scope2'
     global HOST
-    request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken".format(
-        HOST, project_id, cloud_region, registry_id, device_id
+    request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken?scope={}".format(
+        HOST, project_id, cloud_region, registry_id, device_id, scopes
     )
-    payload = {"scope": scopes}
     headers = {"authorization": "Bearer {}".format(jwt_token)}
-    resp = req.post(url=request_path, data=payload, headers=headers)
+    resp = req.post(url=request_path, data={}, headers=headers)
     print(resp.raise_for_status())
     return resp.json()
     # [END iot_exchange_iot_jwt_token_with_gcp_token]
