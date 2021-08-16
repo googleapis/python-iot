@@ -39,7 +39,7 @@ from datetime import datetime, timedelta
 import jwt
 import requests as req
 
-HOST = "https://staging-cloudiottoken.sandbox.googleapis.com"
+HOST = "https://cloudiottoken.googleapis.com"
 
 
 def generate_gcp_token(
@@ -94,13 +94,15 @@ def exchange_iot_jwt_token_with_gcp_token(
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
     # jwt_token = 'CLOUD_IOT_GENERATE_JWT_TOKEN'
-    # scopes = 'scope1 scope2'
+    # scopes = 'scope1 scope2' https://developers.google.com/identity/protocols/oauth2/scopes
     global HOST
-    request_path = "{}/v1alpha1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken?scope={}".format(
-        HOST, project_id, cloud_region, registry_id, device_id, scopes
+    resource_url = "projects/{}/locations/{}/registries/{}/devices/{}".format(project_id, cloud_region, registry_id, device_id)
+    request_path = "{}/v1alpha1/{}:generateAccessToken".format(
+        HOST, resource_url
     )
     headers = {"authorization": "Bearer {}".format(jwt_token)}
-    resp = req.post(url=request_path, data={}, headers=headers)
+    request_payload = {"scope": scopes, "device": resource_url}
+    resp = req.post(url=request_path, data=request_payload, headers=headers)
     print(resp.raise_for_status())
     return resp.json()
     # [END iot_exchange_iot_jwt_token_with_gcp_token]
