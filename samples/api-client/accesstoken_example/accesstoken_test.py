@@ -17,9 +17,14 @@ import sys
 import time
 import uuid
 
+from google.cloud import storage
+from google.cloud import pubsub_v1
+import requests as req
+
 # Add command receiver for bootstrapping device registry / device for testing
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "mqtt_example"))  # noqa
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager")) # noqa
+
 import manager  # noqa
 
 import accesstoken  # noqa
@@ -28,21 +33,23 @@ cloud_region = "us-central1"
 device_id_template = "test-device-{}"
 rsa_cert_path = "resources/rsa_cert.pem"
 rsa_private_path = "resources/rsa_private.pem"  # Must match rsa_cert
-topic_id = "test-device-events-{}".format(uuid.uuid4())
-
+device_topic_id = "test-device-events-{}".format(uuid.uuid4())
+gcs_bucket_name = "test-bucket-name-{}".format(uuid.uuid4())
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-pubsub_topic = "projects/{}/topics/{}".format(project_id, topic_id)
+device_pubsub_topic = "projects/{}/topics/{}".format(project_id, device_topic_id)
+test_topic_id = "test-pubsub-{}".format(uuid.uuid4())
 
 # This format is used in the `clean_up_registries()` below.
 registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
-
+# Generate gcp access token, use gcp access token to enable pubsub notification
+#  from gcs bucket
 def test_generate_gcp_jwt_token():
     device_id = device_id_template.format("RSA256")
-    scope = "scope1 scope2 scope4"
+    scope = "https://www.googleapis.com/auth/pubsub https://www.googleapis.com/auth/devstorage.full_control'"
     manager.open_registry(
-        service_account_json, project_id, cloud_region, pubsub_topic, registry_id
+        service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )
 
     manager.create_rs256_device(
@@ -53,10 +60,24 @@ def test_generate_gcp_jwt_token():
         device_id,
         rsa_cert_path,
     )
+    # Create GCS Bucket
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(gcs_bucket_name)
+    bucket.storage_class = "COLDLINE"
+    new_bucket = storage_client.create_bucket(bucket, location=cloud_region)
 
-    manager.get_device(
-        service_account_json, project_id, cloud_region, registry_id, device_id
+    print(
+        "Created bucket {} in {} with storage class {}".format(
+            new_bucket.name, new_bucket.location, new_bucket.storage_class
+        )
     )
+
+    # Create GCP PubSub
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(project_id, test_topic_id)
+
+    topic = publisher.create_topic(request={"name": topic_path})
+
     token = accesstoken.generate_gcp_token(
         project_id,
         cloud_region,
@@ -66,7 +87,24 @@ def test_generate_gcp_jwt_token():
         "RS256",
         rsa_private_path,
     )
+    payload = {
+      "topic": topic_path,
+      "payload_format": "JSON_API_V1"
+    }
+    request_path = "https://storage.googleapis.com/storage/v1/b/{}/notificationConfigs".format(gcs_bucket_name)
+    headers = { "authorization": "Bearer {}".format(token) }
+    resp = req.post(url=request_path, data=payload, headers=headers)
+    print(resp.raise_for_status())
+
+    assert resp.ok
+
     # clean up
+
+    publisher.delete_topic(request={"topic": topic_path})
+
+    new_bucket.delete()
+    print("Bucket {} deleted".format(gcs_bucket_name))
+
     manager.delete_device(
         service_account_json, project_id, cloud_region, registry_id, device_id
     )

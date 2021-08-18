@@ -1,0 +1,22 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud IoT Core
+  short_name: Cloud IoT Core
+  url: https://cloud.google.com/iot/docs
+  description: >
+    `Google Cloud IoT Core`_ This sample app demonstrates gcp access token
+    generation for Google Cloud IoT.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: accesstoken
+  file: accesstoken.py
+  show_help: True
+
+cloud_client_library: false
+
+folder: iot/api-client/accesstoken_example
