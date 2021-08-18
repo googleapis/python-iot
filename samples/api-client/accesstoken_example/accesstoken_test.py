@@ -78,7 +78,7 @@ def test_generate_gcp_jwt_token_():
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, test_topic_id)
 
-    publisher.create_topic(name=topic_path)
+    publisher.create_topic(topic_path)
 
     token = accesstoken.generate_gcp_token(
         project_id,
