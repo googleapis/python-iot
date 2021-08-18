@@ -23,7 +23,7 @@ import requests as req
 
 # Add command receiver for bootstrapping device registry / device for testing
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager")) # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))  # noqa
 
 import manager  # noqa
 
@@ -76,7 +76,7 @@ def test_generate_gcp_jwt_token():
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, test_topic_id)
 
-    topic = publisher.create_topic(request={"name": topic_path})
+    topic = publisher.create_topic({"name": topic_path})
 
     token = accesstoken.generate_gcp_token(
         project_id,
@@ -87,12 +87,13 @@ def test_generate_gcp_jwt_token():
         "RS256",
         rsa_private_path,
     )
-    payload = {
-      "topic": topic_path,
-      "payload_format": "JSON_API_V1"
-    }
-    request_path = "https://storage.googleapis.com/storage/v1/b/{}/notificationConfigs".format(gcs_bucket_name)
-    headers = { "authorization": "Bearer {}".format(token) }
+    payload = {"topic": topic_path, "payload_format": "JSON_API_V1"}
+    request_path = (
+        "https://storage.googleapis.com/storage/v1/b/{}/notificationConfigs".format(
+            gcs_bucket_name
+        )
+    )
+    headers = {"authorization": "Bearer {}".format(token)}
     resp = req.post(url=request_path, data=payload, headers=headers)
     print(resp.raise_for_status())
 
