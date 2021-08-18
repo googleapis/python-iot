@@ -17,8 +17,8 @@ import sys
 import time
 import uuid
 
-from google.cloud import storage
 from google.cloud import pubsub_v1
+from google.cloud import storage
 import requests as req
 
 # Add command receiver for bootstrapping device registry / device for testing
@@ -45,7 +45,9 @@ registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
 # Generate gcp access token, use gcp access token to enable pubsub notification
 #  from gcs bucket
-def test_generate_gcp_jwt_token():
+
+
+def test_generate_gcp_jwt_token_():
     device_id = device_id_template.format("RSA256")
     scope = "https://www.googleapis.com/auth/pubsub https://www.googleapis.com/auth/devstorage.full_control'"
     manager.open_registry(
@@ -76,7 +78,7 @@ def test_generate_gcp_jwt_token():
     publisher = pubsub_v1.PublisherClient()
     topic_path = publisher.topic_path(project_id, test_topic_id)
 
-    topic = publisher.create_topic({"name": topic_path})
+    publisher.create_topic({"name": topic_path})
 
     token = accesstoken.generate_gcp_token(
         project_id,
