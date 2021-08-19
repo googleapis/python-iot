@@ -30,10 +30,10 @@ Usage example:
       --scope="scope1 scope2"
 """
 import argparse
+from datetime import datetime, timedelta
 import io
 import json
 import os
-from datetime import datetime, timedelta
 import time
 
 
