@@ -10,7 +10,7 @@ connect to the Google Cloud Platform.
 - `Product Documentation`_
 
 .. |GA| image:: https://img.shields.io/badge/support-GA-gold.svg
-   :target: https://github.com/googleapis/google-cloud-python/blob/main/README.rst#general-availability
+   :target: https://github.com/googleapis/google-cloud-python/blob/master/README.rst#general-availability
 .. |pypi| image:: https://img.shields.io/pypi/v/google-cloud-iot.svg
    :target: https://pypi.org/project/google-cloud-iot/
 .. |versions| image:: https://img.shields.io/pypi/pyversions/google-cloud-iot.svg
