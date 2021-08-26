@@ -201,10 +201,10 @@ def test_generate_gcp_jwt_token_gcs():
             gcs_bucket_name, data_name
         )
     )
-    delete_resp = req.delete(url=delete_request_path, headers=headers)
-    print(delete_resp.raise_for_status())
+    delete_data_resp = req.delete(url=delete_request_path, headers=headers)
+    print(delete_data_resp.raise_for_status())
 
-    assert delete_resp.ok
+    assert delete_data_resp.ok
 
     # Clean up
     # Delete GCS Bucket
