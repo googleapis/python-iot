@@ -4,6 +4,40 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [2.2.1](https://www.github.com/googleapis/python-iot/compare/v2.2.0...v2.2.1) (2021-07-26)
+
+### Bug Fixes
+
+* **deps:** pin 'google-{api,cloud}-core', 'google-auth' to allow 2.x versions ([#153](https://www.github.com/googleapis/python-iot/issues/153)) ([9050b55](https://www.github.com/googleapis/python-iot/commit/9050b55fda8871de2948feb8fb8d301a3222ec46))
+* enable self signed jwt for grpc ([#160](https://www.github.com/googleapis/python-iot/issues/160)) ([4cab54a](https://www.github.com/googleapis/python-iot/commit/4cab54a57d1c62b0909dc378b2478bb266103ee2))
+
+
+### Documentation
+
+* add Samples section to CONTRIBUTING.rst ([#154](https://www.github.com/googleapis/python-iot/issues/154)) ([418f8f0](https://www.github.com/googleapis/python-iot/commit/418f8f0865b84dd2193d4f2baa86060069a892ad))
+
+
+### Miscellaneous Chores
+
+* release as 2.2.1 ([#161](https://www.github.com/googleapis/python-iot/issues/161)) ([645b6cc](https://www.github.com/googleapis/python-iot/commit/645b6cc3785b023b91b0b028ddf7209190b9b2aa))
+
+## [2.2.0](https://www.github.com/googleapis/python-iot/compare/v2.1.0...v2.2.0) (2021-07-07)
+
+
+### Features
+
+* add always_use_jwt_access ([#130](https://www.github.com/googleapis/python-iot/issues/130)) ([a1025c2](https://www.github.com/googleapis/python-iot/commit/a1025c214245fc2397ef06403671457954777260))
+
+
+### Bug Fixes
+
+* disable always_use_jwt_access ([#135](https://www.github.com/googleapis/python-iot/issues/135)) ([911eb25](https://www.github.com/googleapis/python-iot/commit/911eb258b9f41855c62682ec1f0e495057b5d0e8))
+
+
+### Documentation
+
+* omit mention of Python 2.7 in 'CONTRIBUTING.rst' ([#1127](https://www.github.com/googleapis/python-iot/issues/1127)) ([#124](https://www.github.com/googleapis/python-iot/issues/124)) ([8eadfe7](https://www.github.com/googleapis/python-iot/commit/8eadfe797a9f05463068d2be4aed9773ed37e55b)), closes [#1126](https://www.github.com/googleapis/python-iot/issues/1126)
+
 ## [2.1.0](https://www.github.com/googleapis/python-iot/compare/v2.0.2...v2.1.0) (2021-06-16)
 
 
