@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import base64
 import os
 import sys
 import time
 import uuid
 
-from google.cloud import pubsub_v1
-from google.cloud import storage
 import requests as req
 
 # Add command receiver for bootstrapping device registry / device for testing
@@ -43,13 +42,12 @@ test_topic_id = "test-pubsub-{}".format(uuid.uuid4())
 # This format is used in the `clean_up_registries()` below.
 registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
-# Generate gcp access token, use gcp access token to enable pubsub notification
-#  from gcs bucket
+# Generate gcp access token, use gcp access token to create pubsub
 
 
-def test_generate_gcp_jwt_token_():
+def test_generate_gcp_jwt_token_pubsub():
     device_id = device_id_template.format("RSA256")
-    scope = "https://www.googleapis.com/auth/pubsub https://www.googleapis.com/auth/devstorage.full_control'"
+    scope = "https://www.googleapis.com/auth/pubsub"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )
@@ -62,24 +60,7 @@ def test_generate_gcp_jwt_token_():
         device_id,
         rsa_cert_path,
     )
-    # Create GCS Bucket
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(gcs_bucket_name)
-    bucket.storage_class = "COLDLINE"
-    new_bucket = storage_client.create_bucket(bucket, location=cloud_region)
-
-    print(
-        "Created bucket {} in {} with storage class {}".format(
-            new_bucket.name, new_bucket.location, new_bucket.storage_class
-        )
-    )
-
-    # Create GCP PubSub
-    publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(project_id, test_topic_id)
-
-    publisher.create_topic(topic_path)
-
+    # Generate GCP access token
     token = accesstoken.generate_gcp_token(
         project_id,
         cloud_region,
@@ -89,28 +70,155 @@ def test_generate_gcp_jwt_token_():
         "RS256",
         rsa_private_path,
     )
-    payload = {"topic": topic_path, "payload_format": "JSON_API_V1"}
-    request_path = (
-        "https://storage.googleapis.com/storage/v1/b/{}/notificationConfigs".format(
-            gcs_bucket_name
-        )
+
+    # Create pubsub topic
+    request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
+        project_id, test_topic_id
     )
     headers = {"authorization": "Bearer {}".format(token)}
-    resp = req.post(url=request_path, data=payload, headers=headers)
+    resp = req.put(url=request_path, data={}, headers=headers)
     print(resp.raise_for_status())
 
     assert resp.ok
 
-    # clean up
+    # Publish messgae to pubsub topic
+    publish_payload = {
+        "messages": [
+            {
+                "attributes": {
+                    "test": "VALUE",
+                },
+                "data": base64.b64encode(bytes("MESSAGE_DATA", "utf-8")),
+            }
+        ]
+    }
+    publish_request_path = (
+        "https://pubsub.googleapis.com/v1/projects/{}/topics/{}:publish".format(
+            project_id, test_topic_id
+        )
+    )
+    publish_resp = req.post(
+        url=publish_request_path, data=publish_payload, headers=headers
+    )
+    print(publish_resp.raise_for_status())
 
-    publisher.delete_topic(request={"topic": topic_path})
+    assert publish_resp.ok
+    # Clean up
 
-    new_bucket.delete()
-    print("Bucket {} deleted".format(gcs_bucket_name))
+    # Delete Pubsub topic
+    pubsub_delete_request_path = (
+        "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
+            project_id, test_topic_id
+        )
+    )
+    delete_resp = req.delete(url=pubsub_delete_request_path, headers=headers)
 
+    print(delete_resp.raise_for_status())
+
+    assert delete_resp.ok
+
+    # Delete device
     manager.delete_device(
         service_account_json, project_id, cloud_region, registry_id, device_id
     )
-
+    # Delete registry
     manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
-    return token
+
+
+# Generate gcp access token, use gcp access token to create gcs bucket
+# upload data to gcs bucket, download data from gcs bucket
+# delete data from gcs bucket
+def test_generate_gcp_jwt_token_gcs():
+    device_id = device_id_template.format("RSA256")
+    scope = "https://www.googleapis.com/auth/devstorage.full_control"
+    manager.open_registry(
+        service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
+    )
+
+    manager.create_rs256_device(
+        service_account_json,
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        rsa_cert_path,
+    )
+    # Generate GCP access token
+    token = accesstoken.generate_gcp_token(
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        scope,
+        "RS256",
+        rsa_private_path,
+    )
+
+    # Create GCS bucket
+    create_payload = {
+        "name": gcs_bucket_name,
+        "location": cloud_region,
+        "storageClass": "STANDARD",
+        "iamConfiguration": {
+            "uniformBucketLevelAccess": {"enabled": True},
+        },
+    }
+    create_request_path = (
+        "https://storage.googleapis.com/storage/v1/b?project={}".format(project_id)
+    )
+    headers = {"authorization": "Bearer {}".format(token)}
+    create_resp = req.post(
+        url=create_request_path, data=create_payload, headers=headers
+    )
+    print(create_resp.raise_for_status())
+
+    assert create_resp.ok
+
+    # Upload data to GCS bucket.
+    data_name = "testFILE"
+    binary_data = open("./resources/logo.png", "r").read()
+    upload_request_path = "https://storage.googleapis.com/upload/storage/v1/b/{}/o?uploadType=media&name={}".format(
+        gcs_bucket_name, data_name
+    )
+    upload_resp = req.post(url=upload_request_path, data=binary_data, headers=headers)
+    print(upload_resp.raise_for_status())
+
+    assert upload_resp.ok
+    # Download data from GCS bucket.
+    download_request_path = (
+        "https://storage.googleapis.com/storage/v1/b/${}/o/${}?alt=media".format(
+            gcs_bucket_name, data_name
+        )
+    )
+    download_resp = req.get(url=download_request_path, headers=headers)
+    print(download_resp.raise_for_status())
+
+    assert download_resp.ok
+
+    # Delete data from GCS bucket.
+    delete_request_path = (
+        "https://storage.googleapis.com/storage/v1/b/${}/o/${}".format(
+            gcs_bucket_name, data_name
+        )
+    )
+    delete_resp = req.delete(url=delete_request_path, headers=headers)
+    print(delete_resp.raise_for_status())
+
+    assert delete_resp.ok
+
+    # Clean up
+    # Delete GCS Bucket
+    gcs_delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}".format(
+        create_resp.json().name
+    )
+    delete_resp = req.delete(url=gcs_delete_request_path, headers=headers)
+
+    print(delete_resp.raise_for_status())
+
+    assert delete_resp.ok
+    # Delete device
+    manager.delete_device(
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
+    # Delete registry
+    manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
