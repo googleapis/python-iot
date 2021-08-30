@@ -77,8 +77,8 @@ def test_generate_gcp_jwt_token_pubsub():
     )
     headers = {"authorization": "Bearer {}".format(token)}
     resp = req.put(url=request_path, data={}, headers=headers)
-    print(resp.raise_for_status())
 
+    print(resp.raise_for_status())
     assert resp.ok
 
     # Publish messgae to pubsub topic
@@ -100,8 +100,8 @@ def test_generate_gcp_jwt_token_pubsub():
     publish_resp = req.post(
         url=publish_request_path, data=publish_payload, headers=headers
     )
-    print(publish_resp.raise_for_status())
 
+    print(publish_resp.raise_for_status())
     assert publish_resp.ok
     # Clean up
 
@@ -114,7 +114,6 @@ def test_generate_gcp_jwt_token_pubsub():
     delete_resp = req.delete(url=pubsub_delete_request_path, headers=headers)
 
     print(delete_resp.raise_for_status())
-
     assert delete_resp.ok
 
     # Delete device
@@ -170,8 +169,8 @@ def test_generate_gcp_jwt_token_gcs():
     create_resp = req.post(
         url=create_request_path, data=create_payload, headers=headers
     )
-    print(create_resp.raise_for_status())
 
+    print(create_resp.raise_for_status())
     assert create_resp.ok
 
     # Upload data to GCS bucket.
@@ -181,9 +180,10 @@ def test_generate_gcp_jwt_token_gcs():
         gcs_bucket_name, data_name
     )
     upload_resp = req.post(url=upload_request_path, data=binary_data, headers=headers)
-    print(upload_resp.raise_for_status())
 
+    print(upload_resp.raise_for_status())
     assert upload_resp.ok
+
     # Download data from GCS bucket.
     download_request_path = (
         "https://storage.googleapis.com/storage/v1/b/${}/o/${}?alt=media".format(
@@ -191,8 +191,8 @@ def test_generate_gcp_jwt_token_gcs():
         )
     )
     download_resp = req.get(url=download_request_path, headers=headers)
-    print(download_resp.raise_for_status())
 
+    print(download_resp.raise_for_status())
     assert download_resp.ok
 
     # Delete data from GCS bucket.
@@ -202,8 +202,8 @@ def test_generate_gcp_jwt_token_gcs():
         )
     )
     delete_data_resp = req.delete(url=delete_request_path, headers=headers)
-    print(delete_data_resp.raise_for_status())
 
+    print(delete_data_resp.raise_for_status())
     assert delete_data_resp.ok
 
     # Clean up
@@ -214,7 +214,6 @@ def test_generate_gcp_jwt_token_gcs():
     delete_resp = req.delete(url=gcs_delete_request_path, headers=headers)
 
     print(delete_resp.raise_for_status())
-
     assert delete_resp.ok
     # Delete device
     manager.delete_device(
@@ -222,3 +221,60 @@ def test_generate_gcp_jwt_token_gcs():
     )
     # Delete registry
     manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
+
+
+# Generate gcp access token, exchange ubermint token for service account access token
+# Use service account access token to send cloud iot command
+def test_exchange_gcsp_token_for_service_account_token():
+    device_id = device_id_template.format("RSA256")
+    scope = "https://www.googleapis.com/auth/cloud-platform"
+    service_account_email = ""
+    manager.open_registry(
+        service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
+    )
+
+    manager.create_rs256_device(
+        service_account_json,
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        rsa_cert_path,
+    )
+    # Generate GCP access token
+    token = accesstoken.generate_gcp_token(
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        scope,
+        "RS256",
+        rsa_private_path,
+    )
+    headers = {"authorization": "Bearer {}".format(token)}
+    # Exchange uber mint token for service account access token.
+    exchange_payload = {"scope": [scope]}
+    exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
+        service_account_email
+    )
+    exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
+    print(exchange_resp.raise_for_status())
+
+    assert exchange_resp.ok
+    assert exchange_resp.json["accessToken"] != ""
+
+    service_account_token = exchange_resp.json["accessToken"]
+
+    # Sending a command to a Cloud IoT Core device
+    command_payload = {"binaryData": bytes("CLOSE DOOR", "utf-8")}
+    command_url = "https://cloudiot.googleapis.com/v1/projects/{}/locations/{}/registries/{}/devices/{}:sendCommandToDevice".format(
+        project_id, cloud_region, registry_id, device_id
+    )
+    command_resp = req.post(
+        url=command_url,
+        data=command_payload,
+        headers={"authorization": "Bearer {}".format(service_account_token)},
+    )
+
+    print(command_resp.raise_for_status())
+    assert command_resp.ok
