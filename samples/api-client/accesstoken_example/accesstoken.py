@@ -98,7 +98,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     # scopes = 'scope1 scope2' https://developers.google.com/identity/protocols/oauth2/scopes
     global HOST
     resource_url = "projects/{}/locations/{}/registries/{}/devices/{}".format(project_id, cloud_region, registry_id, device_id)
-    request_path = "{}/v1alpha1/{}:generateAccessToken".format(
+    request_path = "{}/v1beta1/{}:generateAccessToken".format(
         HOST, resource_url
     )
     headers = {"authorization": "Bearer {}".format(jwt_token)}
