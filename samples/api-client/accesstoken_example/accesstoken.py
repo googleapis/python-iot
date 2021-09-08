@@ -105,7 +105,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     request_payload = {"scope": scopes, "device": resource_url}
     resp = req.post(url=request_path, data=request_payload, headers=headers)
     print(resp.raise_for_status())
-    return resp.json()
+    return resp.json()["access_token"]
     # [END iot_exchange_iot_jwt_token_with_gcp_token]
 
 
