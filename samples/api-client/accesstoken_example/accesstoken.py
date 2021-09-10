@@ -170,7 +170,9 @@ def access_token_gcs(
     )
     headers = {"authorization": "Bearer {}".format(token)}
     create_resp = req.post(
-        url=create_request_path, data=bytearray(create_payload), headers=headers
+        url=create_request_path,
+        data=bytearray(json.dumps(create_payload)),
+        headers=headers,
     )
 
     print(create_resp.raise_for_status())
@@ -301,7 +303,7 @@ def generate_access_token(
     token = exchange_iot_jwt_token_with_gcp_token(
         cloud_region, project_id, registry_id, device_id, jwt_token, scope
     )
-    print('Access token: ', token)
+    print("Access token: ", token)
     return token
     # [END iot_generate_access_token]
 
