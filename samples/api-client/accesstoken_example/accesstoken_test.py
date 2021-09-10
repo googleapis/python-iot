@@ -26,7 +26,7 @@ import manager  # noqa
 import accesstoken  # noqa
 
 cloud_region = "us-central1"
-device_id_template = "test-device-{}"
+device_id_template = "test-device-256-{}"
 rsa_cert_path = "resources/rsa_cert.pem"
 rsa_private_path = "resources/rsa_private.pem"  # Must match rsa_cert
 device_topic_id = "test-device-events-{}".format(uuid.uuid4())
@@ -43,7 +43,7 @@ registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
 
 def test_access_token_pubsub():
-    device_id = device_id_template.format("RSA256")
+    device_id = device_id_template.format(uuid.uuid4())
     scope = "https://www.googleapis.com/auth/pubsub"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
@@ -80,7 +80,7 @@ def test_access_token_pubsub():
 # upload data to gcs bucket, download data from gcs bucket
 # delete data from gcs bucket
 def test_generate_gcp_jwt_token_gcs():
-    device_id = device_id_template.format("RSA256")
+    device_id = device_id_template.format(uuid.uuid4())
     scope = "https://www.googleapis.com/auth/devstorage.full_control"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
@@ -115,7 +115,7 @@ def test_generate_gcp_jwt_token_gcs():
 # Generate gcp access token, exchange ubermint token for service account access token
 # Use service account access token to send cloud iot command
 def test_exchange_gcsp_token_for_service_account_token():
-    device_id = device_id_template.format("RSA256")
+    device_id = device_id_template.format(uuid.uuid4())
     scope = "https://www.googleapis.com/auth/cloud-platform"
     service_account_email = "cloud-iot-test@python-docs-samples-tests.iam.gserviceaccount.com"
     manager.open_registry(
