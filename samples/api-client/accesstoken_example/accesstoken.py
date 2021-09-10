@@ -80,7 +80,11 @@ def access_token_pubsub(
     request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
         project_id, topic_id
     )
-    headers = {"authorization": "Bearer {}".format(token)}
+    headers = {
+        "authorization": "Bearer {}".format(token),
+        "content-type": "application/json",
+        "cache-control": "no-cache",
+    }
     resp = req.put(url=request_path, data={}, headers=headers)
 
     print(resp.raise_for_status())
@@ -168,7 +172,11 @@ def access_token_gcs(
     create_request_path = (
         "https://storage.googleapis.com/storage/v1/b?project={}".format(project_id)
     )
-    headers = {"authorization": "Bearer {}".format(token)}
+    headers = {
+        "authorization": "Bearer {}".format(token),
+        "content-type": "application/json",
+        "cache-control": "no-cache",
+    }
     create_resp = req.post(
         url=create_request_path,
         data=bytes(json.dumps(create_payload), "utf-8"),
@@ -257,7 +265,11 @@ def access_token_iot_send_command(
         algorithm,
         rsa_private_key_path,
     )
-    headers = {"authorization": "Bearer {}".format(token)}
+    headers = {
+        "authorization": "Bearer {}".format(token),
+        "content-type": "application/json",
+        "cache-control": "no-cache",
+    }
     # Exchange access token for service account access token.
     exchange_payload = {"scope": [scope]}
     exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
