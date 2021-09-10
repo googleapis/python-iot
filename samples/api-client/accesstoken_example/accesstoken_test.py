@@ -117,7 +117,7 @@ def test_generate_gcp_jwt_token_gcs():
 def test_exchange_gcsp_token_for_service_account_token():
     device_id = device_id_template.format("RSA256")
     scope = "https://www.googleapis.com/auth/cloud-platform"
-    service_account_email = ""
+    service_account_email = "cloud-iot-test@python-docs-samples-tests.iam.gserviceaccount.com"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )
