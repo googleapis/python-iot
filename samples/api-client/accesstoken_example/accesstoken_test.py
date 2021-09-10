@@ -39,6 +39,7 @@ test_topic_id = "test-pubsub-{}".format(uuid.uuid4())
 # This format is used in the `clean_up_registries()` below.
 registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
+
 # Generate gcp access token, use gcp access token to create gcs bucket
 # upload data to gcs bucket, download data from gcs bucket
 # delete data from gcs bucket
