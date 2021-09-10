@@ -182,9 +182,6 @@ def access_token_gcs(
         data=bytes(json.dumps(create_payload), "utf-8"),
         headers=headers,
     )
-    print(create_resp.request.url)
-    print(create_resp.request.body)
-    print(create_resp.request.headers)
     print(create_resp.raise_for_status())
     assert create_resp.ok
 
@@ -201,7 +198,7 @@ def access_token_gcs(
 
     # Download data from GCS bucket.
     download_request_path = (
-        "https://storage.googleapis.com/storage/v1/b/${}/o/${}?alt=media".format(
+        "https://storage.googleapis.com/storage/v1/b/{}/o/{}?alt=media".format(
             bucket_name, data_name
         )
     )
@@ -212,7 +209,7 @@ def access_token_gcs(
 
     # Delete data from GCS bucket.
     delete_request_path = (
-        "https://storage.googleapis.com/storage/v1/b/${}/o/${}".format(
+        "https://storage.googleapis.com/storage/v1/b/{}/o/{}".format(
             bucket_name, data_name
         )
     )
@@ -268,7 +265,7 @@ def access_token_iot_send_command(
     headers = {
         "authorization": "Bearer {}".format(token),
         "content-type": "application/json",
-        "cache-control": "no-cache"
+        "cache-control": "no-cache",
     }
     # Exchange access token for service account access token.
     exchange_payload = {"scope": [scope]}
@@ -276,8 +273,10 @@ def access_token_iot_send_command(
         service_account_email
     )
     exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
+    print(exchange_resp.request.url)
+    print(exchange_resp.request.body)
+    print(exchange_resp.request.headers)
     print(exchange_resp.raise_for_status())
-
     assert exchange_resp.ok
     assert exchange_resp.json["accessToken"] != ""
 
@@ -294,7 +293,7 @@ def access_token_iot_send_command(
         headers={
             "authorization": "Bearer {}".format(service_account_token),
             "content-type": "application/json",
-            "cache-control": "no-cache"
+            "cache-control": "no-cache",
         },
     )
 
