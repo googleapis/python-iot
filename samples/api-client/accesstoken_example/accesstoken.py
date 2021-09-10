@@ -76,7 +76,7 @@ def access_token_pubsub(
         algorithm,
         rsa_private_key_path,
     )
-
+    print('Access token: ', token)
     # Create pubsub topic
     request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
         project_id, topic_id
