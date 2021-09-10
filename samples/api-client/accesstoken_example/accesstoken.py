@@ -108,7 +108,7 @@ def access_token_pubsub(
     publish_resp = req.post(
         url=publish_request_path, data=publish_payload, headers=headers
     )
-
+    print('Response: ', publish_resp.json())
     print(publish_resp.raise_for_status())
     assert publish_resp.ok
     # Clean up
@@ -270,8 +270,7 @@ def access_token_iot_send_command(
         service_account_email
     )
     exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
-    print(exchange_resp.request.url)
-    print(exchange_resp.request.body)
+    print('Exchange Response: ', exchange_resp.request.url)
     print(exchange_resp.raise_for_status())
     assert exchange_resp.ok
     assert exchange_resp.json["accessToken"] != ""
