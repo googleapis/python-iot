@@ -21,7 +21,7 @@ gcp compatible token.
 
 Usage example:
 
-    python access.py \\
+    python accesstoken.py \\
       --project_id=my-project-id \\
       --cloud_region=us-central1 \\
       --registry_id=my-registry-id \\
@@ -30,6 +30,7 @@ Usage example:
       --scope="scope1 scope2"
 """
 import argparse
+import base64
 from datetime import datetime, timedelta
 import io
 import json
@@ -43,16 +44,257 @@ import requests as req
 HOST = "https://cloudiottoken.googleapis.com"
 
 
-def generate_gcp_token(
+def access_token_pubsub(
+    cloud_region,
+    project_id,
+    registry_id,
+    device_id,
+    scope,
+    algorithm,
+    rsa_private_key_path,
+    topic_id,
+):
+    """Access Token pubsub"""
+    # [START iot_access_token_pubsub]
+    # cloud_region = 'us-central1'
+    # project_id = 'YOUR_PROJECT_ID'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # scope = 'scope1 scope2' # See the full list of scopes at:
+    # https://developers.google.com/identity/protocols/oauth2/scopes
+    # algorithm = 'RS256'
+    # rsa_private_key_path = 'path/to/certificate.pem'
+    # topic_id = 'pubsub topic id'
+
+    # Generate GCP access token
+    token = generate_access_token(
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        scope,
+        algorithm,
+        rsa_private_key_path,
+    )
+
+    # Create pubsub topic
+    request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
+        project_id, topic_id
+    )
+    headers = {"authorization": "Bearer {}".format(token)}
+    resp = req.put(url=request_path, data={}, headers=headers)
+
+    print(resp.raise_for_status())
+    assert resp.ok
+
+    # Publish messgae to pubsub topic
+    publish_payload = {
+        "messages": [
+            {
+                "attributes": {
+                    "test": "VALUE",
+                },
+                "data": base64.b64encode(bytes("MESSAGE_DATA", "utf-8")),
+            }
+        ]
+    }
+    publish_request_path = (
+        "https://pubsub.googleapis.com/v1/projects/{}/topics/{}:publish".format(
+            project_id, topic_id
+        )
+    )
+    publish_resp = req.post(
+        url=publish_request_path, data=publish_payload, headers=headers
+    )
+
+    print(publish_resp.raise_for_status())
+    assert publish_resp.ok
+    # Clean up
+
+    # Delete Pubsub topic
+    pubsub_delete_request_path = (
+        "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
+            project_id, topic_id
+        )
+    )
+    delete_resp = req.delete(url=pubsub_delete_request_path, headers=headers)
+
+    print(delete_resp.raise_for_status())
+    assert delete_resp.ok
+    # [END iot_access_token_pubsub]
+
+
+def access_token_gcs(
+    cloud_region,
+    project_id,
+    registry_id,
+    device_id,
+    scope,
+    algorithm,
+    rsa_private_key_path,
+    bucket_name,
+):
+    """Access Token GCS"""
+    # [START iot_access_token_gcs]
+    # cloud_region = 'us-central1'
+    # project_id = 'YOUR_PROJECT_ID'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # scope = 'scope1 scope2' # See the full list of scopes at:
+    # https://developers.google.com/identity/protocols/oauth2/scopes
+    # algorithm = 'RS256'
+    # rsa_private_key_path = 'path/to/certificate.pem'
+    # bucket_name = 'name of gcs bucket.'
+
+    # Generate GCP access token
+    token = generate_access_token(
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        scope,
+        algorithm,
+        rsa_private_key_path,
+    )
+
+    # Create GCS bucket
+    create_payload = {
+        "name": bucket_name,
+        "location": cloud_region,
+        "storageClass": "STANDARD",
+        "iamConfiguration": {
+            "uniformBucketLevelAccess": {"enabled": True},
+        },
+    }
+    create_request_path = (
+        "https://storage.googleapis.com/storage/v1/b?project={}".format(project_id)
+    )
+    headers = {"authorization": "Bearer {}".format(token)}
+    create_resp = req.post(
+        url=create_request_path, data=create_payload, headers=headers
+    )
+
+    print(create_resp.raise_for_status())
+    assert create_resp.ok
+
+    # Upload data to GCS bucket.
+    data_name = "testFILE"
+    binary_data = open("./resources/logo.png", "r").read()
+    upload_request_path = "https://storage.googleapis.com/upload/storage/v1/b/{}/o?uploadType=media&name={}".format(
+        bucket_name, data_name
+    )
+    upload_resp = req.post(url=upload_request_path, data=binary_data, headers=headers)
+
+    print(upload_resp.raise_for_status())
+    assert upload_resp.ok
+
+    # Download data from GCS bucket.
+    download_request_path = (
+        "https://storage.googleapis.com/storage/v1/b/${}/o/${}?alt=media".format(
+            bucket_name, data_name
+        )
+    )
+    download_resp = req.get(url=download_request_path, headers=headers)
+
+    print(download_resp.raise_for_status())
+    assert download_resp.ok
+
+    # Delete data from GCS bucket.
+    delete_request_path = (
+        "https://storage.googleapis.com/storage/v1/b/${}/o/${}".format(
+            bucket_name, data_name
+        )
+    )
+    delete_data_resp = req.delete(url=delete_request_path, headers=headers)
+
+    print(delete_data_resp.raise_for_status())
+    assert delete_data_resp.ok
+
+    # Clean up
+    # Delete GCS Bucket
+    gcs_delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}".format(
+        create_resp.json().name
+    )
+    delete_resp = req.delete(url=gcs_delete_request_path, headers=headers)
+
+    print(delete_resp.raise_for_status())
+    assert delete_resp.ok
+    # [END iot_access_token_gcs]
+
+
+def access_token_iot_send_command(
+    cloud_region,
+    project_id,
+    registry_id,
+    device_id,
+    scope,
+    algorithm,
+    rsa_private_key_path,
+    service_account_email,
+):
+    """Access Token Iot Send Command"""
+    # [START iot_access_token_iot_send_command]
+    # cloud_region = 'us-central1'
+    # project_id = 'YOUR_PROJECT_ID'
+    # registry_id = 'your-registry-id'
+    # device_id = 'your-device-id'
+    # scope = 'scope1 scope2' # See the full list of scopes at:
+    # https://developers.google.com/identity/protocols/oauth2/scopes
+    # algorithm = 'RS256'
+    # rsa_private_key_path = 'path/to/certificate.pem'
+    # service_account_email = 'service account to be impersonated.'
+
+    # Generate GCP access token
+    token = generate_access_token(
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        scope,
+        algorithm,
+        rsa_private_key_path,
+    )
+    headers = {"authorization": "Bearer {}".format(token)}
+    # Exchange access token for service account access token.
+    exchange_payload = {"scope": [scope]}
+    exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
+        service_account_email
+    )
+    exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
+    print(exchange_resp.raise_for_status())
+
+    assert exchange_resp.ok
+    assert exchange_resp.json["accessToken"] != ""
+
+    service_account_token = exchange_resp.json["accessToken"]
+
+    # Sending a command to a Cloud IoT Core device
+    command_payload = {"binaryData": bytes("CLOSE DOOR", "utf-8")}
+    command_url = "https://cloudiot.googleapis.com/v1/projects/{}/locations/{}/registries/{}/devices/{}:sendCommandToDevice".format(
+        project_id, cloud_region, registry_id, device_id
+    )
+    command_resp = req.post(
+        url=command_url,
+        data=command_payload,
+        headers={"authorization": "Bearer {}".format(service_account_token)},
+    )
+
+    print(command_resp.raise_for_status())
+    assert command_resp.ok
+    # [END iot_access_token_iot_send_command]
+
+
+def generate_access_token(
     project_id, cloud_region, registry_id, device_id, scope, algorithm, certificate_file
 ):
     """Generate GCP access token."""
-    # [START iot_generate_gcp_token]
+    # [START iot_generate_access_token]
     # project_id = 'YOUR_PROJECT_ID'
     # cloud_region = 'us-central1'
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
-    # scope = 'scope1 scope2'
+    # scope = 'scope1 scope2' # See the full list of scopes at:
+    # https://developers.google.com/identity/protocols/oauth2/scopes
     # algorithm = 'RS256'
     # certificate_file = 'path/to/certificate.pem'
 
@@ -61,7 +303,7 @@ def generate_gcp_token(
         cloud_region, project_id, registry_id, device_id, jwt_token, scope
     )
     return token
-    # [END iot_generate_gcp_token]
+    # [END iot_generate_access_token]
 
 
 def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
@@ -95,12 +337,13 @@ def exchange_iot_jwt_token_with_gcp_token(
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
     # jwt_token = 'CLOUD_IOT_GENERATE_JWT_TOKEN'
-    # scopes = 'scope1 scope2' https://developers.google.com/identity/protocols/oauth2/scopes
+    # scopes = 'scope1 scope2' # See the full list of scopes at:
+    # https://developers.google.com/identity/protocols/oauth2/scopes
     global HOST
-    resource_url = "projects/{}/locations/{}/registries/{}/devices/{}".format(project_id, cloud_region, registry_id, device_id)
-    request_path = "{}/v1beta1/{}:generateAccessToken".format(
-        HOST, resource_url
+    resource_url = "projects/{}/locations/{}/registries/{}/devices/{}".format(
+        project_id, cloud_region, registry_id, device_id
     )
+    request_path = "{}/v1beta1/{}:generateAccessToken".format(HOST, resource_url)
     headers = {"authorization": "Bearer {}".format(jwt_token)}
     request_payload = {"scope": scopes, "device": resource_url}
     resp = req.post(url=request_path, data=request_payload, headers=headers)
@@ -128,7 +371,9 @@ def parse_command_line_args():
 
     parser.add_argument("--device_id", default=None, help="Device id.")
     parser.add_argument(
-        "--scope", default=None, help="Scope for GCP token. Space delimited strings"
+        "--scope",
+        default=None,
+        help="Scope for GCP token. Space delimited strings. See the full list of scopes at: https://developers.google.com/identity/protocols/oauth2/scopes",
     )
 
     parser.add_argument(
@@ -160,7 +405,7 @@ def run_program(args):
     if args.scope is None:
         print("You must specify the scope.")
         return
-    token = generate_gcp_token(
+    token = generate_access_token(
         args.project_id,
         args.cloud_region,
         args.registry_id,
