@@ -190,7 +190,7 @@ def access_token_gcs(
 
     # Upload data to GCS bucket.
     data_name = "testFILE"
-    binary_data = open("./resources/logo.png", "r").read()
+    binary_data = open("./resources/logo.png", "rb").read()
     upload_request_path = "https://storage.googleapis.com/upload/storage/v1/b/{}/o?uploadType=media&name={}".format(
         bucket_name, data_name
     )
@@ -268,7 +268,7 @@ def access_token_iot_send_command(
     headers = {
         "authorization": "Bearer {}".format(token),
         "content-type": "application/json",
-        "cache-control": "no-cache",
+        "cache-control": "no-cache"
     }
     # Exchange access token for service account access token.
     exchange_payload = {"scope": [scope]}
@@ -291,7 +291,11 @@ def access_token_iot_send_command(
     command_resp = req.post(
         url=command_url,
         data=command_payload,
-        headers={"authorization": "Bearer {}".format(service_account_token)},
+        headers={
+            "authorization": "Bearer {}".format(service_account_token),
+            "content-type": "application/json",
+            "cache-control": "no-cache"
+        },
     )
 
     print(command_resp.raise_for_status())
