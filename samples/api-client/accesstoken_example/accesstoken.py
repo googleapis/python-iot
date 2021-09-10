@@ -171,7 +171,7 @@ def access_token_gcs(
     headers = {"authorization": "Bearer {}".format(token)}
     create_resp = req.post(
         url=create_request_path,
-        data=bytearray(json.dumps(create_payload),'utf-8'),
+        data=bytes(json.dumps(create_payload), "utf-8"),
         headers=headers,
     )
 
