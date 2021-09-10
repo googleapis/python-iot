@@ -36,7 +36,6 @@ import io
 import json
 import os
 import time
-from urllib.parse import quote
 
 
 import jwt
