@@ -39,43 +39,6 @@ test_topic_id = "test-pubsub-{}".format(uuid.uuid4())
 # This format is used in the `clean_up_registries()` below.
 registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
-# Generate gcp access token, use gcp access token to create pubsub
-
-
-def test_access_token_pubsub():
-    device_id = device_id_template.format(uuid.uuid4())
-    scope = "https://www.googleapis.com/auth/pubsub"
-    manager.open_registry(
-        service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
-    )
-
-    manager.create_rs256_device(
-        service_account_json,
-        project_id,
-        cloud_region,
-        registry_id,
-        device_id,
-        rsa_cert_path,
-    )
-    accesstoken.access_token_pubsub(
-        cloud_region,
-        project_id,
-        registry_id,
-        device_id,
-        scope,
-        "RS256",
-        rsa_private_path,
-        test_topic_id,
-    )
-
-    # Delete device
-    manager.delete_device(
-        service_account_json, project_id, cloud_region, registry_id, device_id
-    )
-    # Delete registry
-    manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
-
-
 # Generate gcp access token, use gcp access token to create gcs bucket
 # upload data to gcs bucket, download data from gcs bucket
 # delete data from gcs bucket
@@ -112,12 +75,49 @@ def test_generate_gcp_jwt_token_gcs():
     manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
 
 
+# Generate gcp access token, use gcp access token to create pubsub
+def test_access_token_pubsub():
+    device_id = device_id_template.format(uuid.uuid4())
+    scope = "https://www.googleapis.com/auth/pubsub"
+    manager.open_registry(
+        service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
+    )
+
+    manager.create_rs256_device(
+        service_account_json,
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        rsa_cert_path,
+    )
+    accesstoken.access_token_pubsub(
+        cloud_region,
+        project_id,
+        registry_id,
+        device_id,
+        scope,
+        "RS256",
+        rsa_private_path,
+        test_topic_id,
+    )
+
+    # Delete device
+    manager.delete_device(
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
+    # Delete registry
+    manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
+
+
 # Generate gcp access token, exchange ubermint token for service account access token
 # Use service account access token to send cloud iot command
-def test_exchange_gcsp_token_for_service_account_token():
+def test_exchange_gcp_token_for_service_account_token():
     device_id = device_id_template.format(uuid.uuid4())
     scope = "https://www.googleapis.com/auth/cloud-platform"
-    service_account_email = "cloud-iot-test@python-docs-samples-tests.iam.gserviceaccount.com"
+    service_account_email = (
+        "cloud-iot-test@python-docs-samples-tests.iam.gserviceaccount.com"
+    )
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )

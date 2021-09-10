@@ -36,6 +36,7 @@ import io
 import json
 import os
 import time
+from urllib.parse import quote
 
 
 import jwt
@@ -208,10 +209,8 @@ def access_token_gcs(
     assert download_resp.ok
 
     # Delete data from GCS bucket.
-    delete_request_path = (
-        "https://storage.googleapis.com/storage/v1/b/{}/o/{}".format(
-            bucket_name, data_name
-        )
+    delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}/o/{}".format(
+        bucket_name, data_name
     )
     delete_data_resp = req.delete(url=delete_request_path, headers=headers)
 
@@ -220,7 +219,6 @@ def access_token_gcs(
 
     # Clean up
     # Delete GCS Bucket
-    print('GCS NAME: ', create_resp.json())
     gcs_delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}".format(
         bucket_name
     )
@@ -271,7 +269,7 @@ def access_token_iot_send_command(
     # Exchange access token for service account access token.
     exchange_payload = {"scope": [scope]}
     exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
-        service_account_email
+        quote(service_account_email)
     )
     exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
     print(exchange_resp.request.url)
