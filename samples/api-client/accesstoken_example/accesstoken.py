@@ -93,10 +93,7 @@ def access_token_pubsub(
     publish_payload = {
         "messages": [
             {
-                "attributes": {
-                    "test": "VALUE",
-                },
-                "data": base64.b64encode(bytes("MESSAGE_DATA", "utf-8")),
+                "data": base64.b64encode(bytes("MESSAGE_DATA", "utf-8"))
             }
         ]
     }
@@ -270,7 +267,7 @@ def access_token_iot_send_command(
         service_account_email
     )
     exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
-    print('Exchange Response: ', exchange_resp.request.url)
+    print('Exchange Response: ', exchange_resp.json())
     print(exchange_resp.raise_for_status())
     assert exchange_resp.ok
     assert exchange_resp.json["accessToken"] != ""
