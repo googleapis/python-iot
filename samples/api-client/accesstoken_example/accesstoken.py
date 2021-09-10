@@ -268,8 +268,8 @@ def access_token_iot_send_command(
     }
     # Exchange access token for service account access token.
     exchange_payload = {"scope": [scope]}
-    exchange_url = "https://iamcredentials.googleapis.com/v1/projects/{}/serviceAccounts/{}:generateAccessToken".format(
-        project_id, quote(service_account_email)
+    exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
+        service_account_email
     )
     exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
     print(exchange_resp.request.url)
