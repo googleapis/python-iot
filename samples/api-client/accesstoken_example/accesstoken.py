@@ -273,7 +273,6 @@ def access_token_iot_send_command(
     exchange_resp = req.post(url=exchange_url, data=exchange_payload, headers=headers)
     print(exchange_resp.request.url)
     print(exchange_resp.request.body)
-    print(exchange_resp.request.headers)
     print(exchange_resp.raise_for_status())
     assert exchange_resp.ok
     assert exchange_resp.json["accessToken"] != ""
