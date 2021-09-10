@@ -220,8 +220,9 @@ def access_token_gcs(
 
     # Clean up
     # Delete GCS Bucket
+    print('GCS NAME: ', create_resp.json())
     gcs_delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}".format(
-        create_resp.json().name
+        bucket_name
     )
     delete_resp = req.delete(url=gcs_delete_request_path, headers=headers)
 
