@@ -76,7 +76,6 @@ def access_token_pubsub(
         algorithm,
         rsa_private_key_path,
     )
-    print('Access token: ', token)
     # Create pubsub topic
     request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
         project_id, topic_id
@@ -302,6 +301,7 @@ def generate_access_token(
     token = exchange_iot_jwt_token_with_gcp_token(
         cloud_region, project_id, registry_id, device_id, jwt_token, scope
     )
+    print('Access token: ', token)
     return token
     # [END iot_generate_access_token]
 
