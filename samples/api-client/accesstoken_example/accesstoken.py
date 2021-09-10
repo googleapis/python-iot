@@ -81,12 +81,12 @@ def access_token_pubsub(
         project_id, topic_id
     )
     headers = {
-        "authorization": "Bearer {}".format(token),
+        "Authorization": "Bearer {}".format(token),
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
     resp = req.put(url=request_path, data={}, headers=headers)
-
+    print('Response: ', resp.json())
     print(resp.raise_for_status())
     assert resp.ok
 
@@ -261,7 +261,7 @@ def access_token_iot_send_command(
         rsa_private_key_path,
     )
     headers = {
-        "authorization": "Bearer {}".format(token),
+        "Authorization": "Bearer {}".format(token),
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
