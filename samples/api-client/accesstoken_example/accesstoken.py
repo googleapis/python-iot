@@ -93,7 +93,7 @@ def access_token_pubsub(
     publish_payload = {
         "messages": [
             {
-                "data": base64.b64encode(bytes("MESSAGE_DATA", "utf-8"))
+                "data": str(base64.b64encode(bytes("MESSAGE_DATA", "utf-8")),'utf-8')
             }
         ]
     }
@@ -103,7 +103,7 @@ def access_token_pubsub(
         )
     )
     publish_resp = req.post(
-        url=publish_request_path, data=json.dumps(publish_payload), headers=headers
+        url=publish_request_path, data=publish_payload, headers=headers
     )
     print('Response: ', publish_resp.json())
     print(publish_resp.raise_for_status())
