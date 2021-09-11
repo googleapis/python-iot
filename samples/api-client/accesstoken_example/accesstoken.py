@@ -303,7 +303,6 @@ def exchange_device_access_token_for_service_account_access_token(
     exchange_resp = req.post(
         url=exchange_url, data=json.dumps(exchange_payload), headers=headers
     )
-    print("Exchange Response: ", exchange_resp.json())
     print(exchange_resp.raise_for_status())
     assert exchange_resp.ok
 
