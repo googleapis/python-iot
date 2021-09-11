@@ -92,9 +92,7 @@ def access_token_pubsub(
     # Publish messgae to pubsub topic
     publish_payload = {
         "messages": [
-            {
-                "data": str(base64.b64encode(bytes("MESSAGE_DATA", "utf-8")),'utf-8')
-            }
+            {"data": str(base64.b64encode(bytes("MESSAGE_DATA", "utf-8")), "utf-8")}
         ]
     }
     publish_request_path = (
@@ -103,9 +101,9 @@ def access_token_pubsub(
         )
     )
     publish_resp = req.post(
-        url=publish_request_path, data=publish_payload, headers=headers
+        url=publish_request_path, data=json.dumps(publish_payload), headers=headers
     )
-    print('Response: ', publish_resp.json())
+    print("Response: ", publish_resp.json())
     print(publish_resp.raise_for_status())
     assert publish_resp.ok
     # Clean up
@@ -266,8 +264,10 @@ def access_token_iot_send_command(
     exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
         service_account_email
     )
-    exchange_resp = req.post(url=exchange_url, data=json.dumps(exchange_payload), headers=headers)
-    print('Exchange Response: ', exchange_resp.json())
+    exchange_resp = req.post(
+        url=exchange_url, data=json.dumps(exchange_payload), headers=headers
+    )
+    print("Exchange Response: ", exchange_resp.json())
     print(exchange_resp.raise_for_status())
     assert exchange_resp.ok
     assert exchange_resp.json["accessToken"] != ""
