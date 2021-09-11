@@ -271,7 +271,7 @@ def access_token_iot_send_command(
     print(exchange_resp.raise_for_status())
     assert exchange_resp.ok
 
-    service_account_token = exchange_resp.json["accessToken"]
+    service_account_token = exchange_resp.json()["accessToken"]
 
     # Sending a command to a Cloud IoT Core device
     command_payload = json.dumps(
