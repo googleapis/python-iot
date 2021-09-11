@@ -276,7 +276,7 @@ def send_iot_command_to_device(
             "cache-control": "no-cache",
         },
     )
-
+    print('Response: ', command_resp.json())
     print(command_resp.raise_for_status())
     assert command_resp.ok
     # [END iot_access_token_iot_send_command]
