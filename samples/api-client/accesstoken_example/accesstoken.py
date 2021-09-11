@@ -44,7 +44,7 @@ import requests as req
 HOST = "https://cloudiottoken.googleapis.com"
 
 
-def access_token_pubsub(
+def publish_pubsub_message(
     cloud_region,
     project_id,
     registry_id,
@@ -121,7 +121,7 @@ def access_token_pubsub(
     # [END iot_access_token_pubsub]
 
 
-def access_token_gcs(
+def download_cloud_storage_file(
     cloud_region,
     project_id,
     registry_id,
@@ -222,7 +222,7 @@ def access_token_gcs(
     # [END iot_access_token_gcs]
 
 
-def access_token_iot_send_command(
+def send_iot_command_to_device(
     cloud_region,
     project_id,
     registry_id,
@@ -254,24 +254,11 @@ def access_token_iot_send_command(
         algorithm,
         rsa_private_key_path,
     )
-    headers = {
-        "Authorization": "Bearer {}".format(token),
-        "content-type": "application/json",
-        "cache-control": "no-cache",
-    }
-    # Exchange access token for service account access token.
-    exchange_payload = {"scope": [scope]}
-    exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
-        service_account_email
+    service_account_token = (
+        exchange_device_access_token_for_service_account_access_token(
+            token, scope, service_account_email
+        )
     )
-    exchange_resp = req.post(
-        url=exchange_url, data=json.dumps(exchange_payload), headers=headers
-    )
-    print("Exchange Response: ", exchange_resp.json())
-    print(exchange_resp.raise_for_status())
-    assert exchange_resp.ok
-
-    service_account_token = exchange_resp.json()["accessToken"]
 
     # Sending a command to a Cloud IoT Core device
     command_payload = json.dumps(
@@ -295,6 +282,36 @@ def access_token_iot_send_command(
     # [END iot_access_token_iot_send_command]
 
 
+def exchange_device_access_token_for_service_account_access_token(
+    device_access_token, scope, service_account_email
+):
+    # [START iot_access_token_service_account_token]
+    # device_access_token = 'device-access-token'
+    # scope = 'scope1 scope2' // See the full list of scopes \
+    #   at: https://developers.google.com/identity/protocols/oauth2/scopes
+    # service_account_email  = 'your-service-account@your-project.iam.gserviceaccount.com'
+    headers = {
+        "Authorization": "Bearer {}".format(device_access_token),
+        "content-type": "application/json",
+        "cache-control": "no-cache",
+    }
+    # Exchange access token for service account access token.
+    exchange_payload = {"scope": [scope]}
+    exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
+        service_account_email
+    )
+    exchange_resp = req.post(
+        url=exchange_url, data=json.dumps(exchange_payload), headers=headers
+    )
+    print("Exchange Response: ", exchange_resp.json())
+    print(exchange_resp.raise_for_status())
+    assert exchange_resp.ok
+
+    service_account_token = exchange_resp.json()["accessToken"]
+    return service_account_token
+    # [END iot_access_token_service_account_token]
+
+
 def generate_access_token(
     project_id, cloud_region, registry_id, device_id, scope, algorithm, certificate_file
 ):
@@ -309,17 +326,17 @@ def generate_access_token(
     # algorithm = 'RS256'
     # certificate_file = 'path/to/certificate.pem'
 
-    jwt_token = generate_iot_jwt_token(project_id, algorithm, certificate_file)
-    token = exchange_iot_jwt_token_with_gcp_token(
-        cloud_region, project_id, registry_id, device_id, jwt_token, scope
+    jwt = create_jwt(project_id, algorithm, certificate_file)
+    token = generate_device_access_token(
+        cloud_region, project_id, registry_id, device_id, jwt, scope
     )
     return token
     # [END iot_generate_access_token]
 
 
-def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
+def create_jwt(project_id, algorithm, path_to_private_certificate):
     """Generate cloud iot jwt token."""
-    # [START iot_generate_iot_jwt_token]
+    # [START iot_create_jwt]
     # project_id = 'YOUR_PROJECT_ID'
     # algorithm = 'RS256'
     # certificate_file = 'path/to/certificate.pem'
@@ -335,14 +352,14 @@ def generate_iot_jwt_token(project_id, algorithm, path_to_private_certificate):
         json.loads(jwt_payload), private_key_bytes, algorithm=algorithm
     )
     return encoded_jwt
-    # [END iot_generate_iot_jwt_token]
+    # [END iot_create_jwt]
 
 
-def exchange_iot_jwt_token_with_gcp_token(
+def generate_device_access_token(
     cloud_region, project_id, registry_id, device_id, jwt_token, scopes
 ):
     """Exchange iot jwt token for gcp token."""
-    # [START iot_exchange_iot_jwt_token_with_gcp_token]
+    # [START iot_generate_device_access_token]
     # cloud_region = 'us-central1'
     # project_id = 'YOUR_PROJECT_ID'
     # registry_id = 'your-registry-id'
@@ -360,7 +377,7 @@ def exchange_iot_jwt_token_with_gcp_token(
     resp = req.post(url=request_path, data=request_payload, headers=headers)
     print(resp.raise_for_status())
     return resp.json()["access_token"]
-    # [END iot_exchange_iot_jwt_token_with_gcp_token]
+    # [END iot_generate_device_access_token]
 
 
 def parse_command_line_args():

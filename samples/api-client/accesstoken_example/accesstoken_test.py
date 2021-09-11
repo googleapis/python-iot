@@ -43,7 +43,7 @@ registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 # Generate gcp access token, use gcp access token to create gcs bucket
 # upload data to gcs bucket, download data from gcs bucket
 # delete data from gcs bucket
-def test_generate_gcp_jwt_token_gcs():
+def test_download_cloud_storage_file():
     device_id = device_id_template.format(uuid.uuid4())
     scope = "https://www.googleapis.com/auth/devstorage.full_control"
     manager.open_registry(
@@ -58,7 +58,7 @@ def test_generate_gcp_jwt_token_gcs():
         device_id,
         rsa_cert_path,
     )
-    accesstoken.access_token_gcs(
+    accesstoken.download_cloud_storage_file(
         cloud_region,
         project_id,
         registry_id,
@@ -77,7 +77,7 @@ def test_generate_gcp_jwt_token_gcs():
 
 
 # Generate gcp access token, use gcp access token to create pubsub
-def test_access_token_pubsub():
+def test_publish_pubsub_message():
     device_id = device_id_template.format(uuid.uuid4())
     scope = "https://www.googleapis.com/auth/pubsub"
     manager.open_registry(
@@ -92,7 +92,7 @@ def test_access_token_pubsub():
         device_id,
         rsa_cert_path,
     )
-    accesstoken.access_token_pubsub(
+    accesstoken.publish_pubsub_message(
         cloud_region,
         project_id,
         registry_id,
@@ -113,7 +113,7 @@ def test_access_token_pubsub():
 
 # Generate gcp access token, exchange ubermint token for service account access token
 # Use service account access token to send cloud iot command
-def test_exchange_gcp_token_for_service_account_token():
+def test_send_iot_command_to_device():
     device_id = device_id_template.format(uuid.uuid4())
     scope = "https://www.googleapis.com/auth/cloud-platform"
     service_account_email = (
@@ -131,7 +131,7 @@ def test_exchange_gcp_token_for_service_account_token():
         device_id,
         rsa_cert_path,
     )
-    accesstoken.access_token_iot_send_command(
+    accesstoken.send_iot_command_to_device(
         cloud_region,
         project_id,
         registry_id,
