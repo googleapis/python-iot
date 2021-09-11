@@ -270,12 +270,13 @@ def access_token_iot_send_command(
     print("Exchange Response: ", exchange_resp.json())
     print(exchange_resp.raise_for_status())
     assert exchange_resp.ok
-    assert exchange_resp.json["accessToken"] != ""
 
     service_account_token = exchange_resp.json["accessToken"]
 
     # Sending a command to a Cloud IoT Core device
-    command_payload = {"binaryData": bytes("CLOSE DOOR", "utf-8")}
+    command_payload = json.dumps(
+        {"binaryData": str(base64.b64encode(bytes("CLOSE_DOOR", "utf-8")), "utf-8")}
+    )
     command_url = "https://cloudiot.googleapis.com/v1/projects/{}/locations/{}/registries/{}/devices/{}:sendCommandToDevice".format(
         project_id, cloud_region, registry_id, device_id
     )
