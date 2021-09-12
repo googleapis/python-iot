@@ -20,7 +20,9 @@ import uuid
 # Add command receiver for bootstrapping device registry / device for testing
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "manager"))  # noqa
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "mqtt_example"))  # noqa
 
+import cloudiot_mqtt_example  # noqa
 import manager  # noqa
 
 import accesstoken  # noqa
@@ -131,6 +133,21 @@ def test_send_iot_command_to_device():
         device_id,
         rsa_cert_path,
     )
+    # Create device MQTT client and connect to cloud iot mqtt bridge.
+    mqtt_bridge_hostname = "mqtt.googleapis.com"
+    mqtt_bridge_port = 8883
+    mqtt_tls_cert = "resources/roots.pem"
+    client = cloudiot_mqtt_example.get_client(
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        rsa_private_path,
+        "RS256",
+        mqtt_tls_cert,
+        mqtt_bridge_hostname,
+        mqtt_bridge_port,
+    )
     accesstoken.send_iot_command_to_device(
         cloud_region,
         project_id,
@@ -142,6 +159,7 @@ def test_send_iot_command_to_device():
         service_account_email,
     )
 
+    client.disconnect()
     # Delete device
     manager.delete_device(
         service_account_json, project_id, cloud_region, registry_id, device_id
