@@ -16,8 +16,8 @@
 
 
 """
-This sample app demonstrates the capabilites of Google Cloud IoT Core 
-device federated authentication feature. For more information, see 
+This sample app demonstrates the capabilites of Google Cloud IoT Core
+device federated authentication feature. For more information, see
 https://cloud.google.com/iot/alpha/docs/how-tos/federated_auth.
 
 Usage example:
@@ -38,6 +38,7 @@ import io
 import json
 import os
 import time
+
 import jwt
 import requests as req
 
