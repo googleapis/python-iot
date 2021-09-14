@@ -76,12 +76,15 @@ def generate_access_token(
         cloud_region, project_id, registry_id, device_id, jwt_token, scopes
     ):
         """Exchange IoT device jwt token for device access token."""
-        request_path = "https://cloudiottoken.googleapis.com/v1beta1/projects/{}/locations/{}/registries/{}/devices/{}:generateAccessToken".format(
+        resource_path = "projects/{}/locations/{}/registries/{}/devices/{}".format(
             project_id, cloud_region, registry_id, device_id
         )
+        request_url = "https://cloudiottoken.googleapis.com/v1beta1/{}:generateAccessToken".format(
+            resource_path
+        )
         headers = {"authorization": "Bearer {}".format(jwt_token)}
-        request_payload = {"scope": scopes, "device": resource_url}
-        resp = req.post(url=request_path, data=request_payload, headers=headers)
+        request_payload = {"scope": scopes, "device": resource_path}
+        resp = req.post(url=request_url, data=request_payload, headers=headers)
         print(resp.raise_for_status())
         return resp.json()["access_token"]
 
