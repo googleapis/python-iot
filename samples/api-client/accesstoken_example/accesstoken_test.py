@@ -47,7 +47,6 @@ registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 # delete data from gcs bucket
 def test_download_cloud_storage_file():
     device_id = device_id_template.format(uuid.uuid4())
-    scope = "https://www.googleapis.com/auth/devstorage.full_control"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )
@@ -60,15 +59,16 @@ def test_download_cloud_storage_file():
         device_id,
         rsa_cert_path,
     )
+    data_path = "./resources/logo.png"
     accesstoken.download_cloud_storage_file(
         cloud_region,
         project_id,
         registry_id,
         device_id,
-        scope,
         "RS256",
         rsa_private_path,
         gcs_bucket_name,
+        data_path,
     )
     # Delete device
     manager.delete_device(
@@ -81,7 +81,6 @@ def test_download_cloud_storage_file():
 # Generate gcp access token, use gcp access token to create pubsub
 def test_publish_pubsub_message():
     device_id = device_id_template.format(uuid.uuid4())
-    scope = "https://www.googleapis.com/auth/pubsub"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )
@@ -99,7 +98,6 @@ def test_publish_pubsub_message():
         project_id,
         registry_id,
         device_id,
-        scope,
         "RS256",
         rsa_private_path,
         test_topic_id,
@@ -117,7 +115,6 @@ def test_publish_pubsub_message():
 # Use service account access token to send cloud iot command
 def test_send_iot_command_to_device():
     device_id = device_id_template.format(uuid.uuid4())
-    scope = "https://www.googleapis.com/auth/cloud-platform"
     service_account_email = (
         "cloud-iot-test@python-docs-samples-tests.iam.gserviceaccount.com"
     )
@@ -153,7 +150,6 @@ def test_send_iot_command_to_device():
         project_id,
         registry_id,
         device_id,
-        scope,
         "RS256",
         rsa_private_path,
         service_account_email,

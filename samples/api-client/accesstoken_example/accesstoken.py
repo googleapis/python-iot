@@ -49,7 +49,6 @@ def publish_pubsub_message(
     project_id,
     registry_id,
     device_id,
-    scope,
     algorithm,
     rsa_private_key_path,
     topic_id,
@@ -60,16 +59,15 @@ def publish_pubsub_message(
     # project_id = 'YOUR_PROJECT_ID'
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
-    # scope = 'scope1 scope2' # See the full list of scopes at:
-    # https://developers.google.com/identity/protocols/oauth2/scopes
     # algorithm = 'RS256'
     # rsa_private_key_path = 'path/to/certificate.pem'
     # topic_id = 'pubsub topic id'
 
+    scope = "https://www.googleapis.com/auth/pubsub"
     # Generate GCP access token
     token = generate_access_token(
-        project_id,
         cloud_region,
+        project_id,
         registry_id,
         device_id,
         scope,
@@ -126,10 +124,10 @@ def download_cloud_storage_file(
     project_id,
     registry_id,
     device_id,
-    scope,
     algorithm,
     rsa_private_key_path,
     bucket_name,
+    data_path,
 ):
     """Access Token GCS"""
     # [START iot_access_token_gcs]
@@ -137,16 +135,15 @@ def download_cloud_storage_file(
     # project_id = 'YOUR_PROJECT_ID'
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
-    # scope = 'scope1 scope2' # See the full list of scopes at:
-    # https://developers.google.com/identity/protocols/oauth2/scopes
     # algorithm = 'RS256'
     # rsa_private_key_path = 'path/to/certificate.pem'
     # bucket_name = 'name of gcs bucket.'
-
+    # data_path = 'path-to-upload-file'
+    scope = "https://www.googleapis.com/auth/devstorage.full_control"
     # Generate GCP access token
     token = generate_access_token(
-        project_id,
         cloud_region,
+        project_id,
         registry_id,
         device_id,
         scope,
@@ -181,7 +178,7 @@ def download_cloud_storage_file(
 
     # Upload data to GCS bucket.
     data_name = "testFILE"
-    binary_data = open("./resources/logo.png", "rb").read()
+    binary_data = open(data_path, "rb").read()
     upload_request_path = "https://storage.googleapis.com/upload/storage/v1/b/{}/o?uploadType=media&name={}".format(
         bucket_name, data_name
     )
@@ -227,7 +224,6 @@ def send_iot_command_to_device(
     project_id,
     registry_id,
     device_id,
-    scope,
     algorithm,
     rsa_private_key_path,
     service_account_email,
@@ -238,16 +234,14 @@ def send_iot_command_to_device(
     # project_id = 'YOUR_PROJECT_ID'
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
-    # scope = 'scope1 scope2' # See the full list of scopes at:
-    # https://developers.google.com/identity/protocols/oauth2/scopes
     # algorithm = 'RS256'
     # rsa_private_key_path = 'path/to/certificate.pem'
     # service_account_email = 'service account to be impersonated.'
-
+    scope = "https://www.googleapis.com/auth/cloud-platform"
     # Generate GCP access token
     token = generate_access_token(
-        project_id,
         cloud_region,
+        project_id,
         registry_id,
         device_id,
         scope,
@@ -282,13 +276,12 @@ def send_iot_command_to_device(
 
 
 def exchange_device_access_token_for_service_account_access_token(
-    device_access_token, scope, service_account_email
+    device_access_token, service_account_email
 ):
     # [START iot_access_token_service_account_token]
     # device_access_token = 'device-access-token'
-    # scope = 'scope1 scope2' // See the full list of scopes \
-    #   at: https://developers.google.com/identity/protocols/oauth2/scopes
     # service_account_email  = 'your-service-account@your-project.iam.gserviceaccount.com'
+    scope = "https://www.googleapis.com/auth/cloud-platform"
     headers = {
         "Authorization": "Bearer {}".format(device_access_token),
         "content-type": "application/json",
@@ -311,12 +304,12 @@ def exchange_device_access_token_for_service_account_access_token(
 
 
 def generate_access_token(
-    project_id, cloud_region, registry_id, device_id, scope, algorithm, certificate_file
+    cloud_region, project_id, registry_id, device_id, scope, algorithm, certificate_file
 ):
     """Generate GCP access token."""
     # [START iot_generate_access_token]
-    # project_id = 'YOUR_PROJECT_ID'
     # cloud_region = 'us-central1'
+    # project_id = 'YOUR_PROJECT_ID'
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
     # scope = 'scope1 scope2' # See the full list of scopes at:
@@ -354,7 +347,7 @@ def create_jwt(project_id, algorithm, path_to_private_certificate):
 
 
 def generate_device_access_token(
-    cloud_region, project_id, registry_id, device_id, jwt_token, scopes
+    cloud_region, project_id, registry_id, device_id, jwt_token, scope
 ):
     """Exchange iot jwt token for gcp token."""
     # [START iot_generate_device_access_token]
@@ -363,7 +356,7 @@ def generate_device_access_token(
     # registry_id = 'your-registry-id'
     # device_id = 'your-device-id'
     # jwt_token = 'CLOUD_IOT_GENERATE_JWT_TOKEN'
-    # scopes = 'scope1 scope2' # See the full list of scopes at:
+    # scope = 'scope1 scope2' # See the full list of scopes at:
     # https://developers.google.com/identity/protocols/oauth2/scopes
     global HOST
     resource_url = "projects/{}/locations/{}/registries/{}/devices/{}".format(
@@ -371,7 +364,7 @@ def generate_device_access_token(
     )
     request_path = "{}/v1beta1/{}:generateAccessToken".format(HOST, resource_url)
     headers = {"authorization": "Bearer {}".format(jwt_token)}
-    request_payload = {"scope": scopes, "device": resource_url}
+    request_payload = {"scope": scope, "device": resource_url}
     resp = req.post(url=request_path, data=request_payload, headers=headers)
     print(resp.raise_for_status())
     return resp.json()["access_token"]
@@ -388,9 +381,9 @@ def parse_command_line_args():
         "--algorithm",
         default="RS256",
         choices=("RS256", "ES256"),
-        help="Which encryption algorithm to use to generate the JWT.",
+        help="Encryption algorithm used to generate the JWT.",
     )
-    parser.add_argument("--certificate_path", help="Path to private certificate.")
+    parser.add_argument("--certificate_path", help="Path to private key certificate.")
     parser.add_argument(
         "--cloud_region", default="us-central1", help="GCP cloud region"
     )
@@ -410,13 +403,62 @@ def parse_command_line_args():
     parser.add_argument(
         "--registry_id",
         default=None,
-        help="Registry id. If not set, a name will be generated.",
+        help="Registry id.",
+    )
+    parser.add_argument(
+        "--topic_id",
+        default=None,
+        help="Pubsub Topic Id.",
+    )
+    parser.add_argument(
+        "--bucket_name",
+        default=None,
+        help="Cloud Storage Bucket name.",
+    )
+    parser.add_argument(
+        "--data_path",
+        default=None,
+        help="Path to file to be uploaded.",
+    )
+    parser.add_argument(
+        "--service_account_email",
+        default=None,
+        help="Service Account Email to exchange Device Token.",
+    )
+    parser.add_argument(
+        "--device_access_token",
+        default=None,
+        help="Device Access Token to exchange for Service Account Access Token.",
+    )
+
+    # Command subparser
+    command = parser.add_subparsers(dest="command")
+    command.add_parser("generate-access-token", help=generate_access_token.__doc__)
+    command.add_parser("publish-pubsub-message", help=publish_pubsub_message.__doc__)
+    command.add_parser("send-iot-command", help=send_iot_command_to_device.__doc__)
+    command.add_parser(
+        "download-cloud-storage-file", help=download_cloud_storage_file.__doc__
+    )
+    command.add_parser(
+        "exchange-device-token-for-service-account-token",
+        help=exchange_device_access_token_for_service_account_access_token.__doc__,
     )
     return parser.parse_args()
 
 
 def run_program(args):
     """Calls the program."""
+    if args.command == "exchange-device-token-for-service-account-token":
+        if args.service_account_email is None:
+            print("You must specify the service_account_email.")
+            return
+        if args.device_access_token is None:
+            print("You must specify the device_access_token.")
+            return
+        exchange_device_access_token_for_service_account_access_token(
+            args.device_access_token, args.service_account_email
+        )
+        return
     if args.registry_id is None:
         print("You must specify a registry ID.")
         return
@@ -428,19 +470,71 @@ def run_program(args):
     if args.certificate_path is None:
         print("You must specify a certificate file.")
         return
-    if args.scope is None:
-        print("You must specify the scope.")
+
+    if args.command == "generate-access-token":
+        if args.scope is None:
+            print("You must specify the scope.")
+            return
+        token = generate_access_token(
+            args.cloud_region,
+            args.project_id,
+            args.registry_id,
+            args.device_id,
+            args.scope,
+            args.algorithm,
+            args.certificate_path,
+        )
+        print("Generated GCP compatible token: ", token)
         return
-    token = generate_access_token(
-        args.project_id,
-        args.cloud_region,
-        args.registry_id,
-        args.device_id,
-        args.scope,
-        args.algorithm,
-        args.certificate_path,
-    )
-    print("Generated GCP compatible token: ", token)
+    elif args.command == "publish-pubsub-message":
+        if args.topic_id is None:
+            print("You must specify the topic_id")
+            return
+        publish_pubsub_message(
+            args.cloud_region,
+            args.project_id,
+            args.registry_id,
+            args.device_id,
+            args.algorithm,
+            args.certificate_path,
+            args.topic_id,
+        )
+        return
+    elif args.command == "send-iot-command":
+        if args.service_account_email is None:
+            print("You must specify the service_account_email.")
+            return
+        send_iot_command_to_device(
+            args.cloud_region,
+            args.project_id,
+            args.registry_id,
+            args.device_id,
+            args.algorithm,
+            args.certificate_path,
+            args.service_account_email,
+        )
+        return
+    elif args.command == "download-cloud-storage-file":
+        if args.bucket_name is None:
+            print("You must specify the bucket_name.")
+            return
+        if args.data_path is None:
+            print("You must specify the data_path. The path of the file.")
+            return
+        download_cloud_storage_file(
+            args.cloud_region,
+            args.project_id,
+            args.registry_id,
+            args.device_id,
+            args.algorithm,
+            args.certificate_path,
+            args.bucket_name,
+            args.data_path,
+        )
+        return
+    else:
+        print("Invalid command.")
+        return
 
 
 if __name__ == "__main__":
