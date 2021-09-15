@@ -80,7 +80,6 @@ def test_publish_pubsub_message():
 # upload a file to bucket, download file from bucket
 def test_download_cloud_storage_file():
     device_id = device_id_template.format(uuid.uuid4())
-    scope = "https://www.googleapis.com/auth/devstorage.full_control"
     data_path = "./resources/logo.png"
 
     manager.open_registry(
@@ -100,7 +99,6 @@ def test_download_cloud_storage_file():
         project_id,
         registry_id,
         device_id,
-        scope,
         "RS256",
         rsa_private_path,
         gcs_bucket_name,
