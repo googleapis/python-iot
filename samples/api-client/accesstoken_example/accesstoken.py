@@ -304,7 +304,7 @@ def send_iot_command_to_device(
     )
     service_account_token = (
         exchange_device_access_token_for_service_account_access_token(
-            token, scope, service_account_email
+            token, service_account_email
         )
     )
     # Sending a command to a Cloud IoT Core device
