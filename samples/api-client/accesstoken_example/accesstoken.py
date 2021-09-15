@@ -323,7 +323,6 @@ def send_iot_command_to_device(
             "cache-control": "no-cache",
         },
     )
-    print("Response: ", command_resp.json())
     print(command_resp.raise_for_status())
     assert command_resp.ok
     # [END iot_access_token_iot_send_command]
@@ -353,6 +352,7 @@ def exchange_device_access_token_for_service_account_access_token(
     assert exchange_resp.ok
 
     service_account_token = exchange_resp.json()["accessToken"]
+    print("Service Account Token: ", service_account_token)
     return service_account_token
     # [END iot_access_token_service_account_token]
 
