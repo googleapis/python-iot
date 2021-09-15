@@ -42,43 +42,8 @@ test_topic_id = "test-pubsub-{}".format(uuid.uuid4())
 registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
 
 
-# Generate gcp access token, use gcp access token to create gcs bucket
-# upload data to gcs bucket, download data from gcs bucket
-# delete data from gcs bucket
-def test_download_cloud_storage_file():
-    device_id = device_id_template.format(uuid.uuid4())
-    manager.open_registry(
-        service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
-    )
-
-    manager.create_rs256_device(
-        service_account_json,
-        project_id,
-        cloud_region,
-        registry_id,
-        device_id,
-        rsa_cert_path,
-    )
-    data_path = "./resources/logo.png"
-    accesstoken.download_cloud_storage_file(
-        cloud_region,
-        project_id,
-        registry_id,
-        device_id,
-        "RS256",
-        rsa_private_path,
-        gcs_bucket_name,
-        data_path,
-    )
-    # Delete device
-    manager.delete_device(
-        service_account_json, project_id, cloud_region, registry_id, device_id
-    )
-    # Delete registry
-    manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
-
-
-# Generate gcp access token, use gcp access token to create pubsub
+# Generate device access token, use device access token to create pubsub topic,
+# publish message to pubsub.
 def test_publish_pubsub_message():
     device_id = device_id_template.format(uuid.uuid4())
     manager.open_registry(
@@ -111,13 +76,52 @@ def test_publish_pubsub_message():
     manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
 
 
-# Generate gcp access token, exchange ubermint token for service account access token
-# Use service account access token to send cloud iot command
+# Generate device access token, use access token to create GCS bucket,
+# upload a file to bucket, download file from bucket
+def test_download_cloud_storage_file():
+    device_id = device_id_template.format(uuid.uuid4())
+    scope = "https://www.googleapis.com/auth/devstorage.full_control"
+    data_path = "./resources/logo.png"
+
+    manager.open_registry(
+        service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
+    )
+
+    manager.create_rs256_device(
+        service_account_json,
+        project_id,
+        cloud_region,
+        registry_id,
+        device_id,
+        rsa_cert_path,
+    )
+    accesstoken.download_cloud_storage_file(
+        cloud_region,
+        project_id,
+        registry_id,
+        device_id,
+        scope,
+        "RS256",
+        rsa_private_path,
+        gcs_bucket_name,
+        data_path,
+    )
+    # Delete device
+    manager.delete_device(
+        service_account_json, project_id, cloud_region, registry_id, device_id
+    )
+    # Delete registry
+    manager.delete_registry(service_account_json, project_id, cloud_region, registry_id)
+
+
+# Generate device access token, exchange device access token for service account access token,
+# use service account access token to send cloud iot device command
 def test_send_iot_command_to_device():
     device_id = device_id_template.format(uuid.uuid4())
     service_account_email = (
         "cloud-iot-test@python-docs-samples-tests.iam.gserviceaccount.com"
     )
+    command_to_be_sent_to_device = "OPEN_DOOR"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )
@@ -153,6 +157,7 @@ def test_send_iot_command_to_device():
         "RS256",
         rsa_private_path,
         service_account_email,
+        command_to_be_sent_to_device,
     )
 
     client.disconnect()
