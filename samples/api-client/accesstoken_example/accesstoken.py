@@ -30,7 +30,7 @@ Usage example:
       --device_id=my-device-id \\
       --private_key_file=./resources/rsa_private.pem \\
       --scope=https://www.googleapis.com/auth/cloud-platform \\
-      --algorithm=RS256
+      --algorithm=RS256 \\
       generate-access-token
 """
 
@@ -59,7 +59,7 @@ def create_jwt(project_id, algorithm, private_key_file):
     encoded_jwt = jwt.encode(
         json.loads(jwt_payload), private_key_bytes, algorithm=algorithm
     )
-    return encoded_jwt
+    return encoded_jwt.decode() if isinstance(encoded_jwt, bytes) else encoded_jwt
 
 
 def generate_access_token(

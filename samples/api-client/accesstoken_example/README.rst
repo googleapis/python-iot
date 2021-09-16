@@ -106,7 +106,7 @@ To run this sample:
           --device_id=my-device-id \
           --private_key_file=./resources/rsa_private.pem \
           --scope=https://www.googleapis.com/auth/cloud-platform \
-          --algorithm=RS256
+          --algorithm=RS256 \
           generate-access-token
 
     positional arguments:
