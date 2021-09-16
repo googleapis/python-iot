@@ -89,7 +89,7 @@ To run this sample:
                           [--service_account_email SERVICE_ACCOUNT_EMAIL]
                           [--device_access_token DEVICE_ACCESS_TOKEN]
                           [--command_to_be_sent_to_device COMMAND_TO_BE_SENT_TO_DEVICE]
-                          {generate-access-token,publish-pubsub-message,send-iot-command,download-cloud-storage-file,exchange-device-token-for-service-account-token}
+                          {generate-access-token,publish-pubsub-message,send-command-to-iot-device,download-cloud-storage-file,exchange-device-token-for-service-account-token}
                           ...
 
     This sample app demonstrates the capabilites of Google Cloud IoT Core
@@ -109,13 +109,14 @@ To run this sample:
           generate-access-token
 
     positional arguments:
-      {generate-access-token,publish-pubsub-message,send-iot-command,download-cloud-storage-file,exchange-device-token-for-service-account-token}
+      {generate-access-token,publish-pubsub-message,send-command-to-iot-device,download-cloud-storage-file,exchange-device-token-for-service-account-token}
         generate-access-token
                             Generate device access token.
         publish-pubsub-message
                             Publish message to Cloud Pub/Sub using device access
                             token
-        send-iot-command    Send command to a Cloud IoT device using access token
+        send-command-to-iot-device
+                            Send command to a Cloud IoT device using access token
         download-cloud-storage-file
                             Download a file from Cloud Storage using device access
                             token

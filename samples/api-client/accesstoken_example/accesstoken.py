@@ -58,7 +58,7 @@ def create_jwt(project_id, algorithm, private_key_file):
     encoded_jwt = jwt.encode(
         json.loads(jwt_payload), private_key_bytes, algorithm=algorithm
     )
-    return encoded_jwt
+    return encoded_jwt.decode("utf-8")
 
 
 def generate_access_token(
@@ -334,9 +334,9 @@ def send_iot_command_to_device(
     # Sending a command to a Cloud IoT Core device
     command_payload = json.dumps(
         {
-            "binaryData": str(
-                base64.b64encode(bytes(command_to_be_sent_to_device, "utf-8")), "utf-8"
-            )
+            "binaryData": base64.urlsafe_b64encode(
+                command_to_be_sent_to_device.encode("utf-8")
+            ).decode("utf-8")
         }
     )
     command_url = "https://cloudiot.googleapis.com/v1/projects/{}/locations/{}/registries/{}/devices/{}:sendCommandToDevice".format(
@@ -419,7 +419,9 @@ def parse_command_line_args():
     command = parser.add_subparsers(dest="command")
     command.add_parser("generate-access-token", help=generate_access_token.__doc__)
     command.add_parser("publish-pubsub-message", help=publish_pubsub_message.__doc__)
-    command.add_parser("send-iot-command", help=send_iot_command_to_device.__doc__)
+    command.add_parser(
+        "send-command-to-iot-device", help=send_iot_command_to_device.__doc__
+    )
     command.add_parser(
         "download-cloud-storage-file", help=download_cloud_storage_file.__doc__
     )
@@ -489,7 +491,7 @@ def run_program(args):
             args.topic_id,
         )
         return
-    elif args.command == "send-iot-command":
+    elif args.command == "send-command-to-iot-device":
         if args.service_account_email is None:
             print("Please specify the service_account_email parameter.")
             return
