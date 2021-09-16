@@ -153,7 +153,7 @@ def test_send_iot_command_to_device():
         device_id,
         "RS256",
         rsa_private_path,
-        service_account_email
+        service_account_email,
     )
 
     client.disconnect()

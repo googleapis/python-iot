@@ -28,7 +28,9 @@ Usage example:
       --registry_id=my-registry-id \\
       --device_id=my-device-id \\
       --private_key_file=/rsa_private.pem \\
-      --scope="scope1 scope2"
+      --scope=https://www.googleapis.com/auth/devstorage.full_control \\
+      --algorithm=RS256
+      generate-access-token
 """
 
 import argparse
@@ -148,10 +150,8 @@ def publish_pubsub_message(
             {"data": str(base64.b64encode(bytes("MESSAGE_DATA", "utf-8")), "utf-8")}
         ]
     }
-    publish_request_path = (
-        "https://pubsub.googleapis.com/v1/projects/{}/topics/{}:publish".format(
-            project_id, topic_id
-        )
+    publish_request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}:publish".format(
+        project_id, topic_id
     )
     publish_resp = req.post(
         url=publish_request_path, data=json.dumps(publish_payload), headers=headers
@@ -161,10 +161,8 @@ def publish_pubsub_message(
     assert publish_resp.ok
 
     # Delete Pub/Sub topic
-    pubsub_delete_request_path = (
-        "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
-            project_id, topic_id
-        )
+    pubsub_delete_request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
+        project_id, topic_id
     )
     delete_resp = req.delete(url=pubsub_delete_request_path, headers=headers)
 
@@ -210,12 +208,10 @@ def download_cloud_storage_file(
         "name": bucket_name,
         "location": cloud_region,
         "storageClass": "STANDARD",
-        "iamConfiguration": {
-            "uniformBucketLevelAccess": {"enabled": True},
-        },
+        "iamConfiguration": {"uniformBucketLevelAccess": {"enabled": True}},
     }
-    create_request_path = (
-        "https://storage.googleapis.com/storage/v1/b?project={}".format(project_id)
+    create_request_path = "https://storage.googleapis.com/storage/v1/b?project={}".format(
+        project_id
     )
     headers = {
         "authorization": "Bearer {}".format(token),
@@ -242,10 +238,8 @@ def download_cloud_storage_file(
     assert upload_resp.ok
 
     # Download data from GCS bucket.
-    download_request_path = (
-        "https://storage.googleapis.com/storage/v1/b/{}/o/{}?alt=media".format(
-            bucket_name, data_name
-        )
+    download_request_path = "https://storage.googleapis.com/storage/v1/b/{}/o/{}?alt=media".format(
+        bucket_name, data_name
     )
     download_resp = req.get(url=download_request_path, headers=headers)
 
@@ -302,10 +296,8 @@ def send_iot_command_to_device(
         algorithm,
         rsa_private_key_path,
     )
-    service_account_token = (
-        exchange_device_access_token_for_service_account_access_token(
-            token, service_account_email
-        )
+    service_account_token = exchange_device_access_token_for_service_account_access_token(
+        token, service_account_email
     )
     # Sending a command to a Cloud IoT Core device
     command_payload = json.dumps(
@@ -387,24 +379,16 @@ def parse_command_line_args():
         help="GCP cloud project name.",
     )
     parser.add_argument(
-        "--registry_id",
-        default=None,
-        help="Registry id.",
+        "--registry_id", default=None, help="Registry id.",
     )
     parser.add_argument(
-        "--topic_id",
-        default=None,
-        help="Pubsub Topic Id.",
+        "--topic_id", default=None, help="Pubsub Topic Id.",
     )
     parser.add_argument(
-        "--bucket_name",
-        default=None,
-        help="Cloud Storage Bucket name.",
+        "--bucket_name", default=None, help="Cloud Storage Bucket name.",
     )
     parser.add_argument(
-        "--data_path",
-        default=None,
-        help="Path to file to be uploaded.",
+        "--data_path", default=None, help="Path to file to be uploaded.",
     )
     parser.add_argument(
         "--service_account_email",
