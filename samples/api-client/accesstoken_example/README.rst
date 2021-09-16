@@ -92,9 +92,10 @@ To run this sample:
                           {generate-access-token,publish-pubsub-message,send-command-to-iot-device,download-cloud-storage-file,exchange-device-token-for-service-account-token}
                           ...
 
-    This sample app demonstrates the capabilites of Google Cloud IoT Core
-    device federated authentication feature. For more information, see
-    https://cloud.google.com/iot/alpha/docs/how-tos/federated_auth.
+    This sample app demonstrates the capabilites of Google Cloud IoT Core device federated authentication feature.
+    Devices authenticated to Cloud IoT Core can use the [Token Service](https://cloud.google.com/iot/alpha/docs/reference/cloudiottoken/rest) federated authentication to request [OAuth 2.0 access tokens](https://developers.google.com/identity/protocols/oauth2) in exchange for their [Cloud IoT Core JWTs](https://cloud.google.com/iot/docs/how-tos/credentials/jwts).
+    The OAuth 2.0 credentials can be used to call different [Google Cloud APIs](https://developers.google.com/identity/protocols/oauth2/scopes) with fine-grained permissions and access control using [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation).
+    For more information, see https://cloud.google.com/iot/alpha/docs/how-tos/federated_auth
 
     Usage example:
 
@@ -103,24 +104,24 @@ To run this sample:
           --cloud_region=us-central1 \
           --registry_id=my-registry-id \
           --device_id=my-device-id \
-          --private_key_file=/rsa_private.pem \
-          --scope=https://www.googleapis.com/auth/devstorage.full_control \
+          --private_key_file=./resources/rsa_private.pem \
+          --scope=https://www.googleapis.com/auth/cloud-platform \
           --algorithm=RS256
           generate-access-token
 
     positional arguments:
       {generate-access-token,publish-pubsub-message,send-command-to-iot-device,download-cloud-storage-file,exchange-device-token-for-service-account-token}
         generate-access-token
-                            Generate device access token.
+                            Generates OAuth 2.0 Google Access Token.
         publish-pubsub-message
-                            Publish message to Cloud Pub/Sub using device access
-                            token
+                            Publishes a message to Cloud Pub/Sub topic.
         send-command-to-iot-device
-                            Send command to a Cloud IoT device using access token
+                            Sends a command to an IoT device.
         download-cloud-storage-file
-                            Download a file from Cloud Storage using device access
-                            token
+                            Downloads a file from Cloud Storage bucket.
         exchange-device-token-for-service-account-token
+                            Exchanges device access token to service account
+                            access token.
 
     optional arguments:
       -h, --help            show this help message and exit
@@ -129,17 +130,17 @@ To run this sample:
       --private_key_file PRIVATE_KEY_FILE
                             Path to private key file.
       --cloud_region CLOUD_REGION
-                            GCP cloud region
+                            GCP cloud region.
       --device_id DEVICE_ID
-                            Device id.
+                            Device ID.
       --scope SCOPE         Scope for OAuth 2.0 access token. Space delimited
                             strings. See the full list of scopes at: https://devel
                             opers.google.com/identity/protocols/oauth2/scopes
       --project_id PROJECT_ID
                             GCP cloud project name.
       --registry_id REGISTRY_ID
-                            Registry id.
-      --topic_id TOPIC_ID   Cloud Pub/Sub topic id.
+                            Registry ID.
+      --topic_id TOPIC_ID   Cloud Pub/Sub topic ID.
       --bucket_name BUCKET_NAME
                             Cloud Storage bucket name.
       --data_path DATA_PATH

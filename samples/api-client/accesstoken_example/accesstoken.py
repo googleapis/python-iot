@@ -16,9 +16,10 @@
 
 
 """
-This sample app demonstrates the capabilites of Google Cloud IoT Core
-device federated authentication feature. For more information, see
-https://cloud.google.com/iot/alpha/docs/how-tos/federated_auth.
+This sample app demonstrates the capabilites of Google Cloud IoT Core device federated authentication feature.
+Devices authenticated to Cloud IoT Core can use the [Token Service](https://cloud.google.com/iot/alpha/docs/reference/cloudiottoken/rest) federated authentication to request [OAuth 2.0 access tokens](https://developers.google.com/identity/protocols/oauth2) in exchange for their [Cloud IoT Core JWTs](https://cloud.google.com/iot/docs/how-tos/credentials/jwts).
+The OAuth 2.0 credentials can be used to call different [Google Cloud APIs](https://developers.google.com/identity/protocols/oauth2/scopes) with fine-grained permissions and access control using [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation).
+For more information, see https://cloud.google.com/iot/alpha/docs/how-tos/federated_auth
 
 Usage example:
 
@@ -27,8 +28,8 @@ Usage example:
       --cloud_region=us-central1 \\
       --registry_id=my-registry-id \\
       --device_id=my-device-id \\
-      --private_key_file=/rsa_private.pem \\
-      --scope=https://www.googleapis.com/auth/devstorage.full_control \\
+      --private_key_file=./resources/rsa_private.pem \\
+      --scope=https://www.googleapis.com/auth/cloud-platform \\
       --algorithm=RS256
       generate-access-token
 """
@@ -58,13 +59,13 @@ def create_jwt(project_id, algorithm, private_key_file):
     encoded_jwt = jwt.encode(
         json.loads(jwt_payload), private_key_bytes, algorithm=algorithm
     )
-    return encoded_jwt.decode("utf-8")
+    return encoded_jwt
 
 
 def generate_access_token(
     cloud_region, project_id, registry_id, device_id, scope, algorithm, private_key_file
 ):
-    """Generate device access token."""
+    """Generates OAuth 2.0 Google Access Token."""
     # [START iot_generate_access_token]
     # cloud_region = 'us-central1'
     # project_id = 'YOUR_PROJECT_ID'
@@ -112,7 +113,7 @@ def publish_pubsub_message(
     rsa_private_key_path,
     topic_id,
 ):
-    """Publish message to Cloud Pub/Sub using device access token"""
+    """Publishes a message to Cloud Pub/Sub topic."""
     # [START iot_access_token_pubsub]
     # cloud_region = 'us-central1'
     # project_id = 'YOUR_PROJECT_ID'
@@ -185,7 +186,7 @@ def download_cloud_storage_file(
     bucket_name,
     data_path,
 ):
-    """Download a file from Cloud Storage using device access token"""
+    """Downloads a file from Cloud Storage bucket."""
     # [START iot_access_token_gcs]
     # cloud_region = 'us-central1'
     # project_id = 'YOUR_PROJECT_ID'
@@ -273,6 +274,7 @@ def download_cloud_storage_file(
 def exchange_device_access_token_for_service_account_access_token(
     device_access_token, service_account_email
 ):
+    """Exchanges device access token to service account access token."""
     # [START iot_access_token_service_account_token]
     # device_access_token = 'device-access-token'
     # service_account_email  = 'your-service-account@your-project.iam.gserviceaccount.com'
@@ -307,7 +309,7 @@ def send_iot_command_to_device(
     service_account_email,
     command_to_be_sent_to_device,
 ):
-    """Send command to a Cloud IoT device using access token"""
+    """Sends a command to an IoT device."""
     # [START iot_access_token_iot_send_command]
     # cloud_region = 'us-central1'
     # project_id = 'YOUR_PROJECT_ID'
@@ -372,10 +374,10 @@ def parse_command_line_args():
     )
     parser.add_argument("--private_key_file", help="Path to private key file.")
     parser.add_argument(
-        "--cloud_region", default="us-central1", help="GCP cloud region"
+        "--cloud_region", default="us-central1", help="GCP cloud region."
     )
 
-    parser.add_argument("--device_id", default=None, help="Device id.")
+    parser.add_argument("--device_id", default=None, help="Device ID.")
     parser.add_argument(
         "--scope",
         default=None,
@@ -388,10 +390,10 @@ def parse_command_line_args():
         help="GCP cloud project name.",
     )
     parser.add_argument(
-        "--registry_id", default=None, help="Registry id.",
+        "--registry_id", default=None, help="Registry ID.",
     )
     parser.add_argument(
-        "--topic_id", default=None, help="Cloud Pub/Sub topic id.",
+        "--topic_id", default=None, help="Cloud Pub/Sub topic ID.",
     )
     parser.add_argument(
         "--bucket_name", default=None, help="Cloud Storage bucket name.",
