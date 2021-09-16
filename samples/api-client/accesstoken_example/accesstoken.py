@@ -328,10 +328,8 @@ def send_iot_command_to_device(
         algorithm,
         rsa_private_key_path,
     )
-    service_account_token = (
-        exchange_device_access_token_for_service_account_access_token(
-            access_token, service_account_email
-        )
+    service_account_token = exchange_device_access_token_for_service_account_access_token(
+        access_token, service_account_email
     )
     # Sending a command to a Cloud IoT Core device
     command_payload = json.dumps(
@@ -393,14 +391,10 @@ def parse_command_line_args():
         "--registry_id", default=None, help="Registry id.",
     )
     parser.add_argument(
-        "--topic_id",
-        default=None,
-        help="Cloud Pub/Sub topic id.",
+        "--topic_id", default=None, help="Cloud Pub/Sub topic id.",
     )
     parser.add_argument(
-        "--bucket_name",
-        default=None,
-        help="Cloud Storage bucket name.",
+        "--bucket_name", default=None, help="Cloud Storage bucket name.",
     )
     parser.add_argument(
         "--data_path", default=None, help="Path to file to be uploaded.",

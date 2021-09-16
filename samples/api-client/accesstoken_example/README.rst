@@ -88,6 +88,7 @@ To run this sample:
                           [--bucket_name BUCKET_NAME] [--data_path DATA_PATH]
                           [--service_account_email SERVICE_ACCOUNT_EMAIL]
                           [--device_access_token DEVICE_ACCESS_TOKEN]
+                          [--command_to_be_sent_to_device COMMAND_TO_BE_SENT_TO_DEVICE]
                           {generate-access-token,publish-pubsub-message,send-iot-command,download-cloud-storage-file,exchange-device-token-for-service-account-token}
                           ...
 
@@ -123,30 +124,33 @@ To run this sample:
     optional arguments:
       -h, --help            show this help message and exit
       --algorithm {RS256,ES256}
-                            Encryption algorithm used to generate the JWT.
+                            Encryption algorithm used to generate the device JWT.
       --private_key_file PRIVATE_KEY_FILE
                             Path to private key file.
       --cloud_region CLOUD_REGION
                             GCP cloud region
       --device_id DEVICE_ID
                             Device id.
-      --scope SCOPE         Scope for GCP token. Space delimited strings. See the
-                            full list of scopes at: https://developers.google.com/
-                            identity/protocols/oauth2/scopes
+      --scope SCOPE         Scope for OAuth 2.0 access token. Space delimited
+                            strings. See the full list of scopes at: https://devel
+                            opers.google.com/identity/protocols/oauth2/scopes
       --project_id PROJECT_ID
                             GCP cloud project name.
       --registry_id REGISTRY_ID
                             Registry id.
-      --topic_id TOPIC_ID   Pubsub Topic Id.
+      --topic_id TOPIC_ID   Cloud Pub/Sub topic id.
       --bucket_name BUCKET_NAME
-                            Cloud Storage Bucket name.
+                            Cloud Storage bucket name.
       --data_path DATA_PATH
                             Path to file to be uploaded.
       --service_account_email SERVICE_ACCOUNT_EMAIL
-                            Service Account Email to exchange Device Token.
+                            Service account email to exchange device access token
+                            to service account token.
       --device_access_token DEVICE_ACCESS_TOKEN
-                            Device Access Token to exchange for Service Account
-                            Access Token.
+                            Device access token to exchange for service account
+                            access token.
+      --command_to_be_sent_to_device COMMAND_TO_BE_SENT_TO_DEVICE
+                            Command to be sent to the IoT device.
 
 
 
