@@ -1,8 +1,8 @@
 # This file is used to generate README.rst
 
 product:
-  name: Google Cloud IoT Core
-  short_name: Cloud IoT Core
+  name: Google Cloud IoT Token Api
+  short_name: Cloud IoT Token Api
   url: https://cloud.google.com/iot/docs
   description: >
     # Google Cloud IoT Core Python Device Federated Authentication example
