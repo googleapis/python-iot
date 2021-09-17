@@ -76,29 +76,21 @@ def generate_access_token(
     # algorithm = 'RS256'
     # private_key_file = 'path/to/private_key.pem'
 
-    def generate_device_access_token(
-        cloud_region, project_id, registry_id, device_id, jwt_token, scopes
-    ):
-        """Exchange IoT device jwt token for device access token."""
-        resource_path = "projects/{}/locations/{}/registries/{}/devices/{}".format(
-            project_id, cloud_region, registry_id, device_id
-        )
-        request_url = "https://cloudiottoken.googleapis.com/v1beta1/{}:generateAccessToken".format(
-            resource_path
-        )
-        headers = {"authorization": "Bearer {}".format(jwt_token)}
-        request_payload = {"scope": scopes, "device": resource_path}
-        resp = req.post(url=request_url, data=request_payload, headers=headers)
-        assert resp.ok, resp.raise_for_status()
-        return resp.json()["access_token"]
-
     # Generate IoT device JWT. See https://cloud.google.com/iot/docs/how-tos/credentials/jwts
     jwt = create_jwt(project_id, algorithm, private_key_file)
 
     # Generate OAuth 2.0 access token. See https://developers.google.com/identity/protocols/oauth2
-    access_token = generate_device_access_token(
-        cloud_region, project_id, registry_id, device_id, jwt, scope
+    resource_path = "projects/{}/locations/{}/registries/{}/devices/{}".format(
+        project_id, cloud_region, registry_id, device_id
     )
+    request_url = "https://cloudiottoken.googleapis.com/v1beta1/{}:generateAccessToken".format(
+        resource_path
+    )
+    headers = {"authorization": "Bearer {}".format(jwt)}
+    request_payload = {"scope": scope, "device": resource_path}
+    resp = req.post(url=request_url, data=request_payload, headers=headers)
+    assert resp.ok, resp.raise_for_status()
+    access_token = resp.json()["access_token"]
     print("Device access token: {}".format(access_token))
     return access_token
     # [END iot_generate_access_token]
@@ -122,8 +114,8 @@ def publish_pubsub_message(
     # algorithm = 'RS256'
     # rsa_private_key_path = 'path/to/private_key.pem'
     # topic_id = 'pubsub-topic-id'
-
     scope = "https://www.googleapis.com/auth/pubsub"
+
     # Generate device access token
     access_token = generate_access_token(
         cloud_region,
@@ -134,6 +126,7 @@ def publish_pubsub_message(
         algorithm,
         rsa_private_key_path,
     )
+
     # Create Pub/Sub topic
     request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
         project_id, topic_id
@@ -197,6 +190,7 @@ def download_cloud_storage_file(
     # bucket_name = 'name-of-gcs-bucket'
     # data_path = 'path/to/file/to/be/uploaded.png'
     scope = "https://www.googleapis.com/auth/devstorage.full_control"
+
     # Generate device access token
     access_token = generate_access_token(
         cloud_region,
@@ -284,6 +278,7 @@ def exchange_device_access_token_for_service_account_access_token(
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
+
     # Exchange access token for service account access token.
     exchange_payload = {"scope": [scope]}
     exchange_url = "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/{}:generateAccessToken".format(
@@ -320,6 +315,7 @@ def send_iot_command_to_device(
     # service_account_email = 'your-service-account@your-project.iam.gserviceaccount.com'
     # command_to_be_sent_to_device = 'command-to-device'
     scope = "https://www.googleapis.com/auth/cloud-platform"
+
     # Generate device access token
     access_token = generate_access_token(
         cloud_region,
@@ -333,6 +329,7 @@ def send_iot_command_to_device(
     service_account_token = exchange_device_access_token_for_service_account_access_token(
         access_token, service_account_email
     )
+
     # Sending a command to a Cloud IoT Core device
     command_payload = json.dumps(
         {
