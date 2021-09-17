@@ -1,0 +1,23 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud IoT Core Device Federated Authentication
+  short_name: Cloud IoT Core Device Federated Authentication
+  url: https://cloud.google.com/iot/alpha/docs/how-tos/federated_auth
+  description: >
+    Devices authenticated to Cloud IoT Core can use the `Token Service <https://cloud.google.com/iot/alpha/docs/reference/cloudiottoken/rest>`_ federated authentication to request `OAuth 2.0 access tokens <https://developers.google.com/identity/protocols/oauth2>`_ in exchange for their `Cloud IoT Core JWTs <https://cloud.google.com/iot/docs/how-tos/credentials/jwts>`_.
+    The OAuth 2.0 credentials can be used to call different `Google Cloud APIs <https://developers.google.com/identity/protocols/oauth2/scopes>`_ with fine-grained permissions and access control using `Workload Identity Federation <https://cloud.google.com/iam/docs/workload-identity-federation>`_.
+    For more information, see `documentation <https://cloud.google.com/iot/alpha/docs/how-tos/federated_auth>`_.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: accesstoken
+  file: accesstoken.py
+  show_help: True
+
+cloud_client_library: false
+
+folder: iot/api-client/accesstoken_example
