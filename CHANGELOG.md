@@ -4,6 +4,18 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.3.0](https://www.github.com/googleapis/python-iot/compare/v2.2.1...v2.3.0) (2021-09-24)
+
+
+### Features
+
+* Added python sample codes for cloud-iot-token-service generateAccessToken API ([#149](https://www.github.com/googleapis/python-iot/issues/149)) ([c2a575e](https://www.github.com/googleapis/python-iot/commit/c2a575e76b7fd2fb6da7954dcb6406933cc50bd1))
+
+
+### Bug Fixes
+
+* add 'dict' annotation type to 'request' ([d4db051](https://www.github.com/googleapis/python-iot/commit/d4db0513a5beba7936d33f011bdf1a8ee831d425))
+
 ### [2.2.1](https://www.github.com/googleapis/python-iot/compare/v2.2.0...v2.2.1) (2021-07-26)
 
 ### Bug Fixes
