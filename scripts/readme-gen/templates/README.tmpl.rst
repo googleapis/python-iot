@@ -6,10 +6,10 @@
 ===============================================================================
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-iot&page=editor&open_in_editor={{folder}}/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor={{folder}}/README.rst
 
 
-This directory contains samples for `{{product.name}}`_. {{product.description}}
+This directory contains samples for {{product.name}}. {{product.description}}
 
 {{description}}
 
@@ -46,7 +46,7 @@ Samples
 
 {% if not sample.hide_cloudshell_button %}
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-iot&page=editor&open_in_editor={{folder}}/{{sample.file}},{{folder}}/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor={{folder}}/{{sample.file}},{{folder}}/README.rst
 {% endif %}
 
 
@@ -54,7 +54,7 @@ Samples
 
 To run this sample:
 
-.. code-block:: no-highlight
+.. code-block:: bash
 
     $ python {{sample.file}}
 {% if sample.show_help %}
