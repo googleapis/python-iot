@@ -4,12 +4,12 @@ Google Cloud IoT Core Python Samples
 ===============================================================================
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/mqtt_example/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-iot&page=editor&open_in_editor=iot/api-client/mqtt_example/README.rst
 
 
-This directory contains samples for Google Cloud IoT Core. `Google Cloud IoT Core`_ allows developers to easily integrate Publish and Subscribe functionality with devices and programmatically manage device authorization.
-This example connects a device to `Google Cloud IoT Core`_ via MQTT, using a JWT for authentication. After connecting, the device publishes messages to the device's  MQTT topic at a rate of one per second.
-Note that before you can run this sample, you  must register a device as described  in the parent README. For the gateway samples, you must register and bind a device  as described in the  `Cloud IoT gateway docs <https://cloud.google.com/iot/docs/how-tos/gateways/#setup>`_.
+This directory contains samples for `Google Cloud IoT Core`_. Cloud IoT Core allows developers to easily integrate Publish and Subscribe functionality with devices and programmatically manage device authorization.
+This example connects a device to Cloud IoT Core via MQTT, using a JWT for authentication. After connecting, the device publishes messages to the device's  MQTT topic at a rate of one per second.
+Note that before you can run this sample, you  must register a device as described  in the `Cloud IoT device docs <https://cloud.google.com/iot/docs/how-tos/devices>`_.  For the gateway samples, you must register and bind a device as described in the  `Cloud IoT gateway docs <https://cloud.google.com/iot/docs/how-tos/gateways#setup>`_.
 
 
 
@@ -37,11 +37,11 @@ credentials for applications.
 Install Dependencies
 ++++++++++++++++++++
 
-#. Clone python-docs-samples and change directory to the sample directory you want to use.
+#. Clone python-iot and change directory to the sample directory you want to use.
 
     .. code-block:: bash
 
-        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+        $ git clone https://github.com/googleapis/python-iot.git
 
 #. Install `pip`_ and `virtualenv`_ if you do not already have them. You may want to refer to the `Python Development Environment Setup Guide`_ for Google Cloud Platform for instructions.
 
@@ -71,14 +71,14 @@ MQTT example
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. image:: https://gstatic.com/cloudssh/images/open-btn.png
-   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=iot/api-client/mqtt_example/cloudiot_mqtt_example.py,iot/api-client/mqtt_example/README.rst
+   :target: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/googleapis/python-iot&page=editor&open_in_editor=iot/api-client/mqtt_example/cloudiot_mqtt_example.py,iot/api-client/mqtt_example/README.rst
 
 
 
 
 To run this sample:
 
-.. code-block:: bash
+.. code-block:: no-highlight
 
     $ python cloudiot_mqtt_example.py
 

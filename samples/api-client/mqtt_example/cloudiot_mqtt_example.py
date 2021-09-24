@@ -141,8 +141,11 @@ def get_client(
     mqtt_bridge_hostname,
     mqtt_bridge_port,
 ):
-    """Create our MQTT client. The client_id is a unique string that identifies
-    this device. For Google Cloud IoT Core, it must be in the format below."""
+    """Create our MQTT client.
+
+    The client_id is a unique string that identifies this device.
+    For Google Cloud IoT Core, it must be in the format below.
+    """
     client_id = "projects/{}/locations/{}/registries/{}/devices/{}".format(
         project_id, cloud_region, registry_id, device_id
     )

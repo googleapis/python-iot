@@ -5,18 +5,18 @@ product:
   short_name: Cloud IoT Core
   url: https://cloud.google.com/iot/docs
   description: >
-    `Google Cloud IoT Core`_ allows developers to easily integrate Publish and
+    Cloud IoT Core allows developers to easily integrate Publish and
     Subscribe functionality with devices and programmatically manage device
     authorization.
 
-    This example connects a device to `Google Cloud IoT Core`_ via MQTT, using a JWT for
+    This example connects a device to Cloud IoT Core via MQTT, using a JWT for
     authentication. After connecting, the device publishes messages to the device's 
     MQTT topic at a rate of one per second.
 
     Note that before you can run this sample, you  must register a device as described 
-    in the parent README. For the gateway samples, you must register and bind a device 
-    as described in the 
-    `Cloud IoT gateway docs <https://cloud.google.com/iot/docs/how-tos/gateways/#setup>`_.
+    in the `Cloud IoT device docs <https://cloud.google.com/iot/docs/how-tos/devices>`_. 
+    For the gateway samples, you must register and bind a device as described in the 
+    `Cloud IoT gateway docs <https://cloud.google.com/iot/docs/how-tos/gateways#setup>`_.
 
 setup:
 - auth
