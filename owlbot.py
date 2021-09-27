@@ -51,3 +51,30 @@ python.py_samples()
 
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)
 
+# ----------------------------------------------------------------------------
+# Repo specifics replacements
+# ----------------------------------------------------------------------------
+
+s.replace(
+   "samples/api-client/accesstoken_example/noxfile.py",
+   "# Copyright 2019 Google LLC",
+   "# Copyright 2021 Google LLC"
+)
+
+s.replace(
+   "samples/api-client/mqtt_example/noxfile.py",
+   "# Copyright 2019 Google LLC",
+   "# Copyright 2021 Google LLC"
+)
+
+s.replace(
+   "scripts/readme-gen/templates/*.rst",
+   "GoogleCloudPlatform/python-docs-samples",
+   "googleapis/python-iot"
+)
+
+s.replace(
+   "scripts/readme-gen/templates/*.rst",
+   "python-docs-samples",
+   "python-iot"
+)

@@ -1,0 +1,32 @@
+# This file is used to generate README.rst
+
+product:
+  name: Google Cloud IoT Core
+  short_name: Cloud IoT Core
+  url: https://cloud.google.com/iot/docs
+  description: >
+    Cloud IoT Core allows developers to easily integrate Publish and
+    Subscribe functionality with devices and programmatically manage device
+    authorization.
+
+    This example connects a device to Cloud IoT Core via MQTT, using a JWT for
+    authentication. After connecting, the device publishes messages to the device's 
+    MQTT topic at a rate of one per second.
+
+    Note that before you can run this sample, you  must register a device as described 
+    in the `Cloud IoT device docs <https://cloud.google.com/iot/docs/how-tos/devices>`_. 
+    For the gateway samples, you must register and bind a device as described in the 
+    `Cloud IoT gateway docs <https://cloud.google.com/iot/docs/how-tos/gateways#setup>`_.
+
+setup:
+- auth
+- install_deps
+
+samples:
+- name: MQTT example
+  file: cloudiot_mqtt_example.py
+  show_help: True
+
+cloud_client_library: false
+
+folder: iot/api-client/mqtt_example
