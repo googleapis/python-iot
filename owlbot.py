@@ -51,3 +51,18 @@ python.py_samples()
 
 s.shell.run(["nox", "-s", "blacken"], hide_output=False)
 
+# ----------------------------------------------------------------------------
+# Repo specifics replacements
+# ----------------------------------------------------------------------------
+
+s.replace(
+   "scripts/readme-gen/templates/*.rst",
+   "GoogleCloudPlatform/python-docs-samples",
+   "googleapis/python-iot"
+)
+
+s.replace(
+   "scripts/readme-gen/templates/*.rst",
+   "python-docs-samples",
+   "python-iot"
+)
