@@ -56,6 +56,12 @@ s.shell.run(["nox", "-s", "blacken"], hide_output=False)
 # ----------------------------------------------------------------------------
 
 s.replace(
+   "samples/api-client/*/noxfile.py",
+   "# Copyright 2019 Google LLC",
+   "# Copyright 2021 Google LLC"
+)
+
+s.replace(
    "scripts/readme-gen/templates/*.rst",
    "GoogleCloudPlatform/python-docs-samples",
    "googleapis/python-iot"
