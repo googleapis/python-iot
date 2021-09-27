@@ -56,7 +56,13 @@ s.shell.run(["nox", "-s", "blacken"], hide_output=False)
 # ----------------------------------------------------------------------------
 
 s.replace(
-   "samples/api-client/*/noxfile.py",
+   "samples/api-client/accesstoken_example/noxfile.py",
+   "# Copyright 2019 Google LLC",
+   "# Copyright 2021 Google LLC"
+)
+
+s.replace(
+   "samples/api-client/mqtt_example/noxfile.py",
    "# Copyright 2019 Google LLC",
    "# Copyright 2021 Google LLC"
 )
