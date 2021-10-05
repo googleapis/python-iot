@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [2.3.1](https://www.github.com/googleapis/python-iot/compare/v2.3.0...v2.3.1) (2021-10-05)
+
+
+### Bug Fixes
+
+* improper types in pagers generation ([18d869a](https://www.github.com/googleapis/python-iot/commit/18d869a87e3346c8dabb3bd27a3ee74c237ce370))
+
 ## [2.3.0](https://www.github.com/googleapis/python-iot/compare/v2.2.1...v2.3.0) (2021-09-24)
 
 
