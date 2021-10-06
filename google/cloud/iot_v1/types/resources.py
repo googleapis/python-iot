@@ -115,6 +115,7 @@ class PublicKeyFormat(proto.Enum):
 
 class Device(proto.Message):
     r"""The device resource.
+
     Attributes:
         id (str):
             The user-defined device identifier. The
@@ -249,6 +250,7 @@ class Device(proto.Message):
 
 class GatewayConfig(proto.Message):
     r"""Gateway-related configuration and state.
+
     Attributes:
         gateway_type (google.cloud.iot_v1.types.GatewayType):
             Indicates whether the device is a gateway.
@@ -273,6 +275,7 @@ class GatewayConfig(proto.Message):
 
 class DeviceRegistry(proto.Message):
     r"""A container for a group of devices.
+
     Attributes:
         id (str):
             The identifier of this device registry. For example,
@@ -353,6 +356,7 @@ class DeviceRegistry(proto.Message):
 
 class MqttConfig(proto.Message):
     r"""The configuration of MQTT for a device registry.
+
     Attributes:
         mqtt_enabled_state (google.cloud.iot_v1.types.MqttState):
             If enabled, allows connections using the MQTT
@@ -365,6 +369,7 @@ class MqttConfig(proto.Message):
 
 class HttpConfig(proto.Message):
     r"""The configuration of the HTTP bridge for a device registry.
+
     Attributes:
         http_enabled_state (google.cloud.iot_v1.types.HttpState):
             If enabled, allows devices to use
@@ -378,6 +383,7 @@ class HttpConfig(proto.Message):
 
 class EventNotificationConfig(proto.Message):
     r"""The configuration for forwarding telemetry events.
+
     Attributes:
         subfolder_matches (str):
             If the subfolder name matches this string
@@ -453,6 +459,7 @@ class X509CertificateDetails(proto.Message):
 
 class PublicKeyCertificate(proto.Message):
     r"""A public key certificate format and data.
+
     Attributes:
         format (google.cloud.iot_v1.types.PublicKeyCertificateFormat):
             The certificate format.
@@ -472,6 +479,7 @@ class PublicKeyCertificate(proto.Message):
 
 class DeviceCredential(proto.Message):
     r"""A server-stored device credential used for authentication.
+
     Attributes:
         public_key (google.cloud.iot_v1.types.PublicKeyCredential):
             A public key used to verify the signature of
@@ -507,6 +515,7 @@ class DeviceCredential(proto.Message):
 
 class PublicKeyCredential(proto.Message):
     r"""A public key format and data.
+
     Attributes:
         format (google.cloud.iot_v1.types.PublicKeyFormat):
             The format of the key.
@@ -520,6 +529,7 @@ class PublicKeyCredential(proto.Message):
 
 class DeviceConfig(proto.Message):
     r"""The device configuration. Eventually delivered to devices.
+
     Attributes:
         version (int):
             [Output only] The version of this update. The version number
@@ -559,6 +569,7 @@ class DeviceConfig(proto.Message):
 
 class DeviceState(proto.Message):
     r"""The device state, as reported by the device.
+
     Attributes:
         update_time (google.protobuf.timestamp_pb2.Timestamp):
             [Output only] The time at which this state version was
