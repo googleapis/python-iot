@@ -792,5 +792,8 @@ class DeviceManagerGrpcAsyncIOTransport(DeviceManagerTransport):
             )
         return self._stubs["unbind_device_from_gateway"]
 
+    def close(self):
+        return self.grpc_channel.close()
+
 
 __all__ = ("DeviceManagerGrpcAsyncIOTransport",)
