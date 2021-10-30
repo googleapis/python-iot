@@ -418,10 +418,14 @@ class RegistryCredential(proto.Message):
     r"""A server-stored registry credential used to validate device
     credentials.
 
+
+    .. _oneof: https://proto-plus-python.readthedocs.io/en/stable/fields.html#oneofs-mutually-exclusive-fields
+
     Attributes:
         public_key_certificate (google.cloud.iot_v1.types.PublicKeyCertificate):
             A public key certificate used to verify the
             device credentials.
+            This field is a member of `oneof`_ ``credential``.
     """
 
     public_key_certificate = proto.Field(
@@ -480,6 +484,8 @@ class PublicKeyCertificate(proto.Message):
 class DeviceCredential(proto.Message):
     r"""A server-stored device credential used for authentication.
 
+    .. _oneof: https://proto-plus-python.readthedocs.io/en/stable/fields.html#oneofs-mutually-exclusive-fields
+
     Attributes:
         public_key (google.cloud.iot_v1.types.PublicKeyCredential):
             A public key used to verify the signature of
@@ -498,6 +504,7 @@ class DeviceCredential(proto.Message):
             keys will be accepted. New device credentials
             must be different from every registry-level
             certificate.
+            This field is a member of `oneof`_ ``credential``.
         expiration_time (google.protobuf.timestamp_pb2.Timestamp):
             [Optional] The time at which this credential becomes
             invalid. This credential will be ignored for new client
