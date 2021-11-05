@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# Copyright 2019 Google LLC
-=======
 # Copyright 2021 Google LLC
->>>>>>> c1149b010f358debbebb5eea483cc628ec91549d
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
