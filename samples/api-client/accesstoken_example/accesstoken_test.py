@@ -119,6 +119,7 @@ def test_send_iot_command_to_device():
     service_account_email = (
         "cloud-iot-test@python-docs-samples-tests.iam.gserviceaccount.com"
     )
+    command_to_be_sent_to_device = "OPEN_DOOR"
     manager.open_registry(
         service_account_json, project_id, cloud_region, device_pubsub_topic, registry_id
     )
@@ -154,6 +155,7 @@ def test_send_iot_command_to_device():
         "RS256",
         rsa_private_path,
         service_account_email,
+        command_to_be_sent_to_device,
     )
 
     client.disconnect()

@@ -19,7 +19,7 @@ import setuptools
 
 name = "google-cloud-iot"
 description = "Cloud IoT API API client library"
-version = "2.2.1"
+version = "2.3.0"
 release_status = "Development Status :: 5 - Production/Stable"
 dependencies = [
     # NOTE: Maintainers, please do not require google-api-core>=2.x.x
@@ -74,7 +74,7 @@ setuptools.setup(
     packages=packages,
     namespace_packages=namespaces,
     install_requires=dependencies,
-    extras_requires=extras,
+    extras_require=extras,
     python_requires=">=3.6",
     scripts=["scripts/fixup_iot_v1_keywords.py"],
     include_package_data=True,

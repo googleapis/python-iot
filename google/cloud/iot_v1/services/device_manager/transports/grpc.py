@@ -85,16 +85,16 @@ class DeviceManagerGrpcTransport(DeviceManagerTransport):
             api_mtls_endpoint (Optional[str]): Deprecated. The mutual TLS endpoint.
                 If provided, it overrides the ``host`` argument and tries to create
                 a mutual TLS channel with client SSL credentials from
-                ``client_cert_source`` or applicatin default SSL credentials.
+                ``client_cert_source`` or application default SSL credentials.
             client_cert_source (Optional[Callable[[], Tuple[bytes, bytes]]]):
                 Deprecated. A callback to provide client SSL certificate bytes and
                 private key bytes, both in PEM format. It is ignored if
                 ``api_mtls_endpoint`` is None.
             ssl_channel_credentials (grpc.ChannelCredentials): SSL credentials
-                for grpc channel. It is ignored if ``channel`` is provided.
+                for the grpc channel. It is ignored if ``channel`` is provided.
             client_cert_source_for_mtls (Optional[Callable[[], Tuple[bytes, bytes]]]):
                 A callback to provide client certificate bytes and private key bytes,
-                both in PEM format. It is used to configure mutual TLS channel. It is
+                both in PEM format. It is used to configure a mutual TLS channel. It is
                 ignored if ``channel`` or ``ssl_channel_credentials`` is provided.
             quota_project_id (Optional[str]): An optional project to use for billing
                 and quota.
@@ -780,6 +780,9 @@ class DeviceManagerGrpcTransport(DeviceManagerTransport):
                 response_deserializer=device_manager.UnbindDeviceFromGatewayResponse.deserialize,
             )
         return self._stubs["unbind_device_from_gateway"]
+
+    def close(self):
+        self.grpc_channel.close()
 
 
 __all__ = ("DeviceManagerGrpcTransport",)

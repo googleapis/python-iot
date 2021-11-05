@@ -52,6 +52,7 @@ __protobuf__ = proto.module(
 
 class CreateDeviceRegistryRequest(proto.Message):
     r"""Request for ``CreateDeviceRegistry``.
+
     Attributes:
         parent (str):
             Required. The project and cloud region where this device
@@ -71,6 +72,7 @@ class CreateDeviceRegistryRequest(proto.Message):
 
 class GetDeviceRegistryRequest(proto.Message):
     r"""Request for ``GetDeviceRegistry``.
+
     Attributes:
         name (str):
             Required. The name of the device registry. For example,
@@ -82,6 +84,7 @@ class GetDeviceRegistryRequest(proto.Message):
 
 class DeleteDeviceRegistryRequest(proto.Message):
     r"""Request for ``DeleteDeviceRegistry``.
+
     Attributes:
         name (str):
             Required. The name of the device registry. For example,
@@ -93,6 +96,7 @@ class DeleteDeviceRegistryRequest(proto.Message):
 
 class UpdateDeviceRegistryRequest(proto.Message):
     r"""Request for ``UpdateDeviceRegistry``.
+
     Attributes:
         device_registry (google.cloud.iot_v1.types.DeviceRegistry):
             Required. The new values for the device registry. The ``id``
@@ -118,6 +122,7 @@ class UpdateDeviceRegistryRequest(proto.Message):
 
 class ListDeviceRegistriesRequest(proto.Message):
     r"""Request for ``ListDeviceRegistries``.
+
     Attributes:
         parent (str):
             Required. The project and cloud region path. For example,
@@ -142,6 +147,7 @@ class ListDeviceRegistriesRequest(proto.Message):
 
 class ListDeviceRegistriesResponse(proto.Message):
     r"""Response for ``ListDeviceRegistries``.
+
     Attributes:
         device_registries (Sequence[google.cloud.iot_v1.types.DeviceRegistry]):
             The registries that matched the query.
@@ -163,6 +169,7 @@ class ListDeviceRegistriesResponse(proto.Message):
 
 class CreateDeviceRequest(proto.Message):
     r"""Request for ``CreateDevice``.
+
     Attributes:
         parent (str):
             Required. The name of the device registry where this device
@@ -180,6 +187,7 @@ class CreateDeviceRequest(proto.Message):
 
 class GetDeviceRequest(proto.Message):
     r"""Request for ``GetDevice``.
+
     Attributes:
         name (str):
             Required. The name of the device. For example,
@@ -199,6 +207,7 @@ class GetDeviceRequest(proto.Message):
 
 class UpdateDeviceRequest(proto.Message):
     r"""Request for ``UpdateDevice``.
+
     Attributes:
         device (google.cloud.iot_v1.types.Device):
             Required. The new values for the device. The ``id`` and
@@ -222,6 +231,7 @@ class UpdateDeviceRequest(proto.Message):
 
 class DeleteDeviceRequest(proto.Message):
     r"""Request for ``DeleteDevice``.
+
     Attributes:
         name (str):
             Required. The name of the device. For example,
@@ -235,6 +245,7 @@ class DeleteDeviceRequest(proto.Message):
 
 class ListDevicesRequest(proto.Message):
     r"""Request for ``ListDevices``.
+
     Attributes:
         parent (str):
             Required. The device registry path. Required. For example,
@@ -310,6 +321,7 @@ class GatewayListOptions(proto.Message):
 
 class ListDevicesResponse(proto.Message):
     r"""Response for ``ListDevices``.
+
     Attributes:
         devices (Sequence[google.cloud.iot_v1.types.Device]):
             The devices that match the request.
@@ -329,6 +341,7 @@ class ListDevicesResponse(proto.Message):
 
 class ModifyCloudToDeviceConfigRequest(proto.Message):
     r"""Request for ``ModifyCloudToDeviceConfig``.
+
     Attributes:
         name (str):
             Required. The name of the device. For example,
@@ -356,6 +369,7 @@ class ModifyCloudToDeviceConfigRequest(proto.Message):
 
 class ListDeviceConfigVersionsRequest(proto.Message):
     r"""Request for ``ListDeviceConfigVersions``.
+
     Attributes:
         name (str):
             Required. The name of the device. For example,
@@ -376,6 +390,7 @@ class ListDeviceConfigVersionsRequest(proto.Message):
 
 class ListDeviceConfigVersionsResponse(proto.Message):
     r"""Response for ``ListDeviceConfigVersions``.
+
     Attributes:
         device_configs (Sequence[google.cloud.iot_v1.types.DeviceConfig]):
             The device configuration for the last few
@@ -390,6 +405,7 @@ class ListDeviceConfigVersionsResponse(proto.Message):
 
 class ListDeviceStatesRequest(proto.Message):
     r"""Request for ``ListDeviceStates``.
+
     Attributes:
         name (str):
             Required. The name of the device. For example,
@@ -410,6 +426,7 @@ class ListDeviceStatesRequest(proto.Message):
 
 class ListDeviceStatesResponse(proto.Message):
     r"""Response for ``ListDeviceStates``.
+
     Attributes:
         device_states (Sequence[google.cloud.iot_v1.types.DeviceState]):
             The last few device states. States are listed
@@ -424,6 +441,7 @@ class ListDeviceStatesResponse(proto.Message):
 
 class SendCommandToDeviceRequest(proto.Message):
     r"""Request for ``SendCommandToDevice``.
+
     Attributes:
         name (str):
             Required. The name of the device. For example,
@@ -451,11 +469,13 @@ class SendCommandToDeviceRequest(proto.Message):
 
 
 class SendCommandToDeviceResponse(proto.Message):
-    r"""Response for ``SendCommandToDevice``.    """
+    r"""Response for ``SendCommandToDevice``.
+    """
 
 
 class BindDeviceToGatewayRequest(proto.Message):
     r"""Request for ``BindDeviceToGateway``.
+
     Attributes:
         parent (str):
             Required. The name of the registry. For example,
@@ -475,11 +495,13 @@ class BindDeviceToGatewayRequest(proto.Message):
 
 
 class BindDeviceToGatewayResponse(proto.Message):
-    r"""Response for ``BindDeviceToGateway``.    """
+    r"""Response for ``BindDeviceToGateway``.
+    """
 
 
 class UnbindDeviceFromGatewayRequest(proto.Message):
     r"""Request for ``UnbindDeviceFromGateway``.
+
     Attributes:
         parent (str):
             Required. The name of the registry. For example,
@@ -499,7 +521,8 @@ class UnbindDeviceFromGatewayRequest(proto.Message):
 
 
 class UnbindDeviceFromGatewayResponse(proto.Message):
-    r"""Response for ``UnbindDeviceFromGateway``.    """
+    r"""Response for ``UnbindDeviceFromGateway``.
+    """
 
 
 __all__ = tuple(sorted(__protobuf__.manifest))
