@@ -1,14 +1,16 @@
 {
-  "name": "cloudiot",
-  "name_pretty": "Google Cloud Internet of Things (IoT) Core",
-  "product_documentation": "https://cloud.google.com/iot",
-  "client_documentation": "https://googleapis.dev/python/cloudiot/latest",
-  "issue_tracker": "https://issuetracker.google.com/issues?q=status:open%20componentid:310170",
-  "release_level": "ga",
-  "language": "python",
-  "library_type": "GAPIC_AUTO",
-  "repo": "googleapis/python-iot",
-  "distribution_name": "google-cloud-iot",
-  "api_id": "cloudiot.googleapis.com",
-  "requires_billing": true
+    "name": "cloudiot",
+    "name_pretty": "Google Cloud Internet of Things (IoT) Core",
+    "product_documentation": "https://cloud.google.com/iot",
+    "client_documentation": "https://googleapis.dev/python/cloudiot/latest",
+    "issue_tracker": "https://issuetracker.google.com/issues?q=status:open%20componentid:310170",
+    "release_level": "ga",
+    "language": "python",
+    "library_type": "GAPIC_AUTO",
+    "repo": "googleapis/python-iot",
+    "distribution_name": "google-cloud-iot",
+    "api_id": "cloudiot.googleapis.com",
+    "requires_billing": true,
+    "default_version": "v1",
+    "codeowner_team": "@googleapis/api-iot"
 }
