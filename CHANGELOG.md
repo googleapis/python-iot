@@ -4,6 +4,19 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.4.0](https://www.github.com/googleapis/python-iot/compare/v2.3.0...v2.4.0) (2021-11-12)
+
+
+### Features
+
+* add context manager support in client ([#202](https://www.github.com/googleapis/python-iot/issues/202)) ([14c4ab6](https://www.github.com/googleapis/python-iot/commit/14c4ab6bd0589111743b4629fbd10c86a43aa698))
+
+
+### Bug Fixes
+
+* fix extras_require typo in setup.py ([#210](https://www.github.com/googleapis/python-iot/issues/210)) ([c1149b0](https://www.github.com/googleapis/python-iot/commit/c1149b010f358debbebb5eea483cc628ec91549d))
+* improper types in pagers generation ([18d869a](https://www.github.com/googleapis/python-iot/commit/18d869a87e3346c8dabb3bd27a3ee74c237ce370))
+
 ## [2.3.0](https://www.github.com/googleapis/python-iot/compare/v2.2.1...v2.3.0) (2021-09-24)
 
 
