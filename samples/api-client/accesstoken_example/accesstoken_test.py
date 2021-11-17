@@ -130,7 +130,7 @@ def clean_up_registries():
                         remove_device = False
 
                     if remove_device:
-                        print("removing {}".format(device_name))
+                        print("removing  ggg{}".format(device_name))
                         client.projects().locations().registries().devices().delete(
                             name=device_name
                         ).execute()
