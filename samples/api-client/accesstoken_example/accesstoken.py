@@ -288,7 +288,7 @@ def exchange_device_access_token_for_service_account_access_token(
     )
     assert exchange_resp.ok, exchange_resp.raise_for_status()
     service_account_token = exchange_resp.json()["accessToken"]
-    print("Service account access token: {}".format(service_account_token))
+    print("Servicef account access token: {}".format(service_account_token))
     return service_account_token
     # [END iot_access_token_service_account_token]
 
