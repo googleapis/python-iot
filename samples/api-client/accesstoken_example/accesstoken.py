@@ -132,6 +132,7 @@ def publish_pubsub_message(
     )
     headers = {
         "Authorization": "Bearer {}".format(access_token),
+        "sec-google-dappertraceinfo": "CcWD_WsO1gjsEWdwKRQn9da-HQMAAAAhAAAAAAAAAAA",
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
@@ -151,6 +152,7 @@ def publish_pubsub_message(
     publish_resp = req.post(
         url=publish_request_path, data=json.dumps(publish_payload), headers=headers
     )
+    print("Response: {}".format(json.dumps(publish_resp)))
     assert publish_resp.ok, publish_resp.raise_for_status()
     print(
         "Pub/Sub message has been successfully published to {}: {}".format(
