@@ -91,7 +91,7 @@ def generate_access_token(
     resp = req.post(url=request_url, data=request_payload, headers=headers)
     assert resp.ok, resp.raise_for_status()
     access_token = resp.json()["access_token"]
-    print("Device access token: {}".format(access_token))
+    print("Device access tokens: {}".format(access_token))
     return access_token
     # [END iot_generate_access_token]
 
