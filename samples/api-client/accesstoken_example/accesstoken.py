@@ -137,7 +137,7 @@ def publish_pubsub_message(
         "cache-control": "no-cache",
     }
     resp = req.put(url=request_path, data={}, headers=headers)
-    print("Create Pubsub response: ", resp.json)
+    print("Create Pubsub response: ", resp.json())
     assert resp.ok, resp.raise_for_status()
     print("Successfully created Pub/Sub topic: {}.".format(topic_id))
 
@@ -223,7 +223,7 @@ def download_cloud_storage_file(
         data=bytes(json.dumps(create_payload), "utf-8"),
         headers=headers,
     )
-    print("Create Bucket Response: ", create_resp.json)
+    print("Create Bucket Response: ", create_resp.json())
     assert create_resp.ok, create_resp.raise_for_status()
     print("Successfully created Storage bucket: {}".format(bucket_name))
 
