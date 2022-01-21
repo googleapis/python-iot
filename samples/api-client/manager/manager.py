@@ -48,7 +48,7 @@ def create_iot_topic(project, topic_name):
     pubsub_client = pubsub.PublisherClient()
     topic_path = pubsub_client.topic_path(project, topic_name)
 
-    topic = pubsub_client.create_topic(name=topic_path)
+    topic = pubsub_client.create_topic(name=topic_path) 
     policy = pubsub_client.get_iam_policy(topic_path)
 
     policy.bindings.add(
