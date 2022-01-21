@@ -52,7 +52,7 @@ def create_iot_topic(project, topic_name):
     policy = pubsub_client.get_iam_policy(topic_path)
 
     policy.bindings.add(
-        role="roles/pubsub.publisher",
+        role="roles/pubsub.publisher", 
         members=["serviceAccount:cloud-iot@system.gserviceaccount.com"],
     )
 
