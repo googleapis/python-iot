@@ -148,7 +148,7 @@ def test_topic():
 
     pubsub_client = pubsub.PublisherClient()
     topic_path = pubsub_client.topic_path(project_id, topic_id)
-    pubsub_client.delete_topic(topic_path)
+    pubsub_client.delete_topic(request={"topic": topic_path})
 
 
 def test_create_delete_registry(test_topic, capsys):
