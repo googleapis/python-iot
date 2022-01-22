@@ -16,7 +16,7 @@ connect to the Google Cloud Platform.
 .. |versions| image:: https://img.shields.io/pypi/pyversions/google-cloud-iot.svg
    :target: https://pypi.org/project/google-cloud-iot/
 .. _Cloud IoT API: https://cloud.google.com/iot
-.. _Client Library Documentation: https://googleapis.dev/python/cloudiot/latest
+.. _Client Library Documentation: https://cloud.google.com/python/docs/reference/cloudiot/latest
 .. _Product Documentation:  https://cloud.google.com/iot
 
 Quick Start
