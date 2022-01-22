@@ -4,7 +4,7 @@
     "product_documentation": "https://cloud.google.com/iot",
     "client_documentation": "https://cloud.google.com/python/docs/reference/cloudiot/latest",
     "issue_tracker": "https://issuetracker.google.com/issues?q=status:open%20componentid:310170",
-    "release_level": "ga",
+    "release_level": "stable",
     "language": "python",
     "library_type": "GAPIC_AUTO",
     "repo": "googleapis/python-iot",
@@ -12,5 +12,6 @@
     "api_id": "cloudiot.googleapis.com",
     "requires_billing": true,
     "default_version": "v1",
-    "codeowner_team": "@googleapis/api-iot"
+    "codeowner_team": "@googleapis/api-iot",
+    "api_shortname": "cloudiot"
 }
