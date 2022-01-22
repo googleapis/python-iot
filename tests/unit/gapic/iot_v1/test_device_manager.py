@@ -15,7 +15,6 @@
 #
 import os
 import mock
-import packaging.version
 
 import grpc
 from grpc.experimental import aio
@@ -36,9 +35,6 @@ from google.cloud.iot_v1.services.device_manager import DeviceManagerAsyncClient
 from google.cloud.iot_v1.services.device_manager import DeviceManagerClient
 from google.cloud.iot_v1.services.device_manager import pagers
 from google.cloud.iot_v1.services.device_manager import transports
-from google.cloud.iot_v1.services.device_manager.transports.base import (
-    _GOOGLE_AUTH_VERSION,
-)
 from google.cloud.iot_v1.types import device_manager
 from google.cloud.iot_v1.types import resources
 from google.iam.v1 import iam_policy_pb2  # type: ignore
@@ -51,20 +47,6 @@ from google.protobuf import timestamp_pb2  # type: ignore
 from google.rpc import status_pb2  # type: ignore
 from google.type import expr_pb2  # type: ignore
 import google.auth
-
-
-# TODO(busunkim): Once google-auth >= 1.25.0 is required transitively
-# through google-api-core:
-# - Delete the auth "less than" test cases
-# - Delete these pytest markers (Make the "greater than or equal to" tests the default).
-requires_google_auth_lt_1_25_0 = pytest.mark.skipif(
-    packaging.version.parse(_GOOGLE_AUTH_VERSION) >= packaging.version.parse("1.25.0"),
-    reason="This test requires google-auth < 1.25.0",
-)
-requires_google_auth_gte_1_25_0 = pytest.mark.skipif(
-    packaging.version.parse(_GOOGLE_AUTH_VERSION) < packaging.version.parse("1.25.0"),
-    reason="This test requires google-auth >= 1.25.0",
-)
 
 
 def client_cert_source_callback():
@@ -223,7 +205,7 @@ def test_device_manager_client_client_options(
     options = client_options.ClientOptions(api_endpoint="squid.clam.whelk")
     with mock.patch.object(transport_class, "__init__") as patched:
         patched.return_value = None
-        client = client_class(client_options=options)
+        client = client_class(transport=transport_name, client_options=options)
         patched.assert_called_once_with(
             credentials=None,
             credentials_file=None,
@@ -240,7 +222,7 @@ def test_device_manager_client_client_options(
     with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS_ENDPOINT": "never"}):
         with mock.patch.object(transport_class, "__init__") as patched:
             patched.return_value = None
-            client = client_class()
+            client = client_class(transport=transport_name)
             patched.assert_called_once_with(
                 credentials=None,
                 credentials_file=None,
@@ -257,7 +239,7 @@ def test_device_manager_client_client_options(
     with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS_ENDPOINT": "always"}):
         with mock.patch.object(transport_class, "__init__") as patched:
             patched.return_value = None
-            client = client_class()
+            client = client_class(transport=transport_name)
             patched.assert_called_once_with(
                 credentials=None,
                 credentials_file=None,
@@ -273,20 +255,20 @@ def test_device_manager_client_client_options(
     # unsupported value.
     with mock.patch.dict(os.environ, {"GOOGLE_API_USE_MTLS_ENDPOINT": "Unsupported"}):
         with pytest.raises(MutualTLSChannelError):
-            client = client_class()
+            client = client_class(transport=transport_name)
 
     # Check the case GOOGLE_API_USE_CLIENT_CERTIFICATE has unsupported value.
     with mock.patch.dict(
         os.environ, {"GOOGLE_API_USE_CLIENT_CERTIFICATE": "Unsupported"}
     ):
         with pytest.raises(ValueError):
-            client = client_class()
+            client = client_class(transport=transport_name)
 
     # Check the case quota_project_id is provided
     options = client_options.ClientOptions(quota_project_id="octopus")
     with mock.patch.object(transport_class, "__init__") as patched:
         patched.return_value = None
-        client = client_class(client_options=options)
+        client = client_class(client_options=options, transport=transport_name)
         patched.assert_called_once_with(
             credentials=None,
             credentials_file=None,
@@ -345,7 +327,7 @@ def test_device_manager_client_mtls_env_auto(
         )
         with mock.patch.object(transport_class, "__init__") as patched:
             patched.return_value = None
-            client = client_class(client_options=options)
+            client = client_class(client_options=options, transport=transport_name)
 
             if use_client_cert_env == "false":
                 expected_client_cert_source = None
@@ -387,7 +369,7 @@ def test_device_manager_client_mtls_env_auto(
                         expected_client_cert_source = client_cert_source_callback
 
                     patched.return_value = None
-                    client = client_class()
+                    client = client_class(transport=transport_name)
                     patched.assert_called_once_with(
                         credentials=None,
                         credentials_file=None,
@@ -409,7 +391,7 @@ def test_device_manager_client_mtls_env_auto(
                 return_value=False,
             ):
                 patched.return_value = None
-                client = client_class()
+                client = client_class(transport=transport_name)
                 patched.assert_called_once_with(
                     credentials=None,
                     credentials_file=None,
@@ -440,7 +422,7 @@ def test_device_manager_client_client_options_scopes(
     options = client_options.ClientOptions(scopes=["1", "2"],)
     with mock.patch.object(transport_class, "__init__") as patched:
         patched.return_value = None
-        client = client_class(client_options=options)
+        client = client_class(client_options=options, transport=transport_name)
         patched.assert_called_once_with(
             credentials=None,
             credentials_file=None,
@@ -471,7 +453,7 @@ def test_device_manager_client_client_options_credentials_file(
     options = client_options.ClientOptions(credentials_file="credentials.json")
     with mock.patch.object(transport_class, "__init__") as patched:
         patched.return_value = None
-        client = client_class(client_options=options)
+        client = client_class(client_options=options, transport=transport_name)
         patched.assert_called_once_with(
             credentials=None,
             credentials_file="credentials.json",
@@ -504,9 +486,10 @@ def test_device_manager_client_client_options_from_dict():
         )
 
 
-def test_create_device_registry(
-    transport: str = "grpc", request_type=device_manager.CreateDeviceRegistryRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.CreateDeviceRegistryRequest, dict,]
+)
+def test_create_device_registry(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -535,10 +518,6 @@ def test_create_device_registry(
     assert response.id == "id_value"
     assert response.name == "name_value"
     assert response.log_level == resources.LogLevel.NONE
-
-
-def test_create_device_registry_from_dict():
-    test_create_device_registry(request_type=dict)
 
 
 def test_create_device_registry_empty_call():
@@ -677,8 +656,12 @@ def test_create_device_registry_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].device_registry == resources.DeviceRegistry(id="id_value")
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].device_registry
+        mock_val = resources.DeviceRegistry(id="id_value")
+        assert arg == mock_val
 
 
 def test_create_device_registry_flattened_error():
@@ -721,8 +704,12 @@ async def test_create_device_registry_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].device_registry == resources.DeviceRegistry(id="id_value")
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].device_registry
+        mock_val = resources.DeviceRegistry(id="id_value")
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -741,9 +728,10 @@ async def test_create_device_registry_flattened_error_async():
         )
 
 
-def test_get_device_registry(
-    transport: str = "grpc", request_type=device_manager.GetDeviceRegistryRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.GetDeviceRegistryRequest, dict,]
+)
+def test_get_device_registry(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -772,10 +760,6 @@ def test_get_device_registry(
     assert response.id == "id_value"
     assert response.name == "name_value"
     assert response.log_level == resources.LogLevel.NONE
-
-
-def test_get_device_registry_from_dict():
-    test_get_device_registry(request_type=dict)
 
 
 def test_get_device_registry_empty_call():
@@ -911,7 +895,9 @@ def test_get_device_registry_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 def test_get_device_registry_flattened_error():
@@ -949,7 +935,9 @@ async def test_get_device_registry_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -966,9 +954,10 @@ async def test_get_device_registry_flattened_error_async():
         )
 
 
-def test_update_device_registry(
-    transport: str = "grpc", request_type=device_manager.UpdateDeviceRegistryRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.UpdateDeviceRegistryRequest, dict,]
+)
+def test_update_device_registry(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -997,10 +986,6 @@ def test_update_device_registry(
     assert response.id == "id_value"
     assert response.name == "name_value"
     assert response.log_level == resources.LogLevel.NONE
-
-
-def test_update_device_registry_from_dict():
-    test_update_device_registry(request_type=dict)
 
 
 def test_update_device_registry_empty_call():
@@ -1145,8 +1130,12 @@ def test_update_device_registry_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].device_registry == resources.DeviceRegistry(id="id_value")
-        assert args[0].update_mask == field_mask_pb2.FieldMask(paths=["paths_value"])
+        arg = args[0].device_registry
+        mock_val = resources.DeviceRegistry(id="id_value")
+        assert arg == mock_val
+        arg = args[0].update_mask
+        mock_val = field_mask_pb2.FieldMask(paths=["paths_value"])
+        assert arg == mock_val
 
 
 def test_update_device_registry_flattened_error():
@@ -1189,8 +1178,12 @@ async def test_update_device_registry_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].device_registry == resources.DeviceRegistry(id="id_value")
-        assert args[0].update_mask == field_mask_pb2.FieldMask(paths=["paths_value"])
+        arg = args[0].device_registry
+        mock_val = resources.DeviceRegistry(id="id_value")
+        assert arg == mock_val
+        arg = args[0].update_mask
+        mock_val = field_mask_pb2.FieldMask(paths=["paths_value"])
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -1209,9 +1202,10 @@ async def test_update_device_registry_flattened_error_async():
         )
 
 
-def test_delete_device_registry(
-    transport: str = "grpc", request_type=device_manager.DeleteDeviceRegistryRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.DeleteDeviceRegistryRequest, dict,]
+)
+def test_delete_device_registry(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -1235,10 +1229,6 @@ def test_delete_device_registry(
 
     # Establish that the response is the type that we expect.
     assert response is None
-
-
-def test_delete_device_registry_from_dict():
-    test_delete_device_registry(request_type=dict)
 
 
 def test_delete_device_registry_empty_call():
@@ -1365,7 +1355,9 @@ def test_delete_device_registry_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 def test_delete_device_registry_flattened_error():
@@ -1401,7 +1393,9 @@ async def test_delete_device_registry_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -1418,9 +1412,10 @@ async def test_delete_device_registry_flattened_error_async():
         )
 
 
-def test_list_device_registries(
-    transport: str = "grpc", request_type=device_manager.ListDeviceRegistriesRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.ListDeviceRegistriesRequest, dict,]
+)
+def test_list_device_registries(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -1447,10 +1442,6 @@ def test_list_device_registries(
     # Establish that the response is the type that we expect.
     assert isinstance(response, pagers.ListDeviceRegistriesPager)
     assert response.next_page_token == "next_page_token_value"
-
-
-def test_list_device_registries_from_dict():
-    test_list_device_registries(request_type=dict)
 
 
 def test_list_device_registries_empty_call():
@@ -1584,7 +1575,9 @@ def test_list_device_registries_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
 
 
 def test_list_device_registries_flattened_error():
@@ -1622,7 +1615,9 @@ async def test_list_device_registries_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -1639,8 +1634,10 @@ async def test_list_device_registries_flattened_error_async():
         )
 
 
-def test_list_device_registries_pager():
-    client = DeviceManagerClient(credentials=ga_credentials.AnonymousCredentials,)
+def test_list_device_registries_pager(transport_name: str = "grpc"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials, transport=transport_name,
+    )
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
@@ -1684,8 +1681,10 @@ def test_list_device_registries_pager():
         assert all(isinstance(i, resources.DeviceRegistry) for i in results)
 
 
-def test_list_device_registries_pages():
-    client = DeviceManagerClient(credentials=ga_credentials.AnonymousCredentials,)
+def test_list_device_registries_pages(transport_name: str = "grpc"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials, transport=transport_name,
+    )
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(
@@ -1805,9 +1804,8 @@ async def test_list_device_registries_async_pages():
             assert page_.raw_page.next_page_token == token
 
 
-def test_create_device(
-    transport: str = "grpc", request_type=device_manager.CreateDeviceRequest
-):
+@pytest.mark.parametrize("request_type", [device_manager.CreateDeviceRequest, dict,])
+def test_create_device(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -1840,10 +1838,6 @@ def test_create_device(
     assert response.num_id == 636
     assert response.blocked is True
     assert response.log_level == resources.LogLevel.NONE
-
-
-def test_create_device_from_dict():
-    test_create_device(request_type=dict)
 
 
 def test_create_device_empty_call():
@@ -1974,8 +1968,12 @@ def test_create_device_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].device == resources.Device(id="id_value")
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].device
+        mock_val = resources.Device(id="id_value")
+        assert arg == mock_val
 
 
 def test_create_device_flattened_error():
@@ -2013,8 +2011,12 @@ async def test_create_device_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].device == resources.Device(id="id_value")
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].device
+        mock_val = resources.Device(id="id_value")
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -2033,9 +2035,8 @@ async def test_create_device_flattened_error_async():
         )
 
 
-def test_get_device(
-    transport: str = "grpc", request_type=device_manager.GetDeviceRequest
-):
+@pytest.mark.parametrize("request_type", [device_manager.GetDeviceRequest, dict,])
+def test_get_device(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -2068,10 +2069,6 @@ def test_get_device(
     assert response.num_id == 636
     assert response.blocked is True
     assert response.log_level == resources.LogLevel.NONE
-
-
-def test_get_device_from_dict():
-    test_get_device(request_type=dict)
 
 
 def test_get_device_empty_call():
@@ -2200,7 +2197,9 @@ def test_get_device_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 def test_get_device_flattened_error():
@@ -2234,7 +2233,9 @@ async def test_get_device_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -2251,9 +2252,8 @@ async def test_get_device_flattened_error_async():
         )
 
 
-def test_update_device(
-    transport: str = "grpc", request_type=device_manager.UpdateDeviceRequest
-):
+@pytest.mark.parametrize("request_type", [device_manager.UpdateDeviceRequest, dict,])
+def test_update_device(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -2286,10 +2286,6 @@ def test_update_device(
     assert response.num_id == 636
     assert response.blocked is True
     assert response.log_level == resources.LogLevel.NONE
-
-
-def test_update_device_from_dict():
-    test_update_device(request_type=dict)
 
 
 def test_update_device_empty_call():
@@ -2421,8 +2417,12 @@ def test_update_device_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].device == resources.Device(id="id_value")
-        assert args[0].update_mask == field_mask_pb2.FieldMask(paths=["paths_value"])
+        arg = args[0].device
+        mock_val = resources.Device(id="id_value")
+        assert arg == mock_val
+        arg = args[0].update_mask
+        mock_val = field_mask_pb2.FieldMask(paths=["paths_value"])
+        assert arg == mock_val
 
 
 def test_update_device_flattened_error():
@@ -2461,8 +2461,12 @@ async def test_update_device_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].device == resources.Device(id="id_value")
-        assert args[0].update_mask == field_mask_pb2.FieldMask(paths=["paths_value"])
+        arg = args[0].device
+        mock_val = resources.Device(id="id_value")
+        assert arg == mock_val
+        arg = args[0].update_mask
+        mock_val = field_mask_pb2.FieldMask(paths=["paths_value"])
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -2481,9 +2485,8 @@ async def test_update_device_flattened_error_async():
         )
 
 
-def test_delete_device(
-    transport: str = "grpc", request_type=device_manager.DeleteDeviceRequest
-):
+@pytest.mark.parametrize("request_type", [device_manager.DeleteDeviceRequest, dict,])
+def test_delete_device(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -2505,10 +2508,6 @@ def test_delete_device(
 
     # Establish that the response is the type that we expect.
     assert response is None
-
-
-def test_delete_device_from_dict():
-    test_delete_device(request_type=dict)
 
 
 def test_delete_device_empty_call():
@@ -2624,7 +2623,9 @@ def test_delete_device_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 def test_delete_device_flattened_error():
@@ -2658,7 +2659,9 @@ async def test_delete_device_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -2675,9 +2678,8 @@ async def test_delete_device_flattened_error_async():
         )
 
 
-def test_list_devices(
-    transport: str = "grpc", request_type=device_manager.ListDevicesRequest
-):
+@pytest.mark.parametrize("request_type", [device_manager.ListDevicesRequest, dict,])
+def test_list_devices(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -2702,10 +2704,6 @@ def test_list_devices(
     # Establish that the response is the type that we expect.
     assert isinstance(response, pagers.ListDevicesPager)
     assert response.next_page_token == "next_page_token_value"
-
-
-def test_list_devices_from_dict():
-    test_list_devices(request_type=dict)
 
 
 def test_list_devices_empty_call():
@@ -2826,7 +2824,9 @@ def test_list_devices_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
 
 
 def test_list_devices_flattened_error():
@@ -2862,7 +2862,9 @@ async def test_list_devices_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -2879,8 +2881,10 @@ async def test_list_devices_flattened_error_async():
         )
 
 
-def test_list_devices_pager():
-    client = DeviceManagerClient(credentials=ga_credentials.AnonymousCredentials,)
+def test_list_devices_pager(transport_name: str = "grpc"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials, transport=transport_name,
+    )
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
@@ -2913,8 +2917,10 @@ def test_list_devices_pager():
         assert all(isinstance(i, resources.Device) for i in results)
 
 
-def test_list_devices_pages():
-    client = DeviceManagerClient(credentials=ga_credentials.AnonymousCredentials,)
+def test_list_devices_pages(transport_name: str = "grpc"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials, transport=transport_name,
+    )
 
     # Mock the actual call within the gRPC stub, and fake the request.
     with mock.patch.object(type(client.transport.list_devices), "__call__") as call:
@@ -3001,10 +3007,10 @@ async def test_list_devices_async_pages():
             assert page_.raw_page.next_page_token == token
 
 
-def test_modify_cloud_to_device_config(
-    transport: str = "grpc",
-    request_type=device_manager.ModifyCloudToDeviceConfigRequest,
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.ModifyCloudToDeviceConfigRequest, dict,]
+)
+def test_modify_cloud_to_device_config(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -3032,10 +3038,6 @@ def test_modify_cloud_to_device_config(
     assert isinstance(response, resources.DeviceConfig)
     assert response.version == 774
     assert response.binary_data == b"binary_data_blob"
-
-
-def test_modify_cloud_to_device_config_from_dict():
-    test_modify_cloud_to_device_config(request_type=dict)
 
 
 def test_modify_cloud_to_device_config_empty_call():
@@ -3170,8 +3172,12 @@ def test_modify_cloud_to_device_config_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
-        assert args[0].binary_data == b"binary_data_blob"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
+        arg = args[0].binary_data
+        mock_val = b"binary_data_blob"
+        assert arg == mock_val
 
 
 def test_modify_cloud_to_device_config_flattened_error():
@@ -3213,8 +3219,12 @@ async def test_modify_cloud_to_device_config_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
-        assert args[0].binary_data == b"binary_data_blob"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
+        arg = args[0].binary_data
+        mock_val = b"binary_data_blob"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -3233,9 +3243,10 @@ async def test_modify_cloud_to_device_config_flattened_error_async():
         )
 
 
-def test_list_device_config_versions(
-    transport: str = "grpc", request_type=device_manager.ListDeviceConfigVersionsRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.ListDeviceConfigVersionsRequest, dict,]
+)
+def test_list_device_config_versions(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -3259,10 +3270,6 @@ def test_list_device_config_versions(
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.ListDeviceConfigVersionsResponse)
-
-
-def test_list_device_config_versions_from_dict():
-    test_list_device_config_versions(request_type=dict)
 
 
 def test_list_device_config_versions_empty_call():
@@ -3393,7 +3400,9 @@ def test_list_device_config_versions_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 def test_list_device_config_versions_flattened_error():
@@ -3431,7 +3440,9 @@ async def test_list_device_config_versions_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -3448,9 +3459,10 @@ async def test_list_device_config_versions_flattened_error_async():
         )
 
 
-def test_list_device_states(
-    transport: str = "grpc", request_type=device_manager.ListDeviceStatesRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.ListDeviceStatesRequest, dict,]
+)
+def test_list_device_states(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -3474,10 +3486,6 @@ def test_list_device_states(
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.ListDeviceStatesResponse)
-
-
-def test_list_device_states_from_dict():
-    test_list_device_states(request_type=dict)
 
 
 def test_list_device_states_empty_call():
@@ -3607,7 +3615,9 @@ def test_list_device_states_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 def test_list_device_states_flattened_error():
@@ -3645,7 +3655,9 @@ async def test_list_device_states_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -3662,9 +3674,8 @@ async def test_list_device_states_flattened_error_async():
         )
 
 
-def test_set_iam_policy(
-    transport: str = "grpc", request_type=iam_policy_pb2.SetIamPolicyRequest
-):
+@pytest.mark.parametrize("request_type", [iam_policy_pb2.SetIamPolicyRequest, dict,])
+def test_set_iam_policy(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -3688,10 +3699,6 @@ def test_set_iam_policy(
     assert isinstance(response, policy_pb2.Policy)
     assert response.version == 774
     assert response.etag == b"etag_blob"
-
-
-def test_set_iam_policy_from_dict():
-    test_set_iam_policy(request_type=dict)
 
 
 def test_set_iam_policy_empty_call():
@@ -3826,7 +3833,9 @@ def test_set_iam_policy_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].resource == "resource_value"
+        arg = args[0].resource
+        mock_val = "resource_value"
+        assert arg == mock_val
 
 
 def test_set_iam_policy_flattened_error():
@@ -3860,7 +3869,9 @@ async def test_set_iam_policy_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].resource == "resource_value"
+        arg = args[0].resource
+        mock_val = "resource_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -3877,9 +3888,8 @@ async def test_set_iam_policy_flattened_error_async():
         )
 
 
-def test_get_iam_policy(
-    transport: str = "grpc", request_type=iam_policy_pb2.GetIamPolicyRequest
-):
+@pytest.mark.parametrize("request_type", [iam_policy_pb2.GetIamPolicyRequest, dict,])
+def test_get_iam_policy(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -3903,10 +3913,6 @@ def test_get_iam_policy(
     assert isinstance(response, policy_pb2.Policy)
     assert response.version == 774
     assert response.etag == b"etag_blob"
-
-
-def test_get_iam_policy_from_dict():
-    test_get_iam_policy(request_type=dict)
 
 
 def test_get_iam_policy_empty_call():
@@ -4041,7 +4047,9 @@ def test_get_iam_policy_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].resource == "resource_value"
+        arg = args[0].resource
+        mock_val = "resource_value"
+        assert arg == mock_val
 
 
 def test_get_iam_policy_flattened_error():
@@ -4075,7 +4083,9 @@ async def test_get_iam_policy_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].resource == "resource_value"
+        arg = args[0].resource
+        mock_val = "resource_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -4092,9 +4102,10 @@ async def test_get_iam_policy_flattened_error_async():
         )
 
 
-def test_test_iam_permissions(
-    transport: str = "grpc", request_type=iam_policy_pb2.TestIamPermissionsRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [iam_policy_pb2.TestIamPermissionsRequest, dict,]
+)
+def test_test_iam_permissions(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -4121,10 +4132,6 @@ def test_test_iam_permissions(
     # Establish that the response is the type that we expect.
     assert isinstance(response, iam_policy_pb2.TestIamPermissionsResponse)
     assert response.permissions == ["permissions_value"]
-
-
-def test_test_iam_permissions_from_dict():
-    test_test_iam_permissions(request_type=dict)
 
 
 def test_test_iam_permissions_empty_call():
@@ -4277,8 +4284,12 @@ def test_test_iam_permissions_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].resource == "resource_value"
-        assert args[0].permissions == ["permissions_value"]
+        arg = args[0].resource
+        mock_val = "resource_value"
+        assert arg == mock_val
+        arg = args[0].permissions
+        mock_val = ["permissions_value"]
+        assert arg == mock_val
 
 
 def test_test_iam_permissions_flattened_error():
@@ -4320,8 +4331,12 @@ async def test_test_iam_permissions_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].resource == "resource_value"
-        assert args[0].permissions == ["permissions_value"]
+        arg = args[0].resource
+        mock_val = "resource_value"
+        assert arg == mock_val
+        arg = args[0].permissions
+        mock_val = ["permissions_value"]
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -4340,9 +4355,10 @@ async def test_test_iam_permissions_flattened_error_async():
         )
 
 
-def test_send_command_to_device(
-    transport: str = "grpc", request_type=device_manager.SendCommandToDeviceRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.SendCommandToDeviceRequest, dict,]
+)
+def test_send_command_to_device(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -4366,10 +4382,6 @@ def test_send_command_to_device(
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.SendCommandToDeviceResponse)
-
-
-def test_send_command_to_device_from_dict():
-    test_send_command_to_device(request_type=dict)
 
 
 def test_send_command_to_device_empty_call():
@@ -4504,9 +4516,15 @@ def test_send_command_to_device_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
-        assert args[0].binary_data == b"binary_data_blob"
-        assert args[0].subfolder == "subfolder_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
+        arg = args[0].binary_data
+        mock_val = b"binary_data_blob"
+        assert arg == mock_val
+        arg = args[0].subfolder
+        mock_val = "subfolder_value"
+        assert arg == mock_val
 
 
 def test_send_command_to_device_flattened_error():
@@ -4551,9 +4569,15 @@ async def test_send_command_to_device_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].name == "name_value"
-        assert args[0].binary_data == b"binary_data_blob"
-        assert args[0].subfolder == "subfolder_value"
+        arg = args[0].name
+        mock_val = "name_value"
+        assert arg == mock_val
+        arg = args[0].binary_data
+        mock_val = b"binary_data_blob"
+        assert arg == mock_val
+        arg = args[0].subfolder
+        mock_val = "subfolder_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -4573,9 +4597,10 @@ async def test_send_command_to_device_flattened_error_async():
         )
 
 
-def test_bind_device_to_gateway(
-    transport: str = "grpc", request_type=device_manager.BindDeviceToGatewayRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.BindDeviceToGatewayRequest, dict,]
+)
+def test_bind_device_to_gateway(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -4599,10 +4624,6 @@ def test_bind_device_to_gateway(
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.BindDeviceToGatewayResponse)
-
-
-def test_bind_device_to_gateway_from_dict():
-    test_bind_device_to_gateway(request_type=dict)
 
 
 def test_bind_device_to_gateway_empty_call():
@@ -4737,9 +4758,15 @@ def test_bind_device_to_gateway_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].gateway_id == "gateway_id_value"
-        assert args[0].device_id == "device_id_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].gateway_id
+        mock_val = "gateway_id_value"
+        assert arg == mock_val
+        arg = args[0].device_id
+        mock_val = "device_id_value"
+        assert arg == mock_val
 
 
 def test_bind_device_to_gateway_flattened_error():
@@ -4784,9 +4811,15 @@ async def test_bind_device_to_gateway_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].gateway_id == "gateway_id_value"
-        assert args[0].device_id == "device_id_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].gateway_id
+        mock_val = "gateway_id_value"
+        assert arg == mock_val
+        arg = args[0].device_id
+        mock_val = "device_id_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -4806,9 +4839,10 @@ async def test_bind_device_to_gateway_flattened_error_async():
         )
 
 
-def test_unbind_device_from_gateway(
-    transport: str = "grpc", request_type=device_manager.UnbindDeviceFromGatewayRequest
-):
+@pytest.mark.parametrize(
+    "request_type", [device_manager.UnbindDeviceFromGatewayRequest, dict,]
+)
+def test_unbind_device_from_gateway(request_type, transport: str = "grpc"):
     client = DeviceManagerClient(
         credentials=ga_credentials.AnonymousCredentials(), transport=transport,
     )
@@ -4832,10 +4866,6 @@ def test_unbind_device_from_gateway(
 
     # Establish that the response is the type that we expect.
     assert isinstance(response, device_manager.UnbindDeviceFromGatewayResponse)
-
-
-def test_unbind_device_from_gateway_from_dict():
-    test_unbind_device_from_gateway(request_type=dict)
 
 
 def test_unbind_device_from_gateway_empty_call():
@@ -4970,9 +5000,15 @@ def test_unbind_device_from_gateway_flattened():
         # request object values.
         assert len(call.mock_calls) == 1
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].gateway_id == "gateway_id_value"
-        assert args[0].device_id == "device_id_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].gateway_id
+        mock_val = "gateway_id_value"
+        assert arg == mock_val
+        arg = args[0].device_id
+        mock_val = "device_id_value"
+        assert arg == mock_val
 
 
 def test_unbind_device_from_gateway_flattened_error():
@@ -5017,9 +5053,15 @@ async def test_unbind_device_from_gateway_flattened_async():
         # request object values.
         assert len(call.mock_calls)
         _, args, _ = call.mock_calls[0]
-        assert args[0].parent == "parent_value"
-        assert args[0].gateway_id == "gateway_id_value"
-        assert args[0].device_id == "device_id_value"
+        arg = args[0].parent
+        mock_val = "parent_value"
+        assert arg == mock_val
+        arg = args[0].gateway_id
+        mock_val = "gateway_id_value"
+        assert arg == mock_val
+        arg = args[0].device_id
+        mock_val = "device_id_value"
+        assert arg == mock_val
 
 
 @pytest.mark.asyncio
@@ -5164,7 +5206,6 @@ def test_device_manager_base_transport():
         transport.close()
 
 
-@requires_google_auth_gte_1_25_0
 def test_device_manager_base_transport_with_credentials_file():
     # Instantiate the base transport with a credentials file
     with mock.patch.object(
@@ -5188,29 +5229,6 @@ def test_device_manager_base_transport_with_credentials_file():
         )
 
 
-@requires_google_auth_lt_1_25_0
-def test_device_manager_base_transport_with_credentials_file_old_google_auth():
-    # Instantiate the base transport with a credentials file
-    with mock.patch.object(
-        google.auth, "load_credentials_from_file", autospec=True
-    ) as load_creds, mock.patch(
-        "google.cloud.iot_v1.services.device_manager.transports.DeviceManagerTransport._prep_wrapped_messages"
-    ) as Transport:
-        Transport.return_value = None
-        load_creds.return_value = (ga_credentials.AnonymousCredentials(), None)
-        transport = transports.DeviceManagerTransport(
-            credentials_file="credentials.json", quota_project_id="octopus",
-        )
-        load_creds.assert_called_once_with(
-            "credentials.json",
-            scopes=(
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/cloudiot",
-            ),
-            quota_project_id="octopus",
-        )
-
-
 def test_device_manager_base_transport_with_adc():
     # Test the default credentials are used if credentials and credentials_file are None.
     with mock.patch.object(google.auth, "default", autospec=True) as adc, mock.patch(
@@ -5222,7 +5240,6 @@ def test_device_manager_base_transport_with_adc():
         adc.assert_called_once()
 
 
-@requires_google_auth_gte_1_25_0
 def test_device_manager_auth_adc():
     # If no credentials are provided, we should use ADC credentials.
     with mock.patch.object(google.auth, "default", autospec=True) as adc:
@@ -5238,21 +5255,6 @@ def test_device_manager_auth_adc():
         )
 
 
-@requires_google_auth_lt_1_25_0
-def test_device_manager_auth_adc_old_google_auth():
-    # If no credentials are provided, we should use ADC credentials.
-    with mock.patch.object(google.auth, "default", autospec=True) as adc:
-        adc.return_value = (ga_credentials.AnonymousCredentials(), None)
-        DeviceManagerClient()
-        adc.assert_called_once_with(
-            scopes=(
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/cloudiot",
-            ),
-            quota_project_id=None,
-        )
-
-
 @pytest.mark.parametrize(
     "transport_class",
     [
@@ -5260,7 +5262,6 @@ def test_device_manager_auth_adc_old_google_auth():
         transports.DeviceManagerGrpcAsyncIOTransport,
     ],
 )
-@requires_google_auth_gte_1_25_0
 def test_device_manager_transport_auth_adc(transport_class):
     # If credentials and host are not provided, the transport class should use
     # ADC credentials.
@@ -5270,29 +5271,6 @@ def test_device_manager_transport_auth_adc(transport_class):
         adc.assert_called_once_with(
             scopes=["1", "2"],
             default_scopes=(
-                "https://www.googleapis.com/auth/cloud-platform",
-                "https://www.googleapis.com/auth/cloudiot",
-            ),
-            quota_project_id="octopus",
-        )
-
-
-@pytest.mark.parametrize(
-    "transport_class",
-    [
-        transports.DeviceManagerGrpcTransport,
-        transports.DeviceManagerGrpcAsyncIOTransport,
-    ],
-)
-@requires_google_auth_lt_1_25_0
-def test_device_manager_transport_auth_adc_old_google_auth(transport_class):
-    # If credentials and host are not provided, the transport class should use
-    # ADC credentials.
-    with mock.patch.object(google.auth, "default", autospec=True) as adc:
-        adc.return_value = (ga_credentials.AnonymousCredentials(), None)
-        transport_class(quota_project_id="octopus")
-        adc.assert_called_once_with(
-            scopes=(
                 "https://www.googleapis.com/auth/cloud-platform",
                 "https://www.googleapis.com/auth/cloudiot",
             ),
@@ -5671,7 +5649,7 @@ def test_parse_common_location_path():
     assert expected == actual
 
 
-def test_client_withDEFAULT_CLIENT_INFO():
+def test_client_with_default_client_info():
     client_info = gapic_v1.client_info.ClientInfo()
 
     with mock.patch.object(
