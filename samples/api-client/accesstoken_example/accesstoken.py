@@ -42,6 +42,8 @@ import json
 import os
 import time
 
+from google.cloud import pubsub
+from google.cloud import storage
 import jwt
 import requests as req
 
@@ -127,18 +129,23 @@ def publish_pubsub_message(
         rsa_private_key_path,
     )
 
+    pubsub_client = pubsub.PublisherClient()
+    topic_path = pubsub_client.topic_path(project_id, topic_id)
+
+    topic = pubsub_client.create_topic(request={"name": topic_path})
+
     # Create Pub/Sub topic
-    request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
-        project_id, topic_id
-    )
+    # request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
+    #     project_id, topic_id
+    # )
     headers = {
         "Authorization": "Bearer {}".format(access_token),
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
-    resp = req.put(url=request_path, data={}, headers=headers)
-    assert resp.ok, resp.raise_for_status()
-    print("Successfully created Pub/Sub topic: {}.".format(topic_id))
+    # resp = req.put(url=request_path, data={}, headers=headers)
+    # assert resp.ok, resp.raise_for_status()
+    # print("Successfully created Pub/Sub topic: {}.".format(topic_id))
 
     # Publish message to Pub/Sub topic
     publish_payload = {
@@ -160,11 +167,12 @@ def publish_pubsub_message(
     )
 
     # Delete Pub/Sub topic
-    pubsub_delete_request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
-        project_id, topic_id
-    )
-    delete_resp = req.delete(url=pubsub_delete_request_path, headers=headers)
-    assert delete_resp.ok, delete_resp.raise_for_status()
+    # pubsub_delete_request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
+    #     project_id, topic_id
+    # )
+    # delete_resp = req.delete(url=pubsub_delete_request_path, headers=headers)
+    # assert delete_resp.ok, delete_resp.raise_for_status()
+    pubsub_client.delete_topic(request={"topic": topic_path})
     print("Successfully deleted Pub/Sub topic: {}".format(topic_id))
     # [END iot_access_token_pubsub]
 
@@ -202,28 +210,43 @@ def download_cloud_storage_file(
         rsa_private_key_path,
     )
 
-    # Create GCS bucket
-    create_payload = {
-        "name": bucket_name,
-        "location": cloud_region,
-        "storageClass": "STANDARD",
-        "iamConfiguration": {"uniformBucketLevelAccess": {"enabled": True}},
-    }
-    create_request_path = "https://storage.googleapis.com/storage/v1/b?project={}".format(
-        project_id
-    )
     headers = {
         "authorization": "Bearer {}".format(access_token),
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
-    create_resp = req.post(
-        url=create_request_path,
-        data=bytes(json.dumps(create_payload), "utf-8"),
-        headers=headers,
+
+    # Create GCS bucket
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    bucket.storage_class = "COLDLINE"
+    new_bucket = storage_client.create_bucket(bucket, location=cloud_region)
+    print(
+        "Created bucket {} in {} with storage class {}".format(
+            new_bucket.name, new_bucket.location, new_bucket.storage_class
+        )
     )
-    assert create_resp.ok, create_resp.raise_for_status()
-    print("Successfully created Storage bucket: {}".format(bucket_name))
+    # create_payload = {
+    #     "name": bucket_name,
+    #     "location": cloud_region,
+    #     "storageClass": "STANDARD",
+    #     "iamConfiguration": {"uniformBucketLevelAccess": {"enabled": True}},
+    # }
+    # create_request_path = "https://storage.googleapis.com/storage/v1/b?project={}".format(
+    #     project_id
+    # )
+    # headers = {
+    #     "authorization": "Bearer {}".format(access_token),
+    #     "content-type": "application/json",
+    #     "cache-control": "no-cache",
+    # }
+    # create_resp = req.post(
+    #     url=create_request_path,
+    #     data=bytes(json.dumps(create_payload), "utf-8"),
+    #     headers=headers,
+    # )
+    # assert create_resp.ok, create_resp.raise_for_status()
+    # print("Successfully created Storage bucket: {}".format(bucket_name))
 
     # Upload data to GCS bucket.
     data_name = "testFile.ext"
@@ -248,19 +271,22 @@ def download_cloud_storage_file(
     print("Successfully downloaded {} from bucket {}.".format(data_name, bucket_name))
 
     # Delete data from GCS bucket.
-    delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}/o/{}".format(
-        bucket_name, data_name
-    )
-    delete_data_resp = req.delete(url=delete_request_path, headers=headers)
-    assert delete_data_resp.ok, delete_data_resp.raise_for_status()
+    # delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}/o/{}".format(
+    #     bucket_name, data_name
+    # )
+    # delete_data_resp = req.delete(url=delete_request_path, headers=headers)
+    # assert delete_data_resp.ok, delete_data_resp.raise_for_status()
+    blob = bucket.blob(data_name)
+    blob.delete()
     print("Successfully deleted {} from bucket {}.".format(data_name, bucket_name))
 
     # Delete GCS Bucket
-    gcs_delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}".format(
-        bucket_name
-    )
-    delete_resp = req.delete(url=gcs_delete_request_path, headers=headers)
-    assert delete_resp.ok, delete_resp.raise_for_status()
+    # gcs_delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}".format(
+    #     bucket_name
+    # )
+    # delete_resp = req.delete(url=gcs_delete_request_path, headers=headers)
+    # assert delete_resp.ok, delete_resp.raise_for_status()
+    bucket.delete()
     print("Successfully deleted bucket: {}".format(bucket_name))
     # [END iot_access_token_gcs]
 
