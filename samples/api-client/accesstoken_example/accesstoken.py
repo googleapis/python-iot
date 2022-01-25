@@ -208,7 +208,7 @@ def download_cloud_storage_file(
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket.storage_class = "COLDLINE"
-    bucket.iam_configuration = {"uniformBucketLevelAccess": {"enabled": True}}
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
     new_bucket = storage_client.create_bucket(bucket, location=cloud_region)
     print(
         "Created bucket {} in {} with storage class {}".format(
