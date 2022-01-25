@@ -255,6 +255,7 @@ def download_cloud_storage_file(
         bucket_name, data_name
     )
     upload_resp = req.post(url=upload_request_path, data=binary_data, headers=headers)
+    print("Upload response: ", upload_resp.json())
     assert upload_resp.ok, upload_resp.raise_for_status()
     print(
         "Successfully uploaded {} as {} to bucket {}.".format(
