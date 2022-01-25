@@ -209,33 +209,8 @@ def download_cloud_storage_file(
     bucket = storage_client.bucket(bucket_name)
     bucket.storage_class = "COLDLINE"
     bucket.iam_configuration.uniform_bucket_level_access_enabled = True
-    new_bucket = storage_client.create_bucket(bucket, location=cloud_region)
-    print(
-        "Created bucket {} in {} with storage class {}".format(
-            new_bucket.name, new_bucket.location, new_bucket.storage_class
-        )
-    )
-    # create_payload = {
-    #     "name": bucket_name,
-    #     "location": cloud_region,
-    #     "storageClass": "STANDARD",
-    #     "iamConfiguration": {"uniformBucketLevelAccess": {"enabled": True}},
-    # }
-    # create_request_path = "https://storage.googleapis.com/storage/v1/b?project={}".format(
-    #     project_id
-    # )
-    # headers = {
-    #     "authorization": "Bearer {}".format(access_token),
-    #     "content-type": "application/json",
-    #     "cache-control": "no-cache",
-    # }
-    # create_resp = req.post(
-    #     url=create_request_path,
-    #     data=bytes(json.dumps(create_payload), "utf-8"),
-    #     headers=headers,
-    # )
-    # assert create_resp.ok, create_resp.raise_for_status()
-    # print("Successfully created Storage bucket: {}".format(bucket_name))
+    storage_client.create_bucket(bucket, location=cloud_region)
+    print("Successfully created Storage bucket: {}".format(bucket_name))
 
     # Upload data to GCS bucket.
     data_name = "testFile.ext"
@@ -261,21 +236,11 @@ def download_cloud_storage_file(
     print("Successfully downloaded {} from bucket {}.".format(data_name, bucket_name))
 
     # Delete data from GCS bucket.
-    # delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}/o/{}".format(
-    #     bucket_name, data_name
-    # )
-    # delete_data_resp = req.delete(url=delete_request_path, headers=headers)
-    # assert delete_data_resp.ok, delete_data_resp.raise_for_status()
     blob = bucket.blob(data_name)
     blob.delete()
     print("Successfully deleted {} from bucket {}.".format(data_name, bucket_name))
 
     # Delete GCS Bucket
-    # gcs_delete_request_path = "https://storage.googleapis.com/storage/v1/b/{}".format(
-    #     bucket_name
-    # )
-    # delete_resp = req.delete(url=gcs_delete_request_path, headers=headers)
-    # assert delete_resp.ok, delete_resp.raise_for_status()
     bucket.delete()
     print("Successfully deleted bucket: {}".format(bucket_name))
     # [END iot_access_token_gcs]
