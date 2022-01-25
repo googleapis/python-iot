@@ -239,7 +239,7 @@ def download_cloud_storage_file(
     blob = bucket.blob(data_name)
     blob.delete()
     print("Successfully deleted {} from bucket {}.".format(data_name, bucket_name))
-    print("Trigger CI")
+
     # Delete GCS Bucket
     bucket.delete()
     print("Successfully deleted bucket: {}".format(bucket_name))
