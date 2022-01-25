@@ -131,21 +131,14 @@ def publish_pubsub_message(
 
     pubsub_client = pubsub.PublisherClient()
     topic_path = pubsub_client.topic_path(project_id, topic_id)
+    pubsub_client.create_topic(request={"name": topic_path})
+    print("Successfully created Pub/Sub topic: {}.".format(topic_id))
 
-    topic = pubsub_client.create_topic(request={"name": topic_path})
-
-    # Create Pub/Sub topic
-    # request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
-    #     project_id, topic_id
-    # )
     headers = {
         "Authorization": "Bearer {}".format(access_token),
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
-    # resp = req.put(url=request_path, data={}, headers=headers)
-    # assert resp.ok, resp.raise_for_status()
-    # print("Successfully created Pub/Sub topic: {}.".format(topic_id))
 
     # Publish message to Pub/Sub topic
     publish_payload = {
@@ -167,11 +160,6 @@ def publish_pubsub_message(
     )
 
     # Delete Pub/Sub topic
-    # pubsub_delete_request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}".format(
-    #     project_id, topic_id
-    # )
-    # delete_resp = req.delete(url=pubsub_delete_request_path, headers=headers)
-    # assert delete_resp.ok, delete_resp.raise_for_status()
     pubsub_client.delete_topic(request={"topic": topic_path})
     print("Successfully deleted Pub/Sub topic: {}".format(topic_id))
     # [END iot_access_token_pubsub]
@@ -220,6 +208,7 @@ def download_cloud_storage_file(
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket.storage_class = "COLDLINE"
+    bucket.iam_configuration = {"uniformBucketLevelAccess": {"enabled": True}}
     new_bucket = storage_client.create_bucket(bucket, location=cloud_region)
     print(
         "Created bucket {} in {} with storage class {}".format(
