@@ -464,7 +464,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([parent, device_registry])
         if request is not None and has_flattened_params:
@@ -534,7 +534,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name])
         if request is not None and has_flattened_params:
@@ -616,7 +616,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 A container for a group of devices.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([device_registry, update_mask])
         if request is not None and has_flattened_params:
@@ -684,7 +684,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name])
         if request is not None and has_flattened_params:
@@ -756,7 +756,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([parent])
         if request is not None and has_flattened_params:
@@ -841,7 +841,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 The device resource.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([parent, device])
         if request is not None and has_flattened_params:
@@ -913,7 +913,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 The device resource.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name])
         if request is not None and has_flattened_params:
@@ -995,7 +995,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 The device resource.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([device, update_mask])
         if request is not None and has_flattened_params:
@@ -1065,7 +1065,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 sent along with the request as metadata.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name])
         if request is not None and has_flattened_params:
@@ -1137,7 +1137,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([parent])
         if request is not None and has_flattened_params:
@@ -1226,7 +1226,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name, binary_data])
         if request is not None and has_flattened_params:
@@ -1302,7 +1302,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 Response for ListDeviceConfigVersions.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name])
         if request is not None and has_flattened_params:
@@ -1375,7 +1375,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 Response for ListDeviceStates.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name])
         if request is not None and has_flattened_params:
@@ -1502,7 +1502,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([resource])
         if request is not None and has_flattened_params:
@@ -1629,7 +1629,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([resource])
         if request is not None and has_flattened_params:
@@ -1711,7 +1711,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 Response message for TestIamPermissions method.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([resource, permissions])
         if request is not None and has_flattened_params:
@@ -1801,12 +1801,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 If empty, the command will be delivered
                 to the /devices/{device-id}/commands
                 topic, otherwise it will be delivered to
-                the /devices/{device-
-                id}/commands/{subfolder} topic. Multi-
-                level subfolders are allowed. This field
-                must not have more than 256 characters,
-                and must not contain any MQTT wildcards
-                ("+" or "#") or null characters.
+                the
+                /devices/{device-id}/commands/{subfolder}
+                topic. Multi-level subfolders are
+                allowed. This field must not have more
+                than 256 characters, and must not
+                contain any MQTT wildcards ("+" or "#")
+                or null characters.
 
                 This corresponds to the ``subfolder`` field
                 on the ``request`` instance; if ``request`` is provided, this
@@ -1822,7 +1823,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 Response for SendCommandToDevice.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([name, binary_data, subfolder])
         if request is not None and has_flattened_params:
@@ -1911,7 +1912,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 Response for BindDeviceToGateway.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([parent, gateway_id, device_id])
         if request is not None and has_flattened_params:
@@ -2002,7 +2003,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 Response for UnbindDeviceFromGateway.
         """
         # Create or coerce a protobuf request object.
-        # Sanity check: If we got a request object, we should *not* have
+        # Quick check: If we got a request object, we should *not* have
         # gotten any keyword arguments that map to the request.
         has_flattened_params = any([parent, gateway_id, device_id])
         if request is not None and has_flattened_params:
