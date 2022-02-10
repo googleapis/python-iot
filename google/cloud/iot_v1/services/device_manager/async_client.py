@@ -224,6 +224,25 @@ class DeviceManagerAsyncClient:
     ) -> resources.DeviceRegistry:
         r"""Creates a device registry that contains devices.
 
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_create_device_registry():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.CreateDeviceRegistryRequest(
+                    parent="parent_value",
+                )
+
+                # Make the request
+                response = client.create_device_registry(request=request)
+
+                # Handle the response
+                print(response)
+
         Args:
             request (Union[google.cloud.iot_v1.types.CreateDeviceRegistryRequest, dict]):
                 The request object. Request for `CreateDeviceRegistry`.
@@ -304,6 +323,25 @@ class DeviceManagerAsyncClient:
     ) -> resources.DeviceRegistry:
         r"""Gets a device registry configuration.
 
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_get_device_registry():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.GetDeviceRegistryRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                response = client.get_device_registry(request=request)
+
+                # Handle the response
+                print(response)
+
         Args:
             request (Union[google.cloud.iot_v1.types.GetDeviceRegistryRequest, dict]):
                 The request object. Request for `GetDeviceRegistry`.
@@ -382,6 +420,24 @@ class DeviceManagerAsyncClient:
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceRegistry:
         r"""Updates a device registry configuration.
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_update_device_registry():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.UpdateDeviceRegistryRequest(
+                )
+
+                # Make the request
+                response = client.update_device_registry(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.UpdateDeviceRegistryRequest, dict]):
@@ -468,6 +524,22 @@ class DeviceManagerAsyncClient:
     ) -> None:
         r"""Deletes a device registry configuration.
 
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_delete_device_registry():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.DeleteDeviceRegistryRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                client.delete_device_registry(request=request)
+
         Args:
             request (Union[google.cloud.iot_v1.types.DeleteDeviceRegistryRequest, dict]):
                 The request object. Request for `DeleteDeviceRegistry`.
@@ -540,6 +612,26 @@ class DeviceManagerAsyncClient:
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListDeviceRegistriesAsyncPager:
         r"""Lists device registries.
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_list_device_registries():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.ListDeviceRegistriesRequest(
+                    parent="parent_value",
+                )
+
+                # Make the request
+                page_result = client.list_device_registries(request=request)
+
+                # Handle the response
+                for response in page_result:
+                    print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.ListDeviceRegistriesRequest, dict]):
@@ -631,6 +723,25 @@ class DeviceManagerAsyncClient:
     ) -> resources.Device:
         r"""Creates a device in a device registry.
 
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_create_device():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.CreateDeviceRequest(
+                    parent="parent_value",
+                )
+
+                # Make the request
+                response = client.create_device(request=request)
+
+                # Handle the response
+                print(response)
+
         Args:
             request (Union[google.cloud.iot_v1.types.CreateDeviceRequest, dict]):
                 The request object. Request for `CreateDevice`.
@@ -710,6 +821,25 @@ class DeviceManagerAsyncClient:
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Gets details about a device.
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_get_device():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.GetDeviceRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                response = client.get_device(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.GetDeviceRequest, dict]):
@@ -791,6 +921,24 @@ class DeviceManagerAsyncClient:
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Updates a device.
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_update_device():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.UpdateDeviceRequest(
+                )
+
+                # Make the request
+                response = client.update_device(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.UpdateDeviceRequest, dict]):
@@ -877,6 +1025,22 @@ class DeviceManagerAsyncClient:
     ) -> None:
         r"""Deletes a device.
 
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_delete_device():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.DeleteDeviceRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                client.delete_device(request=request)
+
         Args:
             request (Union[google.cloud.iot_v1.types.DeleteDeviceRequest, dict]):
                 The request object. Request for `DeleteDevice`.
@@ -951,6 +1115,26 @@ class DeviceManagerAsyncClient:
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListDevicesAsyncPager:
         r"""List devices in a device registry.
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_list_devices():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.ListDevicesRequest(
+                    parent="parent_value",
+                )
+
+                # Make the request
+                page_result = client.list_devices(request=request)
+
+                # Handle the response
+                for response in page_result:
+                    print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.ListDevicesRequest, dict]):
@@ -1043,6 +1227,27 @@ class DeviceManagerAsyncClient:
         r"""Modifies the configuration for the device, which is
         eventually sent from the Cloud IoT Core servers. Returns
         the modified configuration version and its metadata.
+
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_modify_cloud_to_device_config():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.ModifyCloudToDeviceConfigRequest(
+                    name="name_value",
+                    binary_data=b'binary_data_blob',
+                )
+
+                # Make the request
+                response = client.modify_cloud_to_device_config(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.ModifyCloudToDeviceConfigRequest, dict]):
@@ -1138,6 +1343,26 @@ class DeviceManagerAsyncClient:
         r"""Lists the last few versions of the device
         configuration in descending order (i.e.: newest first).
 
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_list_device_config_versions():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.ListDeviceConfigVersionsRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                response = client.list_device_config_versions(request=request)
+
+                # Handle the response
+                print(response)
+
         Args:
             request (Union[google.cloud.iot_v1.types.ListDeviceConfigVersionsRequest, dict]):
                 The request object. Request for
@@ -1220,6 +1445,26 @@ class DeviceManagerAsyncClient:
         r"""Lists the last few versions of the device state in
         descending order (i.e.: newest first).
 
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_list_device_states():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.ListDeviceStatesRequest(
+                    name="name_value",
+                )
+
+                # Make the request
+                response = client.list_device_states(request=request)
+
+                # Handle the response
+                print(response)
+
         Args:
             request (Union[google.cloud.iot_v1.types.ListDeviceStatesRequest, dict]):
                 The request object. Request for `ListDeviceStates`.
@@ -1300,6 +1545,26 @@ class DeviceManagerAsyncClient:
     ) -> policy_pb2.Policy:
         r"""Sets the access control policy on the specified
         resource. Replaces any existing policy.
+
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_set_iam_policy():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.SetIamPolicyRequest(
+                    resource="resource_value",
+                )
+
+                # Make the request
+                response = client.set_iam_policy(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.iam.v1.iam_policy_pb2.SetIamPolicyRequest, dict]):
@@ -1428,6 +1693,26 @@ class DeviceManagerAsyncClient:
         r"""Gets the access control policy for a resource.
         Returns an empty policy if the resource exists and does
         not have a policy set.
+
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_get_iam_policy():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.GetIamPolicyRequest(
+                    resource="resource_value",
+                )
+
+                # Make the request
+                response = client.get_iam_policy(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.iam.v1.iam_policy_pb2.GetIamPolicyRequest, dict]):
@@ -1558,6 +1843,27 @@ class DeviceManagerAsyncClient:
         If the resource does not exist, this will return an empty set of
         permissions, not a NOT_FOUND error.
 
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_test_iam_permissions():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.TestIamPermissionsRequest(
+                    resource="resource_value",
+                    permissions=['permissions_value_1', 'permissions_value_2'],
+                )
+
+                # Make the request
+                response = client.test_iam_permissions(request=request)
+
+                # Handle the response
+                print(response)
+
         Args:
             request (Union[google.iam.v1.iam_policy_pb2.TestIamPermissionsRequest, dict]):
                 The request object. Request message for
@@ -1657,6 +1963,27 @@ class DeviceManagerAsyncClient:
            If the subscription is QoS 1, at least once delivery will be
            guaranteed; for QoS 0, no acknowledgment will be expected
            from the device.
+
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_send_command_to_device():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.SendCommandToDeviceRequest(
+                    name="name_value",
+                    binary_data=b'binary_data_blob',
+                )
+
+                # Make the request
+                response = client.send_command_to_device(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.SendCommandToDeviceRequest, dict]):
@@ -1768,6 +2095,27 @@ class DeviceManagerAsyncClient:
     ) -> device_manager.BindDeviceToGatewayResponse:
         r"""Associates the device with the gateway.
 
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_bind_device_to_gateway():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.BindDeviceToGatewayRequest(
+                    parent="parent_value",
+                    gateway_id="gateway_id_value",
+                    device_id="device_id_value",
+                )
+
+                # Make the request
+                response = client.bind_device_to_gateway(request=request)
+
+                # Handle the response
+                print(response)
+
         Args:
             request (Union[google.cloud.iot_v1.types.BindDeviceToGatewayRequest, dict]):
                 The request object. Request for `BindDeviceToGateway`.
@@ -1857,6 +2205,28 @@ class DeviceManagerAsyncClient:
     ) -> device_manager.UnbindDeviceFromGatewayResponse:
         r"""Deletes the association between the device and the
         gateway.
+
+
+        .. code-block::
+
+            from google.cloud import iot_v1
+
+            def sample_unbind_device_from_gateway():
+                # Create a client
+                client = iot_v1.DeviceManagerClient()
+
+                # Initialize request argument(s)
+                request = iot_v1.UnbindDeviceFromGatewayRequest(
+                    parent="parent_value",
+                    gateway_id="gateway_id_value",
+                    device_id="device_id_value",
+                )
+
+                # Make the request
+                response = client.unbind_device_from_gateway(request=request)
+
+                # Handle the response
+                print(response)
 
         Args:
             request (Union[google.cloud.iot_v1.types.UnbindDeviceFromGatewayRequest, dict]):
