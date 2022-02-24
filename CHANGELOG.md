@@ -4,6 +4,34 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.4.0](https://github.com/googleapis/python-iot/compare/v2.3.0...v2.4.0) (2022-02-24)
+
+
+### Features
+
+* add api key support ([#244](https://github.com/googleapis/python-iot/issues/244)) ([c3ec086](https://github.com/googleapis/python-iot/commit/c3ec086cbce1171509438ba7ced62b041b690d58))
+* add context manager support in client ([#202](https://github.com/googleapis/python-iot/issues/202)) ([14c4ab6](https://github.com/googleapis/python-iot/commit/14c4ab6bd0589111743b4629fbd10c86a43aa698))
+* add support for Python 3.9 / 3.10 ([#220](https://github.com/googleapis/python-iot/issues/220)) ([6038e0c](https://github.com/googleapis/python-iot/commit/6038e0cf8abbdcf0775e02844f86d1909b2857e0)), closes [#221](https://github.com/googleapis/python-iot/issues/221)
+
+
+### Bug Fixes
+
+* **deps:** drop packaging dependency ([b6df5e4](https://github.com/googleapis/python-iot/commit/b6df5e4ba104003123ebac6687e55fdef176daf0))
+* **deps:** require google-api-core>=1.28.0 ([b6df5e4](https://github.com/googleapis/python-iot/commit/b6df5e4ba104003123ebac6687e55fdef176daf0))
+* **deps:** require proto-plus>=1.15.0 ([b6df5e4](https://github.com/googleapis/python-iot/commit/b6df5e4ba104003123ebac6687e55fdef176daf0))
+* fix extras_require typo in setup.py ([#210](https://github.com/googleapis/python-iot/issues/210)) ([c1149b0](https://github.com/googleapis/python-iot/commit/c1149b010f358debbebb5eea483cc628ec91549d))
+* improper types in pagers generation ([18d869a](https://github.com/googleapis/python-iot/commit/18d869a87e3346c8dabb3bd27a3ee74c237ce370))
+* provide appropriate mock values for message body fields ([b6df5e4](https://github.com/googleapis/python-iot/commit/b6df5e4ba104003123ebac6687e55fdef176daf0))
+* resolve DuplicateCredentialArgs error when using credentials_file ([e9e71b1](https://github.com/googleapis/python-iot/commit/e9e71b19712915f7a65a212c75344609183a2298))
+
+
+### Documentation
+
+* add generated snippets ([#253](https://github.com/googleapis/python-iot/issues/253)) ([a68cbf4](https://github.com/googleapis/python-iot/commit/a68cbf47f79e5d16f921920825014c01eba0b448))
+* list oneofs in docstring ([b6df5e4](https://github.com/googleapis/python-iot/commit/b6df5e4ba104003123ebac6687e55fdef176daf0))
+* **samples:** modify accesstoken sample to use environment identity during setup ([#245](https://github.com/googleapis/python-iot/issues/245)) ([63f5a93](https://github.com/googleapis/python-iot/commit/63f5a9327c36714b688fd742fe8beeb0182e2146))
+* **samples:** resolve TypeError in create_iot_topic ([31a5fa8](https://github.com/googleapis/python-iot/commit/31a5fa89c34a7f6fea5cdcd17381ffce831584b3))
+
 ## [2.3.0](https://www.github.com/googleapis/python-iot/compare/v2.2.1...v2.3.0) (2021-09-24)
 
 
