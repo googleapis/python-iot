@@ -224,7 +224,7 @@ class DeviceManagerAsyncClient:
     ) -> resources.DeviceRegistry:
         r"""Creates a device registry that contains devices.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -323,7 +323,7 @@ class DeviceManagerAsyncClient:
     ) -> resources.DeviceRegistry:
         r"""Gets a device registry configuration.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -421,7 +421,7 @@ class DeviceManagerAsyncClient:
     ) -> resources.DeviceRegistry:
         r"""Updates a device registry configuration.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -524,7 +524,7 @@ class DeviceManagerAsyncClient:
     ) -> None:
         r"""Deletes a device registry configuration.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -613,7 +613,7 @@ class DeviceManagerAsyncClient:
     ) -> pagers.ListDeviceRegistriesAsyncPager:
         r"""Lists device registries.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -723,7 +723,7 @@ class DeviceManagerAsyncClient:
     ) -> resources.Device:
         r"""Creates a device in a device registry.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -822,7 +822,7 @@ class DeviceManagerAsyncClient:
     ) -> resources.Device:
         r"""Gets details about a device.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -922,7 +922,7 @@ class DeviceManagerAsyncClient:
     ) -> resources.Device:
         r"""Updates a device.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1025,7 +1025,7 @@ class DeviceManagerAsyncClient:
     ) -> None:
         r"""Deletes a device.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1116,7 +1116,7 @@ class DeviceManagerAsyncClient:
     ) -> pagers.ListDevicesAsyncPager:
         r"""List devices in a device registry.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1229,7 +1229,7 @@ class DeviceManagerAsyncClient:
         the modified configuration version and its metadata.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1344,7 +1344,7 @@ class DeviceManagerAsyncClient:
         configuration in descending order (i.e.: newest first).
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1446,7 +1446,7 @@ class DeviceManagerAsyncClient:
         descending order (i.e.: newest first).
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1547,7 +1547,7 @@ class DeviceManagerAsyncClient:
         resource. Replaces any existing policy.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1695,7 +1695,7 @@ class DeviceManagerAsyncClient:
         not have a policy set.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1844,7 +1844,7 @@ class DeviceManagerAsyncClient:
         permissions, not a NOT_FOUND error.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1965,7 +1965,7 @@ class DeviceManagerAsyncClient:
            from the device.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -2095,7 +2095,7 @@ class DeviceManagerAsyncClient:
     ) -> device_manager.BindDeviceToGatewayResponse:
         r"""Associates the device with the gateway.
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -2207,7 +2207,7 @@ class DeviceManagerAsyncClient:
         gateway.
 
 
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 

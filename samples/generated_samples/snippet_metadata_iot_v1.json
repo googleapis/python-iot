@@ -10,8 +10,8 @@
           "shortName": "BindDeviceToGateway"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_bind_device_to_gateway_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_BindDeviceToGateway_async",
+      "file": "cloudiot_v1_generated_device_manager_bind_device_to_gateway_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_BindDeviceToGateway_async",
       "segments": [
         {
           "end": 46,
@@ -54,8 +54,8 @@
           "shortName": "BindDeviceToGateway"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_bind_device_to_gateway_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_BindDeviceToGateway_sync",
+      "file": "cloudiot_v1_generated_device_manager_bind_device_to_gateway_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_BindDeviceToGateway_sync",
       "segments": [
         {
           "end": 46,
@@ -99,8 +99,8 @@
           "shortName": "CreateDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_create_device_registry_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_CreateDeviceRegistry_async",
+      "file": "cloudiot_v1_generated_device_manager_create_device_registry_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_CreateDeviceRegistry_async",
       "segments": [
         {
           "end": 44,
@@ -143,8 +143,8 @@
           "shortName": "CreateDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_create_device_registry_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_CreateDeviceRegistry_sync",
+      "file": "cloudiot_v1_generated_device_manager_create_device_registry_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_CreateDeviceRegistry_sync",
       "segments": [
         {
           "end": 44,
@@ -188,8 +188,8 @@
           "shortName": "CreateDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_create_device_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_CreateDevice_async",
+      "file": "cloudiot_v1_generated_device_manager_create_device_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_CreateDevice_async",
       "segments": [
         {
           "end": 44,
@@ -232,8 +232,8 @@
           "shortName": "CreateDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_create_device_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_CreateDevice_sync",
+      "file": "cloudiot_v1_generated_device_manager_create_device_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_CreateDevice_sync",
       "segments": [
         {
           "end": 44,
@@ -277,8 +277,8 @@
           "shortName": "DeleteDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_delete_device_registry_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_DeleteDeviceRegistry_async",
+      "file": "cloudiot_v1_generated_device_manager_delete_device_registry_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_DeleteDeviceRegistry_async",
       "segments": [
         {
           "end": 42,
@@ -319,8 +319,8 @@
           "shortName": "DeleteDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_delete_device_registry_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_DeleteDeviceRegistry_sync",
+      "file": "cloudiot_v1_generated_device_manager_delete_device_registry_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_DeleteDeviceRegistry_sync",
       "segments": [
         {
           "end": 42,
@@ -362,8 +362,8 @@
           "shortName": "DeleteDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_delete_device_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_DeleteDevice_async",
+      "file": "cloudiot_v1_generated_device_manager_delete_device_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_DeleteDevice_async",
       "segments": [
         {
           "end": 42,
@@ -404,8 +404,8 @@
           "shortName": "DeleteDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_delete_device_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_DeleteDevice_sync",
+      "file": "cloudiot_v1_generated_device_manager_delete_device_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_DeleteDevice_sync",
       "segments": [
         {
           "end": 42,
@@ -447,8 +447,8 @@
           "shortName": "GetDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_get_device_registry_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_GetDeviceRegistry_async",
+      "file": "cloudiot_v1_generated_device_manager_get_device_registry_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_GetDeviceRegistry_async",
       "segments": [
         {
           "end": 44,
@@ -491,8 +491,8 @@
           "shortName": "GetDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_get_device_registry_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_GetDeviceRegistry_sync",
+      "file": "cloudiot_v1_generated_device_manager_get_device_registry_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_GetDeviceRegistry_sync",
       "segments": [
         {
           "end": 44,
@@ -536,8 +536,8 @@
           "shortName": "GetDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_get_device_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_GetDevice_async",
+      "file": "cloudiot_v1_generated_device_manager_get_device_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_GetDevice_async",
       "segments": [
         {
           "end": 44,
@@ -580,8 +580,8 @@
           "shortName": "GetDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_get_device_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_GetDevice_sync",
+      "file": "cloudiot_v1_generated_device_manager_get_device_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_GetDevice_sync",
       "segments": [
         {
           "end": 44,
@@ -625,8 +625,8 @@
           "shortName": "GetIamPolicy"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_get_iam_policy_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_GetIamPolicy_async",
+      "file": "cloudiot_v1_generated_device_manager_get_iam_policy_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_GetIamPolicy_async",
       "segments": [
         {
           "end": 44,
@@ -669,8 +669,8 @@
           "shortName": "GetIamPolicy"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_get_iam_policy_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_GetIamPolicy_sync",
+      "file": "cloudiot_v1_generated_device_manager_get_iam_policy_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_GetIamPolicy_sync",
       "segments": [
         {
           "end": 44,
@@ -714,8 +714,8 @@
           "shortName": "ListDeviceConfigVersions"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_device_config_versions_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDeviceConfigVersions_async",
+      "file": "cloudiot_v1_generated_device_manager_list_device_config_versions_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDeviceConfigVersions_async",
       "segments": [
         {
           "end": 44,
@@ -758,8 +758,8 @@
           "shortName": "ListDeviceConfigVersions"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_device_config_versions_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDeviceConfigVersions_sync",
+      "file": "cloudiot_v1_generated_device_manager_list_device_config_versions_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDeviceConfigVersions_sync",
       "segments": [
         {
           "end": 44,
@@ -803,8 +803,8 @@
           "shortName": "ListDeviceRegistries"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_device_registries_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDeviceRegistries_async",
+      "file": "cloudiot_v1_generated_device_manager_list_device_registries_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDeviceRegistries_async",
       "segments": [
         {
           "end": 45,
@@ -847,8 +847,8 @@
           "shortName": "ListDeviceRegistries"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_device_registries_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDeviceRegistries_sync",
+      "file": "cloudiot_v1_generated_device_manager_list_device_registries_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDeviceRegistries_sync",
       "segments": [
         {
           "end": 45,
@@ -892,8 +892,8 @@
           "shortName": "ListDeviceStates"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_device_states_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDeviceStates_async",
+      "file": "cloudiot_v1_generated_device_manager_list_device_states_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDeviceStates_async",
       "segments": [
         {
           "end": 44,
@@ -936,8 +936,8 @@
           "shortName": "ListDeviceStates"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_device_states_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDeviceStates_sync",
+      "file": "cloudiot_v1_generated_device_manager_list_device_states_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDeviceStates_sync",
       "segments": [
         {
           "end": 44,
@@ -981,8 +981,8 @@
           "shortName": "ListDevices"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_devices_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDevices_async",
+      "file": "cloudiot_v1_generated_device_manager_list_devices_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDevices_async",
       "segments": [
         {
           "end": 45,
@@ -1025,8 +1025,8 @@
           "shortName": "ListDevices"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_list_devices_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ListDevices_sync",
+      "file": "cloudiot_v1_generated_device_manager_list_devices_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ListDevices_sync",
       "segments": [
         {
           "end": 45,
@@ -1070,8 +1070,8 @@
           "shortName": "ModifyCloudToDeviceConfig"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_modify_cloud_to_device_config_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ModifyCloudToDeviceConfig_async",
+      "file": "cloudiot_v1_generated_device_manager_modify_cloud_to_device_config_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ModifyCloudToDeviceConfig_async",
       "segments": [
         {
           "end": 45,
@@ -1114,8 +1114,8 @@
           "shortName": "ModifyCloudToDeviceConfig"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_modify_cloud_to_device_config_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_ModifyCloudToDeviceConfig_sync",
+      "file": "cloudiot_v1_generated_device_manager_modify_cloud_to_device_config_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_ModifyCloudToDeviceConfig_sync",
       "segments": [
         {
           "end": 45,
@@ -1159,8 +1159,8 @@
           "shortName": "SendCommandToDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_send_command_to_device_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_SendCommandToDevice_async",
+      "file": "cloudiot_v1_generated_device_manager_send_command_to_device_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_SendCommandToDevice_async",
       "segments": [
         {
           "end": 45,
@@ -1203,8 +1203,8 @@
           "shortName": "SendCommandToDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_send_command_to_device_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_SendCommandToDevice_sync",
+      "file": "cloudiot_v1_generated_device_manager_send_command_to_device_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_SendCommandToDevice_sync",
       "segments": [
         {
           "end": 45,
@@ -1248,8 +1248,8 @@
           "shortName": "SetIamPolicy"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_set_iam_policy_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_SetIamPolicy_async",
+      "file": "cloudiot_v1_generated_device_manager_set_iam_policy_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_SetIamPolicy_async",
       "segments": [
         {
           "end": 44,
@@ -1292,8 +1292,8 @@
           "shortName": "SetIamPolicy"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_set_iam_policy_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_SetIamPolicy_sync",
+      "file": "cloudiot_v1_generated_device_manager_set_iam_policy_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_SetIamPolicy_sync",
       "segments": [
         {
           "end": 44,
@@ -1337,8 +1337,8 @@
           "shortName": "TestIamPermissions"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_test_iam_permissions_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_TestIamPermissions_async",
+      "file": "cloudiot_v1_generated_device_manager_test_iam_permissions_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_TestIamPermissions_async",
       "segments": [
         {
           "end": 45,
@@ -1381,8 +1381,8 @@
           "shortName": "TestIamPermissions"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_test_iam_permissions_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_TestIamPermissions_sync",
+      "file": "cloudiot_v1_generated_device_manager_test_iam_permissions_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_TestIamPermissions_sync",
       "segments": [
         {
           "end": 45,
@@ -1426,8 +1426,8 @@
           "shortName": "UnbindDeviceFromGateway"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_unbind_device_from_gateway_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_UnbindDeviceFromGateway_async",
+      "file": "cloudiot_v1_generated_device_manager_unbind_device_from_gateway_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_UnbindDeviceFromGateway_async",
       "segments": [
         {
           "end": 46,
@@ -1470,8 +1470,8 @@
           "shortName": "UnbindDeviceFromGateway"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_unbind_device_from_gateway_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_UnbindDeviceFromGateway_sync",
+      "file": "cloudiot_v1_generated_device_manager_unbind_device_from_gateway_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_UnbindDeviceFromGateway_sync",
       "segments": [
         {
           "end": 46,
@@ -1515,8 +1515,8 @@
           "shortName": "UpdateDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_update_device_registry_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_UpdateDeviceRegistry_async",
+      "file": "cloudiot_v1_generated_device_manager_update_device_registry_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_UpdateDeviceRegistry_async",
       "segments": [
         {
           "end": 43,
@@ -1559,8 +1559,8 @@
           "shortName": "UpdateDeviceRegistry"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_update_device_registry_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_UpdateDeviceRegistry_sync",
+      "file": "cloudiot_v1_generated_device_manager_update_device_registry_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_UpdateDeviceRegistry_sync",
       "segments": [
         {
           "end": 43,
@@ -1604,8 +1604,8 @@
           "shortName": "UpdateDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_update_device_async.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_UpdateDevice_async",
+      "file": "cloudiot_v1_generated_device_manager_update_device_async.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_UpdateDevice_async",
       "segments": [
         {
           "end": 43,
@@ -1648,8 +1648,8 @@
           "shortName": "UpdateDevice"
         }
       },
-      "file": "cloudiot_generated_iot_v1_device_manager_update_device_sync.py",
-      "regionTag": "cloudiot_generated_iot_v1_DeviceManager_UpdateDevice_sync",
+      "file": "cloudiot_v1_generated_device_manager_update_device_sync.py",
+      "regionTag": "cloudiot_v1_generated_DeviceManager_UpdateDevice_sync",
       "segments": [
         {
           "end": 43,

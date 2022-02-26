@@ -433,8 +433,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> resources.DeviceRegistry:
         r"""Creates a device registry that contains devices.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -533,8 +532,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> resources.DeviceRegistry:
         r"""Gets a device registry configuration.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -622,8 +620,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> resources.DeviceRegistry:
         r"""Updates a device registry configuration.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -726,8 +723,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> None:
         r"""Deletes a device registry configuration.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -806,8 +802,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> pagers.ListDeviceRegistriesPager:
         r"""Lists device registries.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -907,8 +902,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> resources.Device:
         r"""Creates a device in a device registry.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1007,8 +1001,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> resources.Device:
         r"""Gets details about a device.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1098,8 +1091,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> resources.Device:
         r"""Updates a device.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1202,8 +1194,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> None:
         r"""Deletes a device.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1284,8 +1275,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> pagers.ListDevicesPager:
         r"""List devices in a device registry.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1388,8 +1378,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         the modified configuration version and its metadata.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1495,8 +1484,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         configuration in descending order (i.e.: newest first).
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1590,8 +1578,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         descending order (i.e.: newest first).
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1682,8 +1669,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         resource. Replaces any existing policy.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1830,8 +1816,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         not have a policy set.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -1979,8 +1964,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         permissions, not a NOT_FOUND error.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -2100,8 +2084,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
            from the device.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -2220,8 +2203,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> device_manager.BindDeviceToGatewayResponse:
         r"""Associates the device with the gateway.
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
@@ -2333,8 +2315,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         gateway.
 
 
-
-        .. code-block::
+        .. code-block:: python
 
             from google.cloud import iot_v1
 
