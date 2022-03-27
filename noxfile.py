@@ -29,6 +29,9 @@ BLACK_PATHS = ["docs", "google", "tests", "noxfile.py", "setup.py"]
 if os.path.exists("samples"):
     BLACK_PATHS.append("samples")
 
+# Error if a python version is missing
+nox.options.error_on_missing_interpreters = True
+
 
 @nox.session(python="3.7")
 def lint(session):
