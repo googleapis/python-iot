@@ -64,9 +64,14 @@ class CreateDeviceRegistryRequest(proto.Message):
             registry ``id`` provided and the ``parent`` field.
     """
 
-    parent = proto.Field(proto.STRING, number=1,)
+    parent = proto.Field(
+        proto.STRING,
+        number=1,
+    )
     device_registry = proto.Field(
-        proto.MESSAGE, number=2, message=resources.DeviceRegistry,
+        proto.MESSAGE,
+        number=2,
+        message=resources.DeviceRegistry,
     )
 
 
@@ -79,7 +84,10 @@ class GetDeviceRegistryRequest(proto.Message):
             ``projects/example-project/locations/us-central1/registries/my-registry``.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
 
 
 class DeleteDeviceRegistryRequest(proto.Message):
@@ -91,7 +99,10 @@ class DeleteDeviceRegistryRequest(proto.Message):
             ``projects/example-project/locations/us-central1/registries/my-registry``.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
 
 
 class UpdateDeviceRegistryRequest(proto.Message):
@@ -113,10 +124,14 @@ class UpdateDeviceRegistryRequest(proto.Message):
     """
 
     device_registry = proto.Field(
-        proto.MESSAGE, number=1, message=resources.DeviceRegistry,
+        proto.MESSAGE,
+        number=1,
+        message=resources.DeviceRegistry,
     )
     update_mask = proto.Field(
-        proto.MESSAGE, number=2, message=field_mask_pb2.FieldMask,
+        proto.MESSAGE,
+        number=2,
+        message=field_mask_pb2.FieldMask,
     )
 
 
@@ -140,9 +155,18 @@ class ListDeviceRegistriesRequest(proto.Message):
             the system should return the next page of data.
     """
 
-    parent = proto.Field(proto.STRING, number=1,)
-    page_size = proto.Field(proto.INT32, number=2,)
-    page_token = proto.Field(proto.STRING, number=3,)
+    parent = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    page_size = proto.Field(
+        proto.INT32,
+        number=2,
+    )
+    page_token = proto.Field(
+        proto.STRING,
+        number=3,
+    )
 
 
 class ListDeviceRegistriesResponse(proto.Message):
@@ -162,9 +186,14 @@ class ListDeviceRegistriesResponse(proto.Message):
         return self
 
     device_registries = proto.RepeatedField(
-        proto.MESSAGE, number=1, message=resources.DeviceRegistry,
+        proto.MESSAGE,
+        number=1,
+        message=resources.DeviceRegistry,
     )
-    next_page_token = proto.Field(proto.STRING, number=2,)
+    next_page_token = proto.Field(
+        proto.STRING,
+        number=2,
+    )
 
 
 class CreateDeviceRequest(proto.Message):
@@ -181,8 +210,15 @@ class CreateDeviceRequest(proto.Message):
             the device registry ``id`` and the ``parent`` field.
     """
 
-    parent = proto.Field(proto.STRING, number=1,)
-    device = proto.Field(proto.MESSAGE, number=2, message=resources.Device,)
+    parent = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    device = proto.Field(
+        proto.MESSAGE,
+        number=2,
+        message=resources.Device,
+    )
 
 
 class GetDeviceRequest(proto.Message):
@@ -201,8 +237,15 @@ class GetDeviceRequest(proto.Message):
             format, for example: ``last_heartbeat_time``.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
-    field_mask = proto.Field(proto.MESSAGE, number=2, message=field_mask_pb2.FieldMask,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    field_mask = proto.Field(
+        proto.MESSAGE,
+        number=2,
+        message=field_mask_pb2.FieldMask,
+    )
 
 
 class UpdateDeviceRequest(proto.Message):
@@ -223,9 +266,15 @@ class UpdateDeviceRequest(proto.Message):
             ``metadata``
     """
 
-    device = proto.Field(proto.MESSAGE, number=2, message=resources.Device,)
+    device = proto.Field(
+        proto.MESSAGE,
+        number=2,
+        message=resources.Device,
+    )
     update_mask = proto.Field(
-        proto.MESSAGE, number=3, message=field_mask_pb2.FieldMask,
+        proto.MESSAGE,
+        number=3,
+        message=field_mask_pb2.FieldMask,
     )
 
 
@@ -240,7 +289,10 @@ class DeleteDeviceRequest(proto.Message):
             ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
 
 
 class ListDevicesRequest(proto.Message):
@@ -277,15 +329,36 @@ class ListDevicesRequest(proto.Message):
             page of data.
     """
 
-    parent = proto.Field(proto.STRING, number=1,)
-    device_num_ids = proto.RepeatedField(proto.UINT64, number=2,)
-    device_ids = proto.RepeatedField(proto.STRING, number=3,)
-    field_mask = proto.Field(proto.MESSAGE, number=4, message=field_mask_pb2.FieldMask,)
-    gateway_list_options = proto.Field(
-        proto.MESSAGE, number=6, message="GatewayListOptions",
+    parent = proto.Field(
+        proto.STRING,
+        number=1,
     )
-    page_size = proto.Field(proto.INT32, number=100,)
-    page_token = proto.Field(proto.STRING, number=101,)
+    device_num_ids = proto.RepeatedField(
+        proto.UINT64,
+        number=2,
+    )
+    device_ids = proto.RepeatedField(
+        proto.STRING,
+        number=3,
+    )
+    field_mask = proto.Field(
+        proto.MESSAGE,
+        number=4,
+        message=field_mask_pb2.FieldMask,
+    )
+    gateway_list_options = proto.Field(
+        proto.MESSAGE,
+        number=6,
+        message="GatewayListOptions",
+    )
+    page_size = proto.Field(
+        proto.INT32,
+        number=100,
+    )
+    page_token = proto.Field(
+        proto.STRING,
+        number=101,
+    )
 
 
 class GatewayListOptions(proto.Message):
@@ -326,10 +399,21 @@ class GatewayListOptions(proto.Message):
     """
 
     gateway_type = proto.Field(
-        proto.ENUM, number=1, oneof="filter", enum=resources.GatewayType,
+        proto.ENUM,
+        number=1,
+        oneof="filter",
+        enum=resources.GatewayType,
     )
-    associations_gateway_id = proto.Field(proto.STRING, number=2, oneof="filter",)
-    associations_device_id = proto.Field(proto.STRING, number=3, oneof="filter",)
+    associations_gateway_id = proto.Field(
+        proto.STRING,
+        number=2,
+        oneof="filter",
+    )
+    associations_device_id = proto.Field(
+        proto.STRING,
+        number=3,
+        oneof="filter",
+    )
 
 
 class ListDevicesResponse(proto.Message):
@@ -348,8 +432,15 @@ class ListDevicesResponse(proto.Message):
     def raw_page(self):
         return self
 
-    devices = proto.RepeatedField(proto.MESSAGE, number=1, message=resources.Device,)
-    next_page_token = proto.Field(proto.STRING, number=2,)
+    devices = proto.RepeatedField(
+        proto.MESSAGE,
+        number=1,
+        message=resources.Device,
+    )
+    next_page_token = proto.Field(
+        proto.STRING,
+        number=2,
+    )
 
 
 class ModifyCloudToDeviceConfigRequest(proto.Message):
@@ -375,9 +466,18 @@ class ModifyCloudToDeviceConfigRequest(proto.Message):
             device.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
-    version_to_update = proto.Field(proto.INT64, number=2,)
-    binary_data = proto.Field(proto.BYTES, number=3,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    version_to_update = proto.Field(
+        proto.INT64,
+        number=2,
+    )
+    binary_data = proto.Field(
+        proto.BYTES,
+        number=3,
+    )
 
 
 class ListDeviceConfigVersionsRequest(proto.Message):
@@ -397,8 +497,14 @@ class ListDeviceConfigVersionsRequest(proto.Message):
             the versions available.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
-    num_versions = proto.Field(proto.INT32, number=2,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    num_versions = proto.Field(
+        proto.INT32,
+        number=2,
+    )
 
 
 class ListDeviceConfigVersionsResponse(proto.Message):
@@ -412,7 +518,9 @@ class ListDeviceConfigVersionsResponse(proto.Message):
     """
 
     device_configs = proto.RepeatedField(
-        proto.MESSAGE, number=1, message=resources.DeviceConfig,
+        proto.MESSAGE,
+        number=1,
+        message=resources.DeviceConfig,
     )
 
 
@@ -433,8 +541,14 @@ class ListDeviceStatesRequest(proto.Message):
             available.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
-    num_states = proto.Field(proto.INT32, number=2,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    num_states = proto.Field(
+        proto.INT32,
+        number=2,
+    )
 
 
 class ListDeviceStatesResponse(proto.Message):
@@ -448,7 +562,9 @@ class ListDeviceStatesResponse(proto.Message):
     """
 
     device_states = proto.RepeatedField(
-        proto.MESSAGE, number=1, message=resources.DeviceState,
+        proto.MESSAGE,
+        number=1,
+        message=resources.DeviceState,
     )
 
 
@@ -476,14 +592,22 @@ class SendCommandToDeviceRequest(proto.Message):
             null characters.
     """
 
-    name = proto.Field(proto.STRING, number=1,)
-    binary_data = proto.Field(proto.BYTES, number=2,)
-    subfolder = proto.Field(proto.STRING, number=3,)
+    name = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    binary_data = proto.Field(
+        proto.BYTES,
+        number=2,
+    )
+    subfolder = proto.Field(
+        proto.STRING,
+        number=3,
+    )
 
 
 class SendCommandToDeviceResponse(proto.Message):
-    r"""Response for ``SendCommandToDevice``.
-    """
+    r"""Response for ``SendCommandToDevice``."""
 
 
 class BindDeviceToGatewayRequest(proto.Message):
@@ -502,14 +626,22 @@ class BindDeviceToGatewayRequest(proto.Message):
             numeric ID or the user-defined device identifier.
     """
 
-    parent = proto.Field(proto.STRING, number=1,)
-    gateway_id = proto.Field(proto.STRING, number=2,)
-    device_id = proto.Field(proto.STRING, number=3,)
+    parent = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    gateway_id = proto.Field(
+        proto.STRING,
+        number=2,
+    )
+    device_id = proto.Field(
+        proto.STRING,
+        number=3,
+    )
 
 
 class BindDeviceToGatewayResponse(proto.Message):
-    r"""Response for ``BindDeviceToGateway``.
-    """
+    r"""Response for ``BindDeviceToGateway``."""
 
 
 class UnbindDeviceFromGatewayRequest(proto.Message):
@@ -528,14 +660,22 @@ class UnbindDeviceFromGatewayRequest(proto.Message):
             numeric ID or the user-defined device identifier.
     """
 
-    parent = proto.Field(proto.STRING, number=1,)
-    gateway_id = proto.Field(proto.STRING, number=2,)
-    device_id = proto.Field(proto.STRING, number=3,)
+    parent = proto.Field(
+        proto.STRING,
+        number=1,
+    )
+    gateway_id = proto.Field(
+        proto.STRING,
+        number=2,
+    )
+    device_id = proto.Field(
+        proto.STRING,
+        number=3,
+    )
 
 
 class UnbindDeviceFromGatewayResponse(proto.Message):
-    r"""Response for ``UnbindDeviceFromGateway``.
-    """
+    r"""Response for ``UnbindDeviceFromGateway``."""
 
 
 __all__ = tuple(sorted(__protobuf__.manifest))
