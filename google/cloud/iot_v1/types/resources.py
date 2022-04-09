@@ -195,7 +195,7 @@ class Device(proto.Message):
 
             The logging verbosity for device activity. If unspecified,
             DeviceRegistry.log_level will be used.
-        metadata (Sequence[google.cloud.iot_v1.types.Device.MetadataEntry]):
+        metadata (Mapping[str, str]):
             The metadata key-value pairs assigned to the device. This
             metadata is not interpreted or indexed by Cloud IoT Core. It
             can be used to add contextual information for the device.
