@@ -53,7 +53,7 @@ class iotCallTransformer(cst.CSTTransformer):
         'list_device_states': ('name', 'num_states', ),
         'modify_cloud_to_device_config': ('name', 'binary_data', 'version_to_update', ),
         'send_command_to_device': ('name', 'binary_data', 'subfolder', ),
-        'set_iam_policy': ('resource', 'policy', ),
+        'set_iam_policy': ('resource', 'policy', 'update_mask', ),
         'test_iam_permissions': ('resource', 'permissions', ),
         'unbind_device_from_gateway': ('parent', 'gateway_id', 'device_id', ),
         'update_device': ('device', 'update_mask', ),
