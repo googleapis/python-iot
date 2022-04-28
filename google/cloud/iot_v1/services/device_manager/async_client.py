@@ -228,9 +228,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_create_device_registry():
+            async def sample_create_device_registry():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.CreateDeviceRegistryRequest(
@@ -238,7 +238,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.create_device_registry(request=request)
+                response = await client.create_device_registry(request=request)
 
                 # Handle the response
                 print(response)
@@ -332,9 +332,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_get_device_registry():
+            async def sample_get_device_registry():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.GetDeviceRegistryRequest(
@@ -342,7 +342,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.get_device_registry(request=request)
+                response = await client.get_device_registry(request=request)
 
                 # Handle the response
                 print(response)
@@ -435,16 +435,16 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_update_device_registry():
+            async def sample_update_device_registry():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.UpdateDeviceRegistryRequest(
                 )
 
                 # Make the request
-                response = client.update_device_registry(request=request)
+                response = await client.update_device_registry(request=request)
 
                 # Handle the response
                 print(response)
@@ -543,9 +543,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_delete_device_registry():
+            async def sample_delete_device_registry():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.DeleteDeviceRegistryRequest(
@@ -553,7 +553,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                client.delete_device_registry(request=request)
+                await client.delete_device_registry(request=request)
 
         Args:
             request (Union[google.cloud.iot_v1.types.DeleteDeviceRegistryRequest, dict]):
@@ -635,9 +635,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_list_device_registries():
+            async def sample_list_device_registries():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.ListDeviceRegistriesRequest(
@@ -648,7 +648,7 @@ class DeviceManagerAsyncClient:
                 page_result = client.list_device_registries(request=request)
 
                 # Handle the response
-                for response in page_result:
+                async for response in page_result:
                     print(response)
 
         Args:
@@ -753,9 +753,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_create_device():
+            async def sample_create_device():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.CreateDeviceRequest(
@@ -763,7 +763,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.create_device(request=request)
+                response = await client.create_device(request=request)
 
                 # Handle the response
                 print(response)
@@ -857,9 +857,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_get_device():
+            async def sample_get_device():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.GetDeviceRequest(
@@ -867,7 +867,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.get_device(request=request)
+                response = await client.get_device(request=request)
 
                 # Handle the response
                 print(response)
@@ -962,16 +962,16 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_update_device():
+            async def sample_update_device():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.UpdateDeviceRequest(
                 )
 
                 # Make the request
-                response = client.update_device(request=request)
+                response = await client.update_device(request=request)
 
                 # Handle the response
                 print(response)
@@ -1070,9 +1070,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_delete_device():
+            async def sample_delete_device():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.DeleteDeviceRequest(
@@ -1080,7 +1080,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                client.delete_device(request=request)
+                await client.delete_device(request=request)
 
         Args:
             request (Union[google.cloud.iot_v1.types.DeleteDeviceRequest, dict]):
@@ -1164,9 +1164,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_list_devices():
+            async def sample_list_devices():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.ListDevicesRequest(
@@ -1177,7 +1177,7 @@ class DeviceManagerAsyncClient:
                 page_result = client.list_devices(request=request)
 
                 # Handle the response
-                for response in page_result:
+                async for response in page_result:
                     print(response)
 
         Args:
@@ -1284,9 +1284,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_modify_cloud_to_device_config():
+            async def sample_modify_cloud_to_device_config():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.ModifyCloudToDeviceConfigRequest(
@@ -1295,7 +1295,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.modify_cloud_to_device_config(request=request)
+                response = await client.modify_cloud_to_device_config(request=request)
 
                 # Handle the response
                 print(response)
@@ -1403,9 +1403,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_list_device_config_versions():
+            async def sample_list_device_config_versions():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.ListDeviceConfigVersionsRequest(
@@ -1413,7 +1413,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.list_device_config_versions(request=request)
+                response = await client.list_device_config_versions(request=request)
 
                 # Handle the response
                 print(response)
@@ -1509,9 +1509,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_list_device_states():
+            async def sample_list_device_states():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.ListDeviceStatesRequest(
@@ -1519,7 +1519,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.list_device_states(request=request)
+                response = await client.list_device_states(request=request)
 
                 # Handle the response
                 print(response)
@@ -1615,9 +1615,9 @@ class DeviceManagerAsyncClient:
             from google.cloud import iot_v1
             from google.iam.v1 import iam_policy_pb2  # type: ignore
 
-            def sample_set_iam_policy():
+            async def sample_set_iam_policy():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iam_policy_pb2.SetIamPolicyRequest(
@@ -1625,7 +1625,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.set_iam_policy(request=request)
+                response = await client.set_iam_policy(request=request)
 
                 # Handle the response
                 print(response)
@@ -1776,9 +1776,9 @@ class DeviceManagerAsyncClient:
             from google.cloud import iot_v1
             from google.iam.v1 import iam_policy_pb2  # type: ignore
 
-            def sample_get_iam_policy():
+            async def sample_get_iam_policy():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iam_policy_pb2.GetIamPolicyRequest(
@@ -1786,7 +1786,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.get_iam_policy(request=request)
+                response = await client.get_iam_policy(request=request)
 
                 # Handle the response
                 print(response)
@@ -1938,9 +1938,9 @@ class DeviceManagerAsyncClient:
             from google.cloud import iot_v1
             from google.iam.v1 import iam_policy_pb2  # type: ignore
 
-            def sample_test_iam_permissions():
+            async def sample_test_iam_permissions():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iam_policy_pb2.TestIamPermissionsRequest(
@@ -1949,7 +1949,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.test_iam_permissions(request=request)
+                response = await client.test_iam_permissions(request=request)
 
                 # Handle the response
                 print(response)
@@ -2064,9 +2064,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_send_command_to_device():
+            async def sample_send_command_to_device():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.SendCommandToDeviceRequest(
@@ -2075,7 +2075,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.send_command_to_device(request=request)
+                response = await client.send_command_to_device(request=request)
 
                 # Handle the response
                 print(response)
@@ -2199,9 +2199,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_bind_device_to_gateway():
+            async def sample_bind_device_to_gateway():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.BindDeviceToGatewayRequest(
@@ -2211,7 +2211,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.bind_device_to_gateway(request=request)
+                response = await client.bind_device_to_gateway(request=request)
 
                 # Handle the response
                 print(response)
@@ -2315,9 +2315,9 @@ class DeviceManagerAsyncClient:
 
             from google.cloud import iot_v1
 
-            def sample_unbind_device_from_gateway():
+            async def sample_unbind_device_from_gateway():
                 # Create a client
-                client = iot_v1.DeviceManagerClient()
+                client = iot_v1.DeviceManagerAsyncClient()
 
                 # Initialize request argument(s)
                 request = iot_v1.UnbindDeviceFromGatewayRequest(
@@ -2327,7 +2327,7 @@ class DeviceManagerAsyncClient:
                 )
 
                 # Make the request
-                response = client.unbind_device_from_gateway(request=request)
+                response = await client.unbind_device_from_gateway(request=request)
 
                 # Handle the response
                 print(response)
