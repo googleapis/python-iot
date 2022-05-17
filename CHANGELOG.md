@@ -4,6 +4,23 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.5.0](https://github.com/googleapis/python-iot/compare/v2.4.1...v2.5.0) (2022-05-17)
+
+
+### Features
+
+* AuditConfig for IAM v1 ([bc445c6](https://github.com/googleapis/python-iot/commit/bc445c6c8e90867b6c7d7d5bddab8abbc970deb3))
+
+
+### Bug Fixes
+
+* **deps:** require grpc-google-iam-v1 >=0.12.4 ([bc445c6](https://github.com/googleapis/python-iot/commit/bc445c6c8e90867b6c7d7d5bddab8abbc970deb3))
+
+
+### Documentation
+
+* fix type in docstring for map fields ([bc445c6](https://github.com/googleapis/python-iot/commit/bc445c6c8e90867b6c7d7d5bddab8abbc970deb3))
+
 ### [2.4.1](https://github.com/googleapis/python-iot/compare/v2.4.0...v2.4.1) (2022-03-05)
 
 
