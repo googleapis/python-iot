@@ -29,20 +29,23 @@ BLACK_PATHS = ["docs", "google", "tests", "noxfile.py", "setup.py"]
 if os.path.exists("samples"):
     BLACK_PATHS.append("samples")
 
+# Error if a python version is missing
+nox.options.error_on_missing_interpreters = True
 
-@nox.session(python="3.7")
+
+@nox.session(python="3.8")
 def lint(session):
     """Run linters.
 
     Returns a failure if the linters find linting errors or sufficiently
     serious code quality issues.
     """
-    session.install("flake8", BLACK_VERSION)
+    session.install("flake8", BLACK_VERSION, "click<8.1")
     session.run("black", "--check", *BLACK_PATHS)
     session.run("flake8", "google", "tests")
 
 
-@nox.session(python="3.6")
+@nox.session(python="3.8")
 def blacken(session):
     """Run black.
 
@@ -52,11 +55,11 @@ def blacken(session):
     That run uses an image that doesn't have 3.6 installed. Before updating this
     check the state of the `gcp_ubuntu_config` we use for that Kokoro run.
     """
-    session.install(BLACK_VERSION)
+    session.install(BLACK_VERSION, "click<8.1")
     session.run("black", *BLACK_PATHS)
 
 
-@nox.session(python="3.7")
+@nox.session(python="3.8")
 def lint_setup_py(session):
     """Verify that setup.py is valid (including RST check)."""
     session.install("docutils", "pygments")
@@ -120,7 +123,7 @@ def system(session):
         session.run("py.test", "--quiet", system_test_folder_path, *session.posargs)
 
 
-@nox.session(python="3.7")
+@nox.session(python="3.8")
 def cover(session):
     """Run the final coverage report.
 
@@ -133,12 +136,12 @@ def cover(session):
     session.run("coverage", "erase")
 
 
-@nox.session(python="3.7")
+@nox.session(python="3.8")
 def docs(session):
     """Build the docs for this library."""
 
     session.install("-e", ".")
-    session.install("sphinx", "alabaster", "recommonmark")
+    session.install("sphinx<3.0.0", "alabaster", "recommonmark", "jinja2<3.1")
 
     shutil.rmtree(os.path.join("docs", "_build"), ignore_errors=True)
     session.run(
