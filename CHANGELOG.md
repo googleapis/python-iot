@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+### [0.3.2](https://github.com/googleapis/python-iot/compare/v0.3.1...v0.3.2) (2022-05-19)
+
+
+### Bug Fixes
+
+* **deps:** require google-api-core >= 1.31.5, >= 2.3.2 on v0 release ([#286](https://github.com/googleapis/python-iot/issues/286)) ([f256838](https://github.com/googleapis/python-iot/commit/f256838122c1d027da92e0c75269247cbbcd7b19))
+
 ### [0.3.1](https://www.github.com/googleapis/python-iot/compare/v0.3.0...v0.3.1) (2020-02-06)
 
 
