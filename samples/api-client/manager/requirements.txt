@@ -1,6 +1,6 @@
 cryptography==37.0.2
 flaky==3.7.0
-google-api-python-client==2.48.0
+google-api-python-client==2.49.0
 google-auth-httplib2==0.1.0
 google-auth==2.6.6
 google-cloud-iot==2.5.0
