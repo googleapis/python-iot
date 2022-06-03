@@ -21,7 +21,7 @@
 
 * fix type in docstring for map fields ([bc445c6](https://github.com/googleapis/python-iot/commit/bc445c6c8e90867b6c7d7d5bddab8abbc970deb3))
 
-### [2.4.1](https://github.com/googleapis/python-iot/compare/v2.4.0...v2.4.1) (2022-03-05)
+## [2.4.1](https://github.com/googleapis/python-iot/compare/v2.4.0...v2.4.1) (2022-03-05)
 
 
 ### Bug Fixes
@@ -68,7 +68,7 @@
 
 * Added python sample codes for cloud-iot-token-service generateAccessToken API ([#149](https://www.github.com/googleapis/python-iot/issues/149)) ([c2a575e](https://www.github.com/googleapis/python-iot/commit/c2a575e76b7fd2fb6da7954dcb6406933cc50bd1))
 
-### [2.2.1](https://www.github.com/googleapis/python-iot/compare/v2.2.0...v2.2.1) (2021-07-26)
+## [2.2.1](https://www.github.com/googleapis/python-iot/compare/v2.2.0...v2.2.1) (2021-07-26)
 
 ### Bug Fixes
 
@@ -116,14 +116,14 @@
 * **deps:** add packaging requirement ([#112](https://www.github.com/googleapis/python-iot/issues/112)) ([7bb82a7](https://www.github.com/googleapis/python-iot/commit/7bb82a76b2ac008b3f6310bd050e10c503eb5d09))
 * use correct retry deadlines ([#81](https://www.github.com/googleapis/python-iot/issues/81)) ([af130f4](https://www.github.com/googleapis/python-iot/commit/af130f4f45356086d934569adf101bce1073971c))
 
-### [2.0.2](https://www.github.com/googleapis/python-iot/compare/v2.0.1...v2.0.2) (2021-02-05)
+## [2.0.2](https://www.github.com/googleapis/python-iot/compare/v2.0.1...v2.0.2) (2021-02-05)
 
 
 ### Bug Fixes
 
 * add fieldMask for getDevice and listDevices ([#64](https://www.github.com/googleapis/python-iot/issues/64)) ([24c9c9a](https://www.github.com/googleapis/python-iot/commit/24c9c9a98af4147c77aa632ec4a9c3fb6464f30c))
 
-### [2.0.1](https://www.github.com/googleapis/python-iot/compare/v2.0.0...v2.0.1) (2020-09-10)
+## [2.0.1](https://www.github.com/googleapis/python-iot/compare/v2.0.0...v2.0.1) (2020-09-10)
 
 
 ### Documentation
@@ -153,7 +153,7 @@
 
 * bump release status to GA ([#6](https://www.github.com/googleapis/python-iot/issues/6)) ([6793d49](https://www.github.com/googleapis/python-iot/commit/6793d493ec576191996c2e82c52ff549ee26347c))
 
-### [0.3.1](https://www.github.com/googleapis/python-iot/compare/v0.3.0...v0.3.1) (2020-02-06)
+## [0.3.1](https://www.github.com/googleapis/python-iot/compare/v0.3.0...v0.3.1) (2020-02-06)
 
 
 ### Bug Fixes
