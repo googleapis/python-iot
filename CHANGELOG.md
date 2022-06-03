@@ -4,6 +4,18 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.5.1](https://github.com/googleapis/python-iot/compare/v2.5.0...v2.5.1) (2022-06-03)
+
+
+### Bug Fixes
+
+* **deps:** require protobuf <4.0.0dev ([#331](https://github.com/googleapis/python-iot/issues/331)) ([efcc5d5](https://github.com/googleapis/python-iot/commit/efcc5d563bf6e119199c3b12e15fb4af2dd95ebc))
+
+
+### Documentation
+
+* fix changelog header to consistent size ([#329](https://github.com/googleapis/python-iot/issues/329)) ([22cf6f2](https://github.com/googleapis/python-iot/commit/22cf6f259a93d18483871ff02953ccf101bf8a14))
+
 ## [2.5.0](https://github.com/googleapis/python-iot/compare/v2.4.1...v2.5.0) (2022-05-17)
 
 
