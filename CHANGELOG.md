@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [1.0.2](https://github.com/googleapis/python-iot/compare/v1.0.1...v1.0.2) (2022-06-08)
+
+
+### Bug Fixes
+
+* **deps:** require protobuf<4.0.0 on v1 branch ([#336](https://github.com/googleapis/python-iot/issues/336)) ([507e3ba](https://github.com/googleapis/python-iot/commit/507e3ba58680f88c1b19e4844aecda9fe51469a1))
+
 ### [1.0.1](https://github.com/googleapis/python-iot/compare/v1.0.0...v1.0.1) (2022-03-31)
 
 
