@@ -19,7 +19,7 @@ import setuptools
 
 name = "google-cloud-iot"
 description = "Cloud IoT API API client library"
-version = "0.3.2"
+version = "0.3.3"
 release_status = "Development Status :: 3 - Alpha"
 dependencies = [
     "google-api-core[grpc] >= 1.31.5, <3.0.0dev,!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.0",
