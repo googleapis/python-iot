@@ -6098,7 +6098,6 @@ def test_device_manager_transport_auth_adc(transport_class):
     [
         transports.DeviceManagerGrpcTransport,
         transports.DeviceManagerGrpcAsyncIOTransport,
-        transports.DeviceManagerRestTransport,
     ],
 )
 def test_device_manager_transport_auth_gdch_credentials(transport_class):
