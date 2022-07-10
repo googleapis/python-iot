@@ -1,21 +1,20 @@
-Python Client for Cloud IoT API
-===============================
+Python Client for Google Cloud Internet of Things (IoT) Core API
+================================================================
 
-|GA| |pypi| |versions| 
+|stable| |pypi| |versions|
 
-`Cloud IoT API`_: Registers and manages IoT (Internet of Things) devices that
-connect to the Google Cloud Platform.
+`Google Cloud Internet of Things (IoT) Core API`_: is a complete set of tools to connect, process, store, and analyze data both at the edge and in the cloud. The platform consists of scalable, fully-managed cloud services; an integrated software stack for edge/on-premises computing with machine learning capabilities for all your IoT needs.
 
 - `Client Library Documentation`_
 - `Product Documentation`_
 
-.. |GA| image:: https://img.shields.io/badge/support-GA-gold.svg
-   :target: https://github.com/googleapis/google-cloud-python/blob/main/README.rst#general-availability
+.. |stable| image:: https://img.shields.io/badge/support-stable-gold.svg
+   :target: https://github.com/googleapis/google-cloud-python/blob/main/README.rst#stability-levels
 .. |pypi| image:: https://img.shields.io/pypi/v/google-cloud-iot.svg
    :target: https://pypi.org/project/google-cloud-iot/
 .. |versions| image:: https://img.shields.io/pypi/pyversions/google-cloud-iot.svg
    :target: https://pypi.org/project/google-cloud-iot/
-.. _Cloud IoT API: https://cloud.google.com/iot
+.. _Google Cloud Internet of Things (IoT) Core API: https://cloud.google.com/iot
 .. _Client Library Documentation: https://cloud.google.com/python/docs/reference/cloudiot/latest
 .. _Product Documentation:  https://cloud.google.com/iot
 
@@ -26,12 +25,12 @@ In order to use this library, you first need to go through the following steps:
 
 1. `Select or create a Cloud Platform project.`_
 2. `Enable billing for your project.`_
-3. `Enable the Cloud IoT API.`_
+3. `Enable the Google Cloud Internet of Things (IoT) Core API.`_
 4. `Setup Authentication.`_
 
 .. _Select or create a Cloud Platform project.: https://console.cloud.google.com/project
 .. _Enable billing for your project.: https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project
-.. _Enable the Cloud IoT API.:  https://cloud.google.com/iot
+.. _Enable the Google Cloud Internet of Things (IoT) Core API.:  https://cloud.google.com/iot
 .. _Setup Authentication.: https://googleapis.dev/python/google-api-core/latest/auth.html
 
 Installation
@@ -48,15 +47,25 @@ dependencies.
 .. _`virtualenv`: https://virtualenv.pypa.io/en/latest/
 
 
+Code samples and snippets
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Code samples and snippets live in the `samples/` folder.
+
+
 Supported Python Versions
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-Python >= 3.6
+Our client libraries are compatible with all current [active](https://devguide.python.org/devcycle/#in-development-main-branch) and [maintenance](https://devguide.python.org/devcycle/#maintenance-branches) versions of
+Python.
 
-Deprecated Python Versions
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-Python == 2.7.
+Python >= 3.7
 
-The last version of this library compatible with Python 2.7 is google-cloud-iot==1.0.0.
+Unsupported Python Versions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Python <= 3.6
+
+If you are using an [end-of-life](https://devguide.python.org/devcycle/#end-of-life-branches)
+version of Python, we recommend that you update as soon as possible to an actively supported version.
 
 
 Mac/Linux
@@ -80,36 +89,15 @@ Windows
     <your-env>\Scripts\activate
     <your-env>\Scripts\pip.exe install google-cloud-iot
 
-Preview
-~~~~~~~
-
-DeviceManagerClient
-^^^^^^^^^^^^^^^^^^^
-
-.. code:: py
-
-    from google.cloud import iot_v1
-
-    client = iot_v1.DeviceManagerClient()
-
-    parent = client.location_path('[PROJECT]', '[LOCATION]')
-
-
-    # Iterate over all results
-    for element in client.list_device_registries(parent):
-        # process element
-        pass
-
-    # Or iterate over results one page at a time
-    for page in client.list_device_registries(parent).pages:
-        for element in page:
-            # process element
-            pass
-
 Next Steps
 ~~~~~~~~~~
 
--  Read the `Client Library Documentation`_ for Cloud IoT API
+-  Read the `Client Library Documentation`_ for Google Cloud Internet of Things (IoT) Core API
    to see other available methods on the client.
--  Read the `Product documentation`_ to learn
+-  Read the `Google Cloud Internet of Things (IoT) Core API Product documentation`_ to learn
    more about the product and see How-to Guides.
+-  View this `README`_ to see the full list of Cloud
+   APIs that we cover.
+
+.. _Google Cloud Internet of Things (IoT) Core API Product documentation:  https://cloud.google.com/iot
+.. _README: https://github.com/googleapis/google-cloud-python/blob/main/README.rst
