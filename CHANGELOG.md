@@ -4,6 +4,19 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.6.0](https://github.com/googleapis/python-iot/compare/v2.5.1...v2.6.0) (2022-07-12)
+
+
+### Features
+
+* add audience parameter ([e82c63f](https://github.com/googleapis/python-iot/commit/e82c63ff68f4da6b4e3e62f5de1633767618c865))
+
+
+### Bug Fixes
+
+* **deps:** require google-api-core >= 2.8.0 ([#343](https://github.com/googleapis/python-iot/issues/343)) ([e82c63f](https://github.com/googleapis/python-iot/commit/e82c63ff68f4da6b4e3e62f5de1633767618c865))
+* require python 3.7+ ([#345](https://github.com/googleapis/python-iot/issues/345)) ([724935c](https://github.com/googleapis/python-iot/commit/724935c3b229b7f3fb24e86a3d4ad9d231716180))
+
 ## [2.5.1](https://github.com/googleapis/python-iot/compare/v2.5.0...v2.5.1) (2022-06-03)
 
 
