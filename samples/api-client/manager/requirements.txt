@@ -4,6 +4,6 @@ google-api-python-client==2.56.0
 google-auth-httplib2==0.1.0
 google-auth==2.10.0
 google-cloud-iot==2.6.1
-google-cloud-pubsub==2.13.5
+google-cloud-pubsub==2.13.6
 paho-mqtt==1.6.1
 pyjwt==2.4.0
