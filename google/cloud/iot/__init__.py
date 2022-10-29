@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from google.cloud.iot import gapic_version as package_version
+
+__version__ = package_version.__version__
+
 
 from google.cloud.iot_v1.services.device_manager.client import DeviceManagerClient
 from google.cloud.iot_v1.services.device_manager.async_client import (
