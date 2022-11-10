@@ -1,0 +1,2 @@
+recursive-include google/cloud/iot *.py
+recursive-include google/cloud/iot_v1 *.py
