@@ -17,18 +17,11 @@ import os
 
 import setuptools
 
-name = "google-cloud-iot"
+name = "cleablade-cloud-iot"
 description = "Cloud IoT API API client library"
-version = "2.6.3"
+version = "1.0.0"
 release_status = "Development Status :: 5 - Production/Stable"
-dependencies = [
-    "google-api-core[grpc] >= 1.32.0, <3.0.0dev,!=2.0.*,!=2.1.*,!=2.2.*,!=2.3.*,!=2.4.*,!=2.5.*,!=2.6.*,!=2.7.*",
-    "grpc-google-iam-v1 >= 0.12.4, <1.0.0dev",
-    "proto-plus >= 1.22.0, <2.0.0dev",
-    "protobuf >= 3.20.2, <5.0.0dev",
-]
-
-extras = {"libcst": "libcst >= 0.2.5"}
+dependencies = ["httpx"]
 
 package_root = os.path.abspath(os.path.dirname(__file__))
 
@@ -39,22 +32,22 @@ with io.open(readme_filename, encoding="utf-8") as readme_file:
 packages = [
     package
     for package in setuptools.PEP420PackageFinder.find()
-    if package.startswith("google")
+    if package.startswith("clearblade")
 ]
 
-namespaces = ["google"]
-if "google.cloud" in packages:
-    namespaces.append("google.cloud")
+namespaces = ["clearblade"]
+if "clearblade.cloud" in packages:
+    namespaces.append("clearblade.cloud")
 
 setuptools.setup(
     name=name,
     version=version,
     description=description,
     long_description=readme,
-    author="Google LLC",
+    author="Clearblade",
     author_email="googleapis-packages@oogle.com",
     license="Apache 2.0",
-    url="https://github.com/googleapis/python-iot",
+    url="https://github.com/clearblade/python-iot",
     classifiers=[
         release_status,
         "Intended Audience :: Developers",
@@ -72,9 +65,7 @@ setuptools.setup(
     packages=packages,
     namespace_packages=namespaces,
     install_requires=dependencies,
-    extras_require=extras,
     python_requires=">=3.7",
-    scripts=["scripts/fixup_iot_v1_keywords.py"],
     include_package_data=True,
     zip_safe=False,
 )
