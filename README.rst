@@ -1,4 +1,4 @@
-Python Client for Google Cloud Internet of Things (IoT) Core API
+Python Client for ClearBlade Cloud Internet of Things (IoT) Core API
 ================================================================
 
 Quick Start
