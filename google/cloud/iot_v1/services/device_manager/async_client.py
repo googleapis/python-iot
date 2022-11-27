@@ -16,32 +16,43 @@
 from collections import OrderedDict
 import functools
 import re
-from typing import Dict, Mapping, Optional, Sequence, Tuple, Type, Union
-import pkg_resources
+from typing import (
+    Dict,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+)
 
-from google.api_core.client_options import ClientOptions
 from google.api_core import exceptions as core_exceptions
 from google.api_core import gapic_v1
 from google.api_core import retry as retries
+from google.api_core.client_options import ClientOptions
 from google.auth import credentials as ga_credentials  # type: ignore
 from google.oauth2 import service_account  # type: ignore
+import pkg_resources
 
 try:
     OptionalRetry = Union[retries.Retry, gapic_v1.method._MethodDefault]
 except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.Retry, object]  # type: ignore
 
-from google.cloud.iot_v1.services.device_manager import pagers
-from google.cloud.iot_v1.types import device_manager
-from google.cloud.iot_v1.types import resources
 from google.iam.v1 import iam_policy_pb2  # type: ignore
 from google.iam.v1 import policy_pb2  # type: ignore
 from google.protobuf import field_mask_pb2  # type: ignore
 from google.protobuf import timestamp_pb2  # type: ignore
 from google.rpc import status_pb2  # type: ignore
-from .transports.base import DeviceManagerTransport, DEFAULT_CLIENT_INFO
-from .transports.grpc_asyncio import DeviceManagerGrpcAsyncIOTransport
+
+from google.cloud.iot_v1.services.device_manager import pagers
+from google.cloud.iot_v1.types import device_manager, resources
+
 from .client import DeviceManagerClient
+from .transports.base import DEFAULT_CLIENT_INFO, DeviceManagerTransport
+from .transports.grpc_asyncio import DeviceManagerGrpcAsyncIOTransport
 
 
 class DeviceManagerAsyncClient:
@@ -168,9 +179,9 @@ class DeviceManagerAsyncClient:
     def __init__(
         self,
         *,
-        credentials: ga_credentials.Credentials = None,
+        credentials: Optional[ga_credentials.Credentials] = None,
         transport: Union[str, DeviceManagerTransport] = "grpc_asyncio",
-        client_options: ClientOptions = None,
+        client_options: Optional[ClientOptions] = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
     ) -> None:
         """Instantiates the device manager client.
@@ -214,12 +225,14 @@ class DeviceManagerAsyncClient:
 
     async def create_device_registry(
         self,
-        request: Union[device_manager.CreateDeviceRegistryRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.CreateDeviceRegistryRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
-        device_registry: resources.DeviceRegistry = None,
+        parent: Optional[str] = None,
+        device_registry: Optional[resources.DeviceRegistry] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceRegistry:
         r"""Creates a device registry that contains devices.
@@ -251,7 +264,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.CreateDeviceRegistryRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.CreateDeviceRegistryRequest, dict]]):
                 The request object. Request for `CreateDeviceRegistry`.
             parent (:class:`str`):
                 Required. The project and cloud region where this device
@@ -326,11 +339,11 @@ class DeviceManagerAsyncClient:
 
     async def get_device_registry(
         self,
-        request: Union[device_manager.GetDeviceRegistryRequest, dict] = None,
+        request: Optional[Union[device_manager.GetDeviceRegistryRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceRegistry:
         r"""Gets a device registry configuration.
@@ -362,7 +375,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.GetDeviceRegistryRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.GetDeviceRegistryRequest, dict]]):
                 The request object. Request for `GetDeviceRegistry`.
             name (:class:`str`):
                 Required. The name of the device registry. For example,
@@ -435,12 +448,14 @@ class DeviceManagerAsyncClient:
 
     async def update_device_registry(
         self,
-        request: Union[device_manager.UpdateDeviceRegistryRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.UpdateDeviceRegistryRequest, dict]
+        ] = None,
         *,
-        device_registry: resources.DeviceRegistry = None,
-        update_mask: field_mask_pb2.FieldMask = None,
+        device_registry: Optional[resources.DeviceRegistry] = None,
+        update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceRegistry:
         r"""Updates a device registry configuration.
@@ -471,7 +486,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.UpdateDeviceRegistryRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.UpdateDeviceRegistryRequest, dict]]):
                 The request object. Request for `UpdateDeviceRegistry`.
             device_registry (:class:`google.cloud.iot_v1.types.DeviceRegistry`):
                 Required. The new values for the device registry. The
@@ -551,11 +566,13 @@ class DeviceManagerAsyncClient:
 
     async def delete_device_registry(
         self,
-        request: Union[device_manager.DeleteDeviceRegistryRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.DeleteDeviceRegistryRequest, dict]
+        ] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a device registry configuration.
@@ -584,7 +601,7 @@ class DeviceManagerAsyncClient:
                 await client.delete_device_registry(request=request)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.DeleteDeviceRegistryRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.DeleteDeviceRegistryRequest, dict]]):
                 The request object. Request for `DeleteDeviceRegistry`.
             name (:class:`str`):
                 Required. The name of the device registry. For example,
@@ -650,11 +667,13 @@ class DeviceManagerAsyncClient:
 
     async def list_device_registries(
         self,
-        request: Union[device_manager.ListDeviceRegistriesRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.ListDeviceRegistriesRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
+        parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListDeviceRegistriesAsyncPager:
         r"""Lists device registries.
@@ -687,7 +706,7 @@ class DeviceManagerAsyncClient:
                     print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.ListDeviceRegistriesRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.ListDeviceRegistriesRequest, dict]]):
                 The request object. Request for `ListDeviceRegistries`.
             parent (:class:`str`):
                 Required. The project and cloud region path. For
@@ -774,12 +793,12 @@ class DeviceManagerAsyncClient:
 
     async def create_device(
         self,
-        request: Union[device_manager.CreateDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.CreateDeviceRequest, dict]] = None,
         *,
-        parent: str = None,
-        device: resources.Device = None,
+        parent: Optional[str] = None,
+        device: Optional[resources.Device] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Creates a device in a device registry.
@@ -811,7 +830,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.CreateDeviceRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.CreateDeviceRequest, dict]]):
                 The request object. Request for `CreateDevice`.
             parent (:class:`str`):
                 Required. The name of the device registry where this
@@ -886,11 +905,11 @@ class DeviceManagerAsyncClient:
 
     async def get_device(
         self,
-        request: Union[device_manager.GetDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.GetDeviceRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Gets details about a device.
@@ -922,7 +941,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.GetDeviceRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.GetDeviceRequest, dict]]):
                 The request object. Request for `GetDevice`.
             name (:class:`str`):
                 Required. The name of the device. For example,
@@ -997,12 +1016,12 @@ class DeviceManagerAsyncClient:
 
     async def update_device(
         self,
-        request: Union[device_manager.UpdateDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.UpdateDeviceRequest, dict]] = None,
         *,
-        device: resources.Device = None,
-        update_mask: field_mask_pb2.FieldMask = None,
+        device: Optional[resources.Device] = None,
+        update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Updates a device.
@@ -1033,7 +1052,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.UpdateDeviceRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.UpdateDeviceRequest, dict]]):
                 The request object. Request for `UpdateDevice`.
             device (:class:`google.cloud.iot_v1.types.Device`):
                 Required. The new values for the device. The ``id`` and
@@ -1113,11 +1132,11 @@ class DeviceManagerAsyncClient:
 
     async def delete_device(
         self,
-        request: Union[device_manager.DeleteDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.DeleteDeviceRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a device.
@@ -1146,7 +1165,7 @@ class DeviceManagerAsyncClient:
                 await client.delete_device(request=request)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.DeleteDeviceRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.DeleteDeviceRequest, dict]]):
                 The request object. Request for `DeleteDevice`.
             name (:class:`str`):
                 Required. The name of the device. For example,
@@ -1214,11 +1233,11 @@ class DeviceManagerAsyncClient:
 
     async def list_devices(
         self,
-        request: Union[device_manager.ListDevicesRequest, dict] = None,
+        request: Optional[Union[device_manager.ListDevicesRequest, dict]] = None,
         *,
-        parent: str = None,
+        parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListDevicesAsyncPager:
         r"""List devices in a device registry.
@@ -1251,7 +1270,7 @@ class DeviceManagerAsyncClient:
                     print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.ListDevicesRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.ListDevicesRequest, dict]]):
                 The request object. Request for `ListDevices`.
             parent (:class:`str`):
                 Required. The device registry path. Required. For
@@ -1338,12 +1357,14 @@ class DeviceManagerAsyncClient:
 
     async def modify_cloud_to_device_config(
         self,
-        request: Union[device_manager.ModifyCloudToDeviceConfigRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.ModifyCloudToDeviceConfigRequest, dict]
+        ] = None,
         *,
-        name: str = None,
-        binary_data: bytes = None,
+        name: Optional[str] = None,
+        binary_data: Optional[bytes] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceConfig:
         r"""Modifies the configuration for the device, which is
@@ -1378,7 +1399,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.ModifyCloudToDeviceConfigRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.ModifyCloudToDeviceConfigRequest, dict]]):
                 The request object. Request for
                 `ModifyCloudToDeviceConfig`.
             name (:class:`str`):
@@ -1466,11 +1487,13 @@ class DeviceManagerAsyncClient:
 
     async def list_device_config_versions(
         self,
-        request: Union[device_manager.ListDeviceConfigVersionsRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.ListDeviceConfigVersionsRequest, dict]
+        ] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.ListDeviceConfigVersionsResponse:
         r"""Lists the last few versions of the device
@@ -1503,7 +1526,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.ListDeviceConfigVersionsRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.ListDeviceConfigVersionsRequest, dict]]):
                 The request object. Request for
                 `ListDeviceConfigVersions`.
             name (:class:`str`):
@@ -1579,11 +1602,11 @@ class DeviceManagerAsyncClient:
 
     async def list_device_states(
         self,
-        request: Union[device_manager.ListDeviceStatesRequest, dict] = None,
+        request: Optional[Union[device_manager.ListDeviceStatesRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.ListDeviceStatesResponse:
         r"""Lists the last few versions of the device state in
@@ -1616,7 +1639,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.ListDeviceStatesRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.ListDeviceStatesRequest, dict]]):
                 The request object. Request for `ListDeviceStates`.
             name (:class:`str`):
                 Required. The name of the device. For example,
@@ -1691,11 +1714,11 @@ class DeviceManagerAsyncClient:
 
     async def set_iam_policy(
         self,
-        request: Union[iam_policy_pb2.SetIamPolicyRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.SetIamPolicyRequest, dict]] = None,
         *,
-        resource: str = None,
+        resource: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> policy_pb2.Policy:
         r"""Sets the access control policy on the specified
@@ -1729,7 +1752,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.iam.v1.iam_policy_pb2.SetIamPolicyRequest, dict]):
+            request (Optional[Union[google.iam.v1.iam_policy_pb2.SetIamPolicyRequest, dict]]):
                 The request object. Request message for `SetIamPolicy`
                 method.
             resource (:class:`str`):
@@ -1858,11 +1881,11 @@ class DeviceManagerAsyncClient:
 
     async def get_iam_policy(
         self,
-        request: Union[iam_policy_pb2.GetIamPolicyRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.GetIamPolicyRequest, dict]] = None,
         *,
-        resource: str = None,
+        resource: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> policy_pb2.Policy:
         r"""Gets the access control policy for a resource.
@@ -1897,7 +1920,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.iam.v1.iam_policy_pb2.GetIamPolicyRequest, dict]):
+            request (Optional[Union[google.iam.v1.iam_policy_pb2.GetIamPolicyRequest, dict]]):
                 The request object. Request message for `GetIamPolicy`
                 method.
             resource (:class:`str`):
@@ -2026,12 +2049,12 @@ class DeviceManagerAsyncClient:
 
     async def test_iam_permissions(
         self,
-        request: Union[iam_policy_pb2.TestIamPermissionsRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.TestIamPermissionsRequest, dict]] = None,
         *,
-        resource: str = None,
-        permissions: Sequence[str] = None,
+        resource: Optional[str] = None,
+        permissions: Optional[MutableSequence[str]] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> iam_policy_pb2.TestIamPermissionsResponse:
         r"""Returns permissions that a caller has on the specified resource.
@@ -2067,7 +2090,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.iam.v1.iam_policy_pb2.TestIamPermissionsRequest, dict]):
+            request (Optional[Union[google.iam.v1.iam_policy_pb2.TestIamPermissionsRequest, dict]]):
                 The request object. Request message for
                 `TestIamPermissions` method.
             resource (:class:`str`):
@@ -2079,7 +2102,7 @@ class DeviceManagerAsyncClient:
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            permissions (:class:`Sequence[str]`):
+            permissions (:class:`MutableSequence[str]`):
                 The set of permissions to check for the ``resource``.
                 Permissions with wildcards (such as '*' or 'storage.*')
                 are not allowed. For more information see `IAM
@@ -2145,13 +2168,15 @@ class DeviceManagerAsyncClient:
 
     async def send_command_to_device(
         self,
-        request: Union[device_manager.SendCommandToDeviceRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.SendCommandToDeviceRequest, dict]
+        ] = None,
         *,
-        name: str = None,
-        binary_data: bytes = None,
-        subfolder: str = None,
+        name: Optional[str] = None,
+        binary_data: Optional[bytes] = None,
+        subfolder: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.SendCommandToDeviceResponse:
         r"""Sends a command to the specified device. In order for a device
@@ -2200,7 +2225,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.SendCommandToDeviceRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.SendCommandToDeviceRequest, dict]]):
                 The request object. Request for `SendCommandToDevice`.
             name (:class:`str`):
                 Required. The name of the device. For example,
@@ -2303,13 +2328,15 @@ class DeviceManagerAsyncClient:
 
     async def bind_device_to_gateway(
         self,
-        request: Union[device_manager.BindDeviceToGatewayRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.BindDeviceToGatewayRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
-        gateway_id: str = None,
-        device_id: str = None,
+        parent: Optional[str] = None,
+        gateway_id: Optional[str] = None,
+        device_id: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.BindDeviceToGatewayResponse:
         r"""Associates the device with the gateway.
@@ -2343,7 +2370,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.BindDeviceToGatewayRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.BindDeviceToGatewayRequest, dict]]):
                 The request object. Request for `BindDeviceToGateway`.
             parent (:class:`str`):
                 Required. The name of the registry. For example,
@@ -2425,13 +2452,15 @@ class DeviceManagerAsyncClient:
 
     async def unbind_device_from_gateway(
         self,
-        request: Union[device_manager.UnbindDeviceFromGatewayRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.UnbindDeviceFromGatewayRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
-        gateway_id: str = None,
-        device_id: str = None,
+        parent: Optional[str] = None,
+        gateway_id: Optional[str] = None,
+        device_id: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.UnbindDeviceFromGatewayResponse:
         r"""Deletes the association between the device and the
@@ -2466,7 +2495,7 @@ class DeviceManagerAsyncClient:
                 print(response)
 
         Args:
-            request (Union[google.cloud.iot_v1.types.UnbindDeviceFromGatewayRequest, dict]):
+            request (Optional[Union[google.cloud.iot_v1.types.UnbindDeviceFromGatewayRequest, dict]]):
                 The request object. Request for
                 `UnbindDeviceFromGateway`.
             parent (:class:`str`):

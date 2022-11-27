@@ -13,11 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import MutableMapping, MutableSequence
+
+from google.protobuf import field_mask_pb2  # type: ignore
 import proto  # type: ignore
 
 from google.cloud.iot_v1.types import resources
-from google.protobuf import field_mask_pb2  # type: ignore
-
 
 __protobuf__ = proto.module(
     package="google.cloud.iot.v1",
@@ -64,11 +65,11 @@ class CreateDeviceRegistryRequest(proto.Message):
             registry ``id`` provided and the ``parent`` field.
     """
 
-    parent = proto.Field(
+    parent: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    device_registry = proto.Field(
+    device_registry: resources.DeviceRegistry = proto.Field(
         proto.MESSAGE,
         number=2,
         message=resources.DeviceRegistry,
@@ -84,7 +85,7 @@ class GetDeviceRegistryRequest(proto.Message):
             ``projects/example-project/locations/us-central1/registries/my-registry``.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
@@ -99,7 +100,7 @@ class DeleteDeviceRegistryRequest(proto.Message):
             ``projects/example-project/locations/us-central1/registries/my-registry``.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
@@ -123,12 +124,12 @@ class UpdateDeviceRegistryRequest(proto.Message):
             ``mqtt_config``, and ``state_notification_config``.
     """
 
-    device_registry = proto.Field(
+    device_registry: resources.DeviceRegistry = proto.Field(
         proto.MESSAGE,
         number=1,
         message=resources.DeviceRegistry,
     )
-    update_mask = proto.Field(
+    update_mask: field_mask_pb2.FieldMask = proto.Field(
         proto.MESSAGE,
         number=2,
         message=field_mask_pb2.FieldMask,
@@ -155,15 +156,15 @@ class ListDeviceRegistriesRequest(proto.Message):
             the system should return the next page of data.
     """
 
-    parent = proto.Field(
+    parent: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    page_size = proto.Field(
+    page_size: int = proto.Field(
         proto.INT32,
         number=2,
     )
-    page_token = proto.Field(
+    page_token: str = proto.Field(
         proto.STRING,
         number=3,
     )
@@ -173,7 +174,7 @@ class ListDeviceRegistriesResponse(proto.Message):
     r"""Response for ``ListDeviceRegistries``.
 
     Attributes:
-        device_registries (Sequence[google.cloud.iot_v1.types.DeviceRegistry]):
+        device_registries (MutableSequence[google.cloud.iot_v1.types.DeviceRegistry]):
             The registries that matched the query.
         next_page_token (str):
             If not empty, indicates that there may be more registries
@@ -185,12 +186,12 @@ class ListDeviceRegistriesResponse(proto.Message):
     def raw_page(self):
         return self
 
-    device_registries = proto.RepeatedField(
+    device_registries: MutableSequence[resources.DeviceRegistry] = proto.RepeatedField(
         proto.MESSAGE,
         number=1,
         message=resources.DeviceRegistry,
     )
-    next_page_token = proto.Field(
+    next_page_token: str = proto.Field(
         proto.STRING,
         number=2,
     )
@@ -210,11 +211,11 @@ class CreateDeviceRequest(proto.Message):
             the device registry ``id`` and the ``parent`` field.
     """
 
-    parent = proto.Field(
+    parent: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    device = proto.Field(
+    device: resources.Device = proto.Field(
         proto.MESSAGE,
         number=2,
         message=resources.Device,
@@ -237,11 +238,11 @@ class GetDeviceRequest(proto.Message):
             format, for example: ``last_heartbeat_time``.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    field_mask = proto.Field(
+    field_mask: field_mask_pb2.FieldMask = proto.Field(
         proto.MESSAGE,
         number=2,
         message=field_mask_pb2.FieldMask,
@@ -266,12 +267,12 @@ class UpdateDeviceRequest(proto.Message):
             ``metadata``
     """
 
-    device = proto.Field(
+    device: resources.Device = proto.Field(
         proto.MESSAGE,
         number=2,
         message=resources.Device,
     )
-    update_mask = proto.Field(
+    update_mask: field_mask_pb2.FieldMask = proto.Field(
         proto.MESSAGE,
         number=3,
         message=field_mask_pb2.FieldMask,
@@ -289,7 +290,7 @@ class DeleteDeviceRequest(proto.Message):
             ``projects/p0/locations/us-central1/registries/registry0/devices/{num_id}``.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
@@ -302,10 +303,10 @@ class ListDevicesRequest(proto.Message):
         parent (str):
             Required. The device registry path. Required. For example,
             ``projects/my-project/locations/us-central1/registries/my-registry``.
-        device_num_ids (Sequence[int]):
+        device_num_ids (MutableSequence[int]):
             A list of device numeric IDs. If empty, this
             field is ignored. Maximum IDs: 10,000.
-        device_ids (Sequence[str]):
+        device_ids (MutableSequence[str]):
             A list of device string IDs. For example,
             ``['device0', 'device12']``. If empty, this field is
             ignored. Maximum IDs: 10,000
@@ -329,33 +330,33 @@ class ListDevicesRequest(proto.Message):
             page of data.
     """
 
-    parent = proto.Field(
+    parent: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    device_num_ids = proto.RepeatedField(
+    device_num_ids: MutableSequence[int] = proto.RepeatedField(
         proto.UINT64,
         number=2,
     )
-    device_ids = proto.RepeatedField(
+    device_ids: MutableSequence[str] = proto.RepeatedField(
         proto.STRING,
         number=3,
     )
-    field_mask = proto.Field(
+    field_mask: field_mask_pb2.FieldMask = proto.Field(
         proto.MESSAGE,
         number=4,
         message=field_mask_pb2.FieldMask,
     )
-    gateway_list_options = proto.Field(
+    gateway_list_options: "GatewayListOptions" = proto.Field(
         proto.MESSAGE,
         number=6,
         message="GatewayListOptions",
     )
-    page_size = proto.Field(
+    page_size: int = proto.Field(
         proto.INT32,
         number=100,
     )
-    page_token = proto.Field(
+    page_token: str = proto.Field(
         proto.STRING,
         number=101,
     )
@@ -398,18 +399,18 @@ class GatewayListOptions(proto.Message):
             This field is a member of `oneof`_ ``filter``.
     """
 
-    gateway_type = proto.Field(
+    gateway_type: resources.GatewayType = proto.Field(
         proto.ENUM,
         number=1,
         oneof="filter",
         enum=resources.GatewayType,
     )
-    associations_gateway_id = proto.Field(
+    associations_gateway_id: str = proto.Field(
         proto.STRING,
         number=2,
         oneof="filter",
     )
-    associations_device_id = proto.Field(
+    associations_device_id: str = proto.Field(
         proto.STRING,
         number=3,
         oneof="filter",
@@ -420,7 +421,7 @@ class ListDevicesResponse(proto.Message):
     r"""Response for ``ListDevices``.
 
     Attributes:
-        devices (Sequence[google.cloud.iot_v1.types.Device]):
+        devices (MutableSequence[google.cloud.iot_v1.types.Device]):
             The devices that match the request.
         next_page_token (str):
             If not empty, indicates that there may be more devices that
@@ -432,12 +433,12 @@ class ListDevicesResponse(proto.Message):
     def raw_page(self):
         return self
 
-    devices = proto.RepeatedField(
+    devices: MutableSequence[resources.Device] = proto.RepeatedField(
         proto.MESSAGE,
         number=1,
         message=resources.Device,
     )
-    next_page_token = proto.Field(
+    next_page_token: str = proto.Field(
         proto.STRING,
         number=2,
     )
@@ -466,15 +467,15 @@ class ModifyCloudToDeviceConfigRequest(proto.Message):
             device.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    version_to_update = proto.Field(
+    version_to_update: int = proto.Field(
         proto.INT64,
         number=2,
     )
-    binary_data = proto.Field(
+    binary_data: bytes = proto.Field(
         proto.BYTES,
         number=3,
     )
@@ -497,11 +498,11 @@ class ListDeviceConfigVersionsRequest(proto.Message):
             the versions available.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    num_versions = proto.Field(
+    num_versions: int = proto.Field(
         proto.INT32,
         number=2,
     )
@@ -511,13 +512,13 @@ class ListDeviceConfigVersionsResponse(proto.Message):
     r"""Response for ``ListDeviceConfigVersions``.
 
     Attributes:
-        device_configs (Sequence[google.cloud.iot_v1.types.DeviceConfig]):
+        device_configs (MutableSequence[google.cloud.iot_v1.types.DeviceConfig]):
             The device configuration for the last few
             versions. Versions are listed in decreasing
             order, starting from the most recent one.
     """
 
-    device_configs = proto.RepeatedField(
+    device_configs: MutableSequence[resources.DeviceConfig] = proto.RepeatedField(
         proto.MESSAGE,
         number=1,
         message=resources.DeviceConfig,
@@ -541,11 +542,11 @@ class ListDeviceStatesRequest(proto.Message):
             available.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    num_states = proto.Field(
+    num_states: int = proto.Field(
         proto.INT32,
         number=2,
     )
@@ -555,13 +556,13 @@ class ListDeviceStatesResponse(proto.Message):
     r"""Response for ``ListDeviceStates``.
 
     Attributes:
-        device_states (Sequence[google.cloud.iot_v1.types.DeviceState]):
+        device_states (MutableSequence[google.cloud.iot_v1.types.DeviceState]):
             The last few device states. States are listed
             in descending order of server update time,
             starting from the most recent one.
     """
 
-    device_states = proto.RepeatedField(
+    device_states: MutableSequence[resources.DeviceState] = proto.RepeatedField(
         proto.MESSAGE,
         number=1,
         message=resources.DeviceState,
@@ -592,15 +593,15 @@ class SendCommandToDeviceRequest(proto.Message):
             null characters.
     """
 
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    binary_data = proto.Field(
+    binary_data: bytes = proto.Field(
         proto.BYTES,
         number=2,
     )
-    subfolder = proto.Field(
+    subfolder: str = proto.Field(
         proto.STRING,
         number=3,
     )
@@ -626,15 +627,15 @@ class BindDeviceToGatewayRequest(proto.Message):
             numeric ID or the user-defined device identifier.
     """
 
-    parent = proto.Field(
+    parent: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    gateway_id = proto.Field(
+    gateway_id: str = proto.Field(
         proto.STRING,
         number=2,
     )
-    device_id = proto.Field(
+    device_id: str = proto.Field(
         proto.STRING,
         number=3,
     )
@@ -660,15 +661,15 @@ class UnbindDeviceFromGatewayRequest(proto.Message):
             numeric ID or the user-defined device identifier.
     """
 
-    parent = proto.Field(
+    parent: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    gateway_id = proto.Field(
+    gateway_id: str = proto.Field(
         proto.STRING,
         number=2,
     )
-    device_id = proto.Field(
+    device_id: str = proto.Field(
         proto.STRING,
         number=3,
     )

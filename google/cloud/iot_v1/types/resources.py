@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import proto  # type: ignore
+from typing import MutableMapping, MutableSequence
 
 from google.protobuf import timestamp_pb2  # type: ignore
 from google.rpc import status_pb2  # type: ignore
-
+import proto  # type: ignore
 
 __protobuf__ = proto.module(
     package="google.cloud.iot.v1",
@@ -132,7 +132,7 @@ class Device(proto.Message):
             [Output only] A server-defined unique numeric ID for the
             device. This is a more compact way to identify devices, and
             it is globally unique.
-        credentials (Sequence[google.cloud.iot_v1.types.DeviceCredential]):
+        credentials (MutableSequence[google.cloud.iot_v1.types.DeviceCredential]):
             The credentials used to authenticate this device. To allow
             credential rotation without interruption, multiple device
             credentials can be bound to this device. No more than 3
@@ -195,7 +195,7 @@ class Device(proto.Message):
 
             The logging verbosity for device activity. If unspecified,
             DeviceRegistry.log_level will be used.
-        metadata (Mapping[str, str]):
+        metadata (MutableMapping[str, str]):
             The metadata key-value pairs assigned to the device. This
             metadata is not interpreted or indexed by Cloud IoT Core. It
             can be used to add contextual information for the device.
@@ -213,83 +213,83 @@ class Device(proto.Message):
             Gateway-related configuration and state.
     """
 
-    id = proto.Field(
+    id: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=2,
     )
-    num_id = proto.Field(
+    num_id: int = proto.Field(
         proto.UINT64,
         number=3,
     )
-    credentials = proto.RepeatedField(
+    credentials: MutableSequence["DeviceCredential"] = proto.RepeatedField(
         proto.MESSAGE,
         number=12,
         message="DeviceCredential",
     )
-    last_heartbeat_time = proto.Field(
+    last_heartbeat_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=7,
         message=timestamp_pb2.Timestamp,
     )
-    last_event_time = proto.Field(
+    last_event_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=8,
         message=timestamp_pb2.Timestamp,
     )
-    last_state_time = proto.Field(
+    last_state_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=20,
         message=timestamp_pb2.Timestamp,
     )
-    last_config_ack_time = proto.Field(
+    last_config_ack_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=14,
         message=timestamp_pb2.Timestamp,
     )
-    last_config_send_time = proto.Field(
+    last_config_send_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=18,
         message=timestamp_pb2.Timestamp,
     )
-    blocked = proto.Field(
+    blocked: bool = proto.Field(
         proto.BOOL,
         number=19,
     )
-    last_error_time = proto.Field(
+    last_error_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=10,
         message=timestamp_pb2.Timestamp,
     )
-    last_error_status = proto.Field(
+    last_error_status: status_pb2.Status = proto.Field(
         proto.MESSAGE,
         number=11,
         message=status_pb2.Status,
     )
-    config = proto.Field(
+    config: "DeviceConfig" = proto.Field(
         proto.MESSAGE,
         number=13,
         message="DeviceConfig",
     )
-    state = proto.Field(
+    state: "DeviceState" = proto.Field(
         proto.MESSAGE,
         number=16,
         message="DeviceState",
     )
-    log_level = proto.Field(
+    log_level: "LogLevel" = proto.Field(
         proto.ENUM,
         number=21,
         enum="LogLevel",
     )
-    metadata = proto.MapField(
+    metadata: MutableMapping[str, str] = proto.MapField(
         proto.STRING,
         proto.STRING,
         number=17,
     )
-    gateway_config = proto.Field(
+    gateway_config: "GatewayConfig" = proto.Field(
         proto.MESSAGE,
         number=24,
         message="GatewayConfig",
@@ -313,21 +313,21 @@ class GatewayConfig(proto.Message):
             accessed the gateway specified in ``last_accessed_gateway``.
     """
 
-    gateway_type = proto.Field(
+    gateway_type: "GatewayType" = proto.Field(
         proto.ENUM,
         number=1,
         enum="GatewayType",
     )
-    gateway_auth_method = proto.Field(
+    gateway_auth_method: "GatewayAuthMethod" = proto.Field(
         proto.ENUM,
         number=2,
         enum="GatewayAuthMethod",
     )
-    last_accessed_gateway_id = proto.Field(
+    last_accessed_gateway_id: str = proto.Field(
         proto.STRING,
         number=3,
     )
-    last_accessed_gateway_time = proto.Field(
+    last_accessed_gateway_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=4,
         message=timestamp_pb2.Timestamp,
@@ -344,7 +344,7 @@ class DeviceRegistry(proto.Message):
         name (str):
             The resource path name. For example,
             ``projects/example-project/locations/us-central1/registries/my-registry``.
-        event_notification_configs (Sequence[google.cloud.iot_v1.types.EventNotificationConfig]):
+        event_notification_configs (MutableSequence[google.cloud.iot_v1.types.EventNotificationConfig]):
             The configuration for notification of
             telemetry events received from the device. All
             telemetry events that were successfully
@@ -380,7 +380,7 @@ class DeviceRegistry(proto.Message):
             The default logging verbosity for activity from devices in
             this registry. The verbosity level can be overridden by
             Device.log_level.
-        credentials (Sequence[google.cloud.iot_v1.types.RegistryCredential]):
+        credentials (MutableSequence[google.cloud.iot_v1.types.RegistryCredential]):
             The credentials used to verify the device
             credentials. No more than 10 credentials can be
             bound to a single registry at a time. The
@@ -399,40 +399,42 @@ class DeviceRegistry(proto.Message):
             are revoked, deleted, or modified.
     """
 
-    id = proto.Field(
+    id: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    name = proto.Field(
+    name: str = proto.Field(
         proto.STRING,
         number=2,
     )
-    event_notification_configs = proto.RepeatedField(
+    event_notification_configs: MutableSequence[
+        "EventNotificationConfig"
+    ] = proto.RepeatedField(
         proto.MESSAGE,
         number=10,
         message="EventNotificationConfig",
     )
-    state_notification_config = proto.Field(
+    state_notification_config: "StateNotificationConfig" = proto.Field(
         proto.MESSAGE,
         number=7,
         message="StateNotificationConfig",
     )
-    mqtt_config = proto.Field(
+    mqtt_config: "MqttConfig" = proto.Field(
         proto.MESSAGE,
         number=4,
         message="MqttConfig",
     )
-    http_config = proto.Field(
+    http_config: "HttpConfig" = proto.Field(
         proto.MESSAGE,
         number=9,
         message="HttpConfig",
     )
-    log_level = proto.Field(
+    log_level: "LogLevel" = proto.Field(
         proto.ENUM,
         number=11,
         enum="LogLevel",
     )
-    credentials = proto.RepeatedField(
+    credentials: MutableSequence["RegistryCredential"] = proto.RepeatedField(
         proto.MESSAGE,
         number=8,
         message="RegistryCredential",
@@ -449,7 +451,7 @@ class MqttConfig(proto.Message):
             registry will fail.
     """
 
-    mqtt_enabled_state = proto.Field(
+    mqtt_enabled_state: "MqttState" = proto.Field(
         proto.ENUM,
         number=1,
         enum="MqttState",
@@ -467,7 +469,7 @@ class HttpConfig(proto.Message):
             registry.
     """
 
-    http_enabled_state = proto.Field(
+    http_enabled_state: "HttpState" = proto.Field(
         proto.ENUM,
         number=1,
         enum="HttpState",
@@ -490,11 +492,11 @@ class EventNotificationConfig(proto.Message):
             ``projects/myProject/topics/deviceEvents``.
     """
 
-    subfolder_matches = proto.Field(
+    subfolder_matches: str = proto.Field(
         proto.STRING,
         number=2,
     )
-    pubsub_topic_name = proto.Field(
+    pubsub_topic_name: str = proto.Field(
         proto.STRING,
         number=1,
     )
@@ -510,7 +512,7 @@ class StateNotificationConfig(proto.Message):
             ``projects/myProject/topics/deviceEvents``.
     """
 
-    pubsub_topic_name = proto.Field(
+    pubsub_topic_name: str = proto.Field(
         proto.STRING,
         number=1,
     )
@@ -531,7 +533,7 @@ class RegistryCredential(proto.Message):
             This field is a member of `oneof`_ ``credential``.
     """
 
-    public_key_certificate = proto.Field(
+    public_key_certificate: "PublicKeyCertificate" = proto.Field(
         proto.MESSAGE,
         number=1,
         oneof="credential",
@@ -559,29 +561,29 @@ class X509CertificateDetails(proto.Message):
             The type of public key in the certificate.
     """
 
-    issuer = proto.Field(
+    issuer: str = proto.Field(
         proto.STRING,
         number=1,
     )
-    subject = proto.Field(
+    subject: str = proto.Field(
         proto.STRING,
         number=2,
     )
-    start_time = proto.Field(
+    start_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=3,
         message=timestamp_pb2.Timestamp,
     )
-    expiry_time = proto.Field(
+    expiry_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=4,
         message=timestamp_pb2.Timestamp,
     )
-    signature_algorithm = proto.Field(
+    signature_algorithm: str = proto.Field(
         proto.STRING,
         number=5,
     )
-    public_key_type = proto.Field(
+    public_key_type: str = proto.Field(
         proto.STRING,
         number=6,
     )
@@ -600,16 +602,16 @@ class PublicKeyCertificate(proto.Message):
             certificates.
     """
 
-    format = proto.Field(
+    format: "PublicKeyCertificateFormat" = proto.Field(
         proto.ENUM,
         number=1,
         enum="PublicKeyCertificateFormat",
     )
-    certificate = proto.Field(
+    certificate: str = proto.Field(
         proto.STRING,
         number=2,
     )
-    x509_details = proto.Field(
+    x509_details: "X509CertificateDetails" = proto.Field(
         proto.MESSAGE,
         number=3,
         message="X509CertificateDetails",
@@ -648,13 +650,13 @@ class DeviceCredential(proto.Message):
             will not be automatically deleted.
     """
 
-    public_key = proto.Field(
+    public_key: "PublicKeyCredential" = proto.Field(
         proto.MESSAGE,
         number=2,
         oneof="credential",
         message="PublicKeyCredential",
     )
-    expiration_time = proto.Field(
+    expiration_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=6,
         message=timestamp_pb2.Timestamp,
@@ -671,12 +673,12 @@ class PublicKeyCredential(proto.Message):
             The key data.
     """
 
-    format = proto.Field(
+    format: "PublicKeyFormat" = proto.Field(
         proto.ENUM,
         number=1,
         enum="PublicKeyFormat",
     )
-    key = proto.Field(
+    key: str = proto.Field(
         proto.STRING,
         number=2,
     )
@@ -712,21 +714,21 @@ class DeviceConfig(proto.Message):
             The device configuration data.
     """
 
-    version = proto.Field(
+    version: int = proto.Field(
         proto.INT64,
         number=1,
     )
-    cloud_update_time = proto.Field(
+    cloud_update_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=2,
         message=timestamp_pb2.Timestamp,
     )
-    device_ack_time = proto.Field(
+    device_ack_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=3,
         message=timestamp_pb2.Timestamp,
     )
-    binary_data = proto.Field(
+    binary_data: bytes = proto.Field(
         proto.BYTES,
         number=4,
     )
@@ -743,12 +745,12 @@ class DeviceState(proto.Message):
             The device state data.
     """
 
-    update_time = proto.Field(
+    update_time: timestamp_pb2.Timestamp = proto.Field(
         proto.MESSAGE,
         number=1,
         message=timestamp_pb2.Timestamp,
     )
-    binary_data = proto.Field(
+    binary_data: bytes = proto.Field(
         proto.BYTES,
         number=2,
     )

@@ -35,8 +35,7 @@ import sys
 import time
 
 from google.api_core.exceptions import AlreadyExists
-from google.cloud import iot_v1
-from google.cloud import pubsub
+from google.cloud import iot_v1, pubsub
 from google.oauth2 import service_account
 from google.protobuf import field_mask_pb2 as gp_field_mask
 from googleapiclient import discovery
@@ -457,7 +456,7 @@ def create_registry(
 
 
 def get_registry(service_account_json, project_id, cloud_region, registry_id):
-    """ Retrieves a device registry."""
+    """Retrieves a device registry."""
     # [START iot_get_registry]
     # project_id = 'YOUR_PROJECT_ID'
     # cloud_region = 'us-central1'

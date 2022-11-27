@@ -42,8 +42,7 @@ import json
 import os
 import time
 
-from google.cloud import pubsub
-from google.cloud import storage
+from google.cloud import pubsub, storage
 import jwt
 import requests as req
 
@@ -85,8 +84,10 @@ def generate_access_token(
     resource_path = "projects/{}/locations/{}/registries/{}/devices/{}".format(
         project_id, cloud_region, registry_id, device_id
     )
-    request_url = "https://cloudiottoken.googleapis.com/v1beta1/{}:generateAccessToken".format(
-        resource_path
+    request_url = (
+        "https://cloudiottoken.googleapis.com/v1beta1/{}:generateAccessToken".format(
+            resource_path
+        )
     )
     headers = {"authorization": "Bearer {}".format(jwt)}
     request_payload = {"scope": scope, "device": resource_path}
@@ -146,8 +147,10 @@ def publish_pubsub_message(
             {"data": str(base64.b64encode(bytes("MESSAGE_DATA", "utf-8")), "utf-8")}
         ]
     }
-    publish_request_path = "https://pubsub.googleapis.com/v1/projects/{}/topics/{}:publish".format(
-        project_id, topic_id
+    publish_request_path = (
+        "https://pubsub.googleapis.com/v1/projects/{}/topics/{}:publish".format(
+            project_id, topic_id
+        )
     )
     publish_resp = req.post(
         url=publish_request_path, data=json.dumps(publish_payload), headers=headers
@@ -228,8 +231,10 @@ def download_cloud_storage_file(
     )
 
     # Download data from GCS bucket.
-    download_request_path = "https://storage.googleapis.com/storage/v1/b/{}/o/{}?alt=media".format(
-        bucket_name, data_name
+    download_request_path = (
+        "https://storage.googleapis.com/storage/v1/b/{}/o/{}?alt=media".format(
+            bucket_name, data_name
+        )
     )
     download_resp = req.get(url=download_request_path, headers=headers)
     assert download_resp.ok, download_resp.raise_for_status()
@@ -307,8 +312,10 @@ def send_iot_command_to_device(
         algorithm,
         rsa_private_key_path,
     )
-    service_account_token = exchange_device_access_token_for_service_account_access_token(
-        access_token, service_account_email
+    service_account_token = (
+        exchange_device_access_token_for_service_account_access_token(
+            access_token, service_account_email
+        )
     )
 
     # Sending a command to a Cloud IoT Core device
@@ -368,16 +375,24 @@ def parse_command_line_args():
         help="GCP cloud project name.",
     )
     parser.add_argument(
-        "--registry_id", default=None, help="Registry ID.",
+        "--registry_id",
+        default=None,
+        help="Registry ID.",
     )
     parser.add_argument(
-        "--topic_id", default=None, help="Cloud Pub/Sub topic ID.",
+        "--topic_id",
+        default=None,
+        help="Cloud Pub/Sub topic ID.",
     )
     parser.add_argument(
-        "--bucket_name", default=None, help="Cloud Storage bucket name.",
+        "--bucket_name",
+        default=None,
+        help="Cloud Storage bucket name.",
     )
     parser.add_argument(
-        "--data_path", default=None, help="Path to file to be uploaded.",
+        "--data_path",
+        default=None,
+        help="Path to file to be uploaded.",
     )
     parser.add_argument(
         "--service_account_email",

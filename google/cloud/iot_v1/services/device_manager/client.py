@@ -16,33 +16,45 @@
 from collections import OrderedDict
 import os
 import re
-from typing import Dict, Mapping, Optional, Sequence, Tuple, Type, Union
-import pkg_resources
+from typing import (
+    Dict,
+    Mapping,
+    MutableMapping,
+    MutableSequence,
+    Optional,
+    Sequence,
+    Tuple,
+    Type,
+    Union,
+    cast,
+)
 
 from google.api_core import client_options as client_options_lib
 from google.api_core import exceptions as core_exceptions
 from google.api_core import gapic_v1
 from google.api_core import retry as retries
 from google.auth import credentials as ga_credentials  # type: ignore
+from google.auth.exceptions import MutualTLSChannelError  # type: ignore
 from google.auth.transport import mtls  # type: ignore
 from google.auth.transport.grpc import SslCredentials  # type: ignore
-from google.auth.exceptions import MutualTLSChannelError  # type: ignore
 from google.oauth2 import service_account  # type: ignore
+import pkg_resources
 
 try:
     OptionalRetry = Union[retries.Retry, gapic_v1.method._MethodDefault]
 except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.Retry, object]  # type: ignore
 
-from google.cloud.iot_v1.services.device_manager import pagers
-from google.cloud.iot_v1.types import device_manager
-from google.cloud.iot_v1.types import resources
 from google.iam.v1 import iam_policy_pb2  # type: ignore
 from google.iam.v1 import policy_pb2  # type: ignore
 from google.protobuf import field_mask_pb2  # type: ignore
 from google.protobuf import timestamp_pb2  # type: ignore
 from google.rpc import status_pb2  # type: ignore
-from .transports.base import DeviceManagerTransport, DEFAULT_CLIENT_INFO
+
+from google.cloud.iot_v1.services.device_manager import pagers
+from google.cloud.iot_v1.types import device_manager, resources
+
+from .transports.base import DEFAULT_CLIENT_INFO, DeviceManagerTransport
 from .transports.grpc import DeviceManagerGrpcTransport
 from .transports.grpc_asyncio import DeviceManagerGrpcAsyncIOTransport
 
@@ -61,7 +73,7 @@ class DeviceManagerClientMeta(type):
 
     def get_transport_class(
         cls,
-        label: str = None,
+        label: Optional[str] = None,
     ) -> Type[DeviceManagerTransport]:
         """Returns an appropriate transport class.
 
@@ -362,8 +374,8 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         self,
         *,
         credentials: Optional[ga_credentials.Credentials] = None,
-        transport: Union[str, DeviceManagerTransport, None] = None,
-        client_options: Optional[client_options_lib.ClientOptions] = None,
+        transport: Optional[Union[str, DeviceManagerTransport]] = None,
+        client_options: Optional[Union[client_options_lib.ClientOptions, dict]] = None,
         client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
     ) -> None:
         """Instantiates the device manager client.
@@ -377,7 +389,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
             transport (Union[str, DeviceManagerTransport]): The
                 transport to use. If set to None, a transport is chosen
                 automatically.
-            client_options (google.api_core.client_options.ClientOptions): Custom options for the
+            client_options (Optional[Union[google.api_core.client_options.ClientOptions, dict]]): Custom options for the
                 client. It won't take effect if a ``transport`` instance is provided.
                 (1) The ``api_endpoint`` property can be used to override the
                 default endpoint provided by the client. GOOGLE_API_USE_MTLS_ENDPOINT
@@ -407,6 +419,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
             client_options = client_options_lib.from_dict(client_options)
         if client_options is None:
             client_options = client_options_lib.ClientOptions()
+        client_options = cast(client_options_lib.ClientOptions, client_options)
 
         api_endpoint, client_cert_source_func = self.get_mtls_endpoint_and_cert_source(
             client_options
@@ -459,12 +472,14 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def create_device_registry(
         self,
-        request: Union[device_manager.CreateDeviceRegistryRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.CreateDeviceRegistryRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
-        device_registry: resources.DeviceRegistry = None,
+        parent: Optional[str] = None,
+        device_registry: Optional[resources.DeviceRegistry] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceRegistry:
         r"""Creates a device registry that contains devices.
@@ -571,11 +586,11 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def get_device_registry(
         self,
-        request: Union[device_manager.GetDeviceRegistryRequest, dict] = None,
+        request: Optional[Union[device_manager.GetDeviceRegistryRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceRegistry:
         r"""Gets a device registry configuration.
@@ -670,12 +685,14 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def update_device_registry(
         self,
-        request: Union[device_manager.UpdateDeviceRegistryRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.UpdateDeviceRegistryRequest, dict]
+        ] = None,
         *,
-        device_registry: resources.DeviceRegistry = None,
-        update_mask: field_mask_pb2.FieldMask = None,
+        device_registry: Optional[resources.DeviceRegistry] = None,
+        update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceRegistry:
         r"""Updates a device registry configuration.
@@ -786,11 +803,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def delete_device_registry(
         self,
-        request: Union[device_manager.DeleteDeviceRegistryRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.DeleteDeviceRegistryRequest, dict]
+        ] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a device registry configuration.
@@ -875,11 +894,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def list_device_registries(
         self,
-        request: Union[device_manager.ListDeviceRegistriesRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.ListDeviceRegistriesRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
+        parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListDeviceRegistriesPager:
         r"""Lists device registries.
@@ -989,12 +1010,12 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def create_device(
         self,
-        request: Union[device_manager.CreateDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.CreateDeviceRequest, dict]] = None,
         *,
-        parent: str = None,
-        device: resources.Device = None,
+        parent: Optional[str] = None,
+        device: Optional[resources.Device] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Creates a device in a device registry.
@@ -1101,11 +1122,11 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def get_device(
         self,
-        request: Union[device_manager.GetDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.GetDeviceRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Gets details about a device.
@@ -1202,12 +1223,12 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def update_device(
         self,
-        request: Union[device_manager.UpdateDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.UpdateDeviceRequest, dict]] = None,
         *,
-        device: resources.Device = None,
-        update_mask: field_mask_pb2.FieldMask = None,
+        device: Optional[resources.Device] = None,
+        update_mask: Optional[field_mask_pb2.FieldMask] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.Device:
         r"""Updates a device.
@@ -1318,11 +1339,11 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def delete_device(
         self,
-        request: Union[device_manager.DeleteDeviceRequest, dict] = None,
+        request: Optional[Union[device_manager.DeleteDeviceRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> None:
         r"""Deletes a device.
@@ -1409,11 +1430,11 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def list_devices(
         self,
-        request: Union[device_manager.ListDevicesRequest, dict] = None,
+        request: Optional[Union[device_manager.ListDevicesRequest, dict]] = None,
         *,
-        parent: str = None,
+        parent: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> pagers.ListDevicesPager:
         r"""List devices in a device registry.
@@ -1523,12 +1544,14 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def modify_cloud_to_device_config(
         self,
-        request: Union[device_manager.ModifyCloudToDeviceConfigRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.ModifyCloudToDeviceConfigRequest, dict]
+        ] = None,
         *,
-        name: str = None,
-        binary_data: bytes = None,
+        name: Optional[str] = None,
+        binary_data: Optional[bytes] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> resources.DeviceConfig:
         r"""Modifies the configuration for the device, which is
@@ -1642,11 +1665,13 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def list_device_config_versions(
         self,
-        request: Union[device_manager.ListDeviceConfigVersionsRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.ListDeviceConfigVersionsRequest, dict]
+        ] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.ListDeviceConfigVersionsResponse:
         r"""Lists the last few versions of the device
@@ -1747,11 +1772,11 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def list_device_states(
         self,
-        request: Union[device_manager.ListDeviceStatesRequest, dict] = None,
+        request: Optional[Union[device_manager.ListDeviceStatesRequest, dict]] = None,
         *,
-        name: str = None,
+        name: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.ListDeviceStatesResponse:
         r"""Lists the last few versions of the device state in
@@ -1849,11 +1874,11 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def set_iam_policy(
         self,
-        request: Union[iam_policy_pb2.SetIamPolicyRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.SetIamPolicyRequest, dict]] = None,
         *,
-        resource: str = None,
+        resource: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> policy_pb2.Policy:
         r"""Sets the access control policy on the specified
@@ -2013,11 +2038,11 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def get_iam_policy(
         self,
-        request: Union[iam_policy_pb2.GetIamPolicyRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.GetIamPolicyRequest, dict]] = None,
         *,
-        resource: str = None,
+        resource: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> policy_pb2.Policy:
         r"""Gets the access control policy for a resource.
@@ -2178,12 +2203,12 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def test_iam_permissions(
         self,
-        request: Union[iam_policy_pb2.TestIamPermissionsRequest, dict] = None,
+        request: Optional[Union[iam_policy_pb2.TestIamPermissionsRequest, dict]] = None,
         *,
-        resource: str = None,
-        permissions: Sequence[str] = None,
+        resource: Optional[str] = None,
+        permissions: Optional[MutableSequence[str]] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> iam_policy_pb2.TestIamPermissionsResponse:
         r"""Returns permissions that a caller has on the specified resource.
@@ -2231,7 +2256,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
                 This corresponds to the ``resource`` field
                 on the ``request`` instance; if ``request`` is provided, this
                 should not be set.
-            permissions (Sequence[str]):
+            permissions (MutableSequence[str]):
                 The set of permissions to check for the ``resource``.
                 Permissions with wildcards (such as '*' or 'storage.*')
                 are not allowed. For more information see `IAM
@@ -2295,13 +2320,15 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def send_command_to_device(
         self,
-        request: Union[device_manager.SendCommandToDeviceRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.SendCommandToDeviceRequest, dict]
+        ] = None,
         *,
-        name: str = None,
-        binary_data: bytes = None,
-        subfolder: str = None,
+        name: Optional[str] = None,
+        binary_data: Optional[bytes] = None,
+        subfolder: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.SendCommandToDeviceResponse:
         r"""Sends a command to the specified device. In order for a device
@@ -2442,13 +2469,15 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def bind_device_to_gateway(
         self,
-        request: Union[device_manager.BindDeviceToGatewayRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.BindDeviceToGatewayRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
-        gateway_id: str = None,
-        device_id: str = None,
+        parent: Optional[str] = None,
+        gateway_id: Optional[str] = None,
+        device_id: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.BindDeviceToGatewayResponse:
         r"""Associates the device with the gateway.
@@ -2564,13 +2593,15 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
     def unbind_device_from_gateway(
         self,
-        request: Union[device_manager.UnbindDeviceFromGatewayRequest, dict] = None,
+        request: Optional[
+            Union[device_manager.UnbindDeviceFromGatewayRequest, dict]
+        ] = None,
         *,
-        parent: str = None,
-        gateway_id: str = None,
-        device_id: str = None,
+        parent: Optional[str] = None,
+        gateway_id: Optional[str] = None,
+        device_id: Optional[str] = None,
         retry: OptionalRetry = gapic_v1.method.DEFAULT,
-        timeout: float = None,
+        timeout: Optional[float] = None,
         metadata: Sequence[Tuple[str, str]] = (),
     ) -> device_manager.UnbindDeviceFromGatewayResponse:
         r"""Deletes the association between the device and the
