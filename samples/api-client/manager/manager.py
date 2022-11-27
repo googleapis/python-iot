@@ -457,7 +457,7 @@ def create_registry(
 
 
 def get_registry(service_account_json, project_id, cloud_region, registry_id):
-    """ Retrieves a device registry."""
+    """Retrieves a device registry."""
     # [START iot_get_registry]
     # project_id = 'YOUR_PROJECT_ID'
     # cloud_region = 'us-central1'
