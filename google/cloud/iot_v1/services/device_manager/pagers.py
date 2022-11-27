@@ -18,14 +18,13 @@ from typing import (
     AsyncIterator,
     Awaitable,
     Callable,
+    Iterator,
+    Optional,
     Sequence,
     Tuple,
-    Optional,
-    Iterator,
 )
 
-from google.cloud.iot_v1.types import device_manager
-from google.cloud.iot_v1.types import resources
+from google.cloud.iot_v1.types import device_manager, resources
 
 
 class ListDeviceRegistriesPager:

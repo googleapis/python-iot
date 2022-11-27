@@ -27,31 +27,32 @@ from typing import (
     Type,
     Union,
 )
-import pkg_resources
 
-from google.api_core.client_options import ClientOptions
 from google.api_core import exceptions as core_exceptions
 from google.api_core import gapic_v1
 from google.api_core import retry as retries
+from google.api_core.client_options import ClientOptions
 from google.auth import credentials as ga_credentials  # type: ignore
 from google.oauth2 import service_account  # type: ignore
+import pkg_resources
 
 try:
     OptionalRetry = Union[retries.Retry, gapic_v1.method._MethodDefault]
 except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.Retry, object]  # type: ignore
 
-from google.cloud.iot_v1.services.device_manager import pagers
-from google.cloud.iot_v1.types import device_manager
-from google.cloud.iot_v1.types import resources
 from google.iam.v1 import iam_policy_pb2  # type: ignore
 from google.iam.v1 import policy_pb2  # type: ignore
 from google.protobuf import field_mask_pb2  # type: ignore
 from google.protobuf import timestamp_pb2  # type: ignore
 from google.rpc import status_pb2  # type: ignore
-from .transports.base import DeviceManagerTransport, DEFAULT_CLIENT_INFO
-from .transports.grpc_asyncio import DeviceManagerGrpcAsyncIOTransport
+
+from google.cloud.iot_v1.services.device_manager import pagers
+from google.cloud.iot_v1.types import device_manager, resources
+
 from .client import DeviceManagerClient
+from .transports.base import DEFAULT_CLIENT_INFO, DeviceManagerTransport
+from .transports.grpc_asyncio import DeviceManagerGrpcAsyncIOTransport
 
 
 class DeviceManagerAsyncClient:

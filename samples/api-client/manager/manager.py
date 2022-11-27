@@ -35,8 +35,7 @@ import sys
 import time
 
 from google.api_core.exceptions import AlreadyExists
-from google.cloud import iot_v1
-from google.cloud import pubsub
+from google.cloud import iot_v1, pubsub
 from google.oauth2 import service_account
 from google.protobuf import field_mask_pb2 as gp_field_mask
 from googleapiclient import discovery

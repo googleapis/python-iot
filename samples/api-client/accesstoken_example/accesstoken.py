@@ -42,8 +42,7 @@ import json
 import os
 import time
 
-from google.cloud import pubsub
-from google.cloud import storage
+from google.cloud import pubsub, storage
 import jwt
 import requests as req
 
