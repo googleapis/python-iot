@@ -6,7 +6,7 @@ Quick Start
 
 In order to use this library, you first need to go through the following steps:
 
-1. Install pip package - pip install clearblade-cloud-iot
+1. Install pip package - ```pip install clearblade-cloud-iot```
 
 
 2. Set an environment variable CLEARBLADE_CONFIGURATION which should point to your clearblade service account json file.
