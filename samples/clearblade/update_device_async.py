@@ -1,8 +1,28 @@
+import asyncio
+import os
+
 from clearblade.cloud import iot_v1
+
 
 async def sample_update_device_async():
     client = iot_v1.DeviceManagerAsyncClient()
 
-    request = iot_v1.UpdateDeviceRequest(name='Rashmi_Device_Test',id='Rashmi_Device_Test',logLevel='NONE',blocked=True, updateMask='logLevel')
+    registry_path = client.registry_path(
+        "api-project-320446546234", 
+        "us-central1", 
+        "rajas-test")
+
+    device = iot_v1.Device(id="test-dev-1", blocked=True, log_level='NONE')
+    
+
+    request = iot_v1.UpdateDeviceRequest(
+        parent=registry_path,
+        device=device,
+        updateMask="logLevel,blocked")
 
     response = await client.update_device(request)
+
+    print(response)
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+asyncio.run(sample_update_device_async())

@@ -1,3 +1,6 @@
+import asyncio
+import os
+
 from clearblade.cloud import iot_v1
 
 
@@ -5,9 +8,14 @@ async def sample_get_device_registry():
     # Create a client
     client = iot_v1.DeviceManagerAsyncClient()
 
+    registry_path = client.registry_path(
+        "api-project-320446546234", 
+        "us-central1", 
+        "rajas-test")
+
     # Initialize request argument(s)
     request = iot_v1.GetDeviceRegistryRequest(
-        name="name_value",
+        name=registry_path,
     )
 
     # Make the request
@@ -15,3 +23,6 @@ async def sample_get_device_registry():
 
     # Handle the response
     print(response)
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+asyncio.run(sample_get_device_registry())

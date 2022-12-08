@@ -1,9 +1,34 @@
+from .device_types import *
 from .devices import *
 from .registry import *
-from .device_types import *
 from .registry_types import *
 
-class DeviceManagerClient():
+class Client():
+    def device_path(
+        self,
+        project: str,
+        location: str,
+        registry: str,
+        device: str
+        ) -> str:
+        cb_device_manager = ClearBladeDeviceManager()
+        return cb_device_manager.device_path(project=project, 
+                                             location=location, 
+                                             registry=registry, 
+                                             device=device)
+    
+    def registry_path(
+        self,
+        project: str,
+        location: str,
+        registry: str
+        ) -> str:
+        cb_device_manager = ClearBladeDeviceManager()
+        return cb_device_manager.registry_path(project=project, 
+                                               location=location, 
+                                               registry=registry)
+
+class DeviceManagerClient(Client):
 
     def send_command_to_device(self,request:SendCommandToDeviceRequest):
         cb_device_manager = ClearBladeDeviceManager()
@@ -76,7 +101,7 @@ class DeviceManagerClient():
         cb_registry_manager = ClearBladeRegistryManager()
         return cb_registry_manager.patch(request=request)
 
-class DeviceManagerAsyncClient():
+class DeviceManagerAsyncClient(Client):
 
     async def send_command_to_device(self, request:SendCommandToDeviceRequest):
         cb_device_manager = ClearBladeDeviceManager()

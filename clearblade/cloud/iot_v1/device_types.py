@@ -1,5 +1,7 @@
-from .utils import get_value
 from typing import List
+
+from .utils import get_value
+
 
 class Device():
     """
@@ -109,12 +111,12 @@ class DeviceState():
                            binary_data=get_value(response_json, 'binaryData'))
 
 class Request():
-    def __init__(self, name) -> None:
-        self._name = name
+    def __init__(self, parent) -> None:
+        self._parent = parent
 
     @property
-    def name(self):
-        return self._name
+    def parent(self):
+        return self._parent
 
 class SendCommandToDeviceRequest(Request):
     def __init__(self, name: str = None,
@@ -133,9 +135,9 @@ class SendCommandToDeviceRequest(Request):
         return self._subfolder
 
 class CreateDeviceRequest(Request):
-    def __init__(self, name: str = None,
+    def __init__(self, parent: str = None,
                        device: Device = None) -> None:
-        super().__init__(name)
+        super().__init__(parent)
         self._device = device
 
     @property
@@ -236,13 +238,13 @@ class UnbindDeviceFromGatewayRequest(BindUnBindGatewayDeviceRequest):
 
 class ListDeviceStatesRequest(Request):
     def __init__(self, name: str = None,
-                num_states: int = None) -> None:
+                numStates: int = None) -> None:
         super().__init__(name)
-        self._num_states = num_states
+        self._numStates = numStates
 
     @property
-    def num_states(self):
-        return self._num_states
+    def numStates(self):
+        return self._numStates
 
 class ListDeviceStatesResponse():
     def __init__(self, device_states:List[DeviceState] = []) -> None:
@@ -293,40 +295,27 @@ class ListDeviceConfigVersionsResponse():
         return ListDeviceConfigVersionsResponse(device_configs=deviceConfigs)
 
 class UpdateDeviceRequest(Request):
-    def __init__(self, id: str = None, name: str = None, numId: str=None,
-                 credentials: list=None, blocked: bool = None,
-                 logLevel: str = None, metadata: dict = None, gatewayConfig : dict = None,
-                 updateMask: str = None) -> None:
-        self._id = id
-        self._name = name
-        self._num_id = numId
-        self._credentials = credentials
-        self._blocked = blocked
-        self._log_level = logLevel
-        self._meta_data = metadata
-        self._gateway_config = gatewayConfig
+    def __init__(self, parent: str = None, device: Device = None, updateMask: str = None) -> None:
+        self._parent = parent
+        self._device = device
         self._update_mask = updateMask
 
     def _prepare_params_body_for_update(self):
-        params = {'name': self._name}
+        params = {'name': self._device.id}
         if self._update_mask is not None:
             params['updateMask'] = self._update_mask
 
         body = {}
-        if self._id is not None:
-            body['id'] = self._id
-        if self._name is not None:
-            body['name'] = self._name
-        if self._log_level is not None:
-            body['logLevel'] = self._log_level
-        if self._gateway_config is not None:
-            body['gatewayConfig'] = self._gateway_config
-        if self._meta_data is not None:
-            body['metadata'] = self._meta_data
-        if self._blocked is not None:
-            body['blocked'] = self._blocked
-        if self._credentials is not None:
-            body['credentials'] = self._credentials
+        if self._device.log_level is not None:
+            body['logLevel'] = self._device.log_level
+        if self._device.gateway_config is not None:
+            body['gatewayConfig'] = self._device.gateway_config
+        if self._device.meta_data is not None:
+            body['metadata'] = self._device.meta_data
+        if self._device._blocked is not None:
+            body['blocked'] = self._device._blocked
+        if self._device.credentials is not None:
+            body['credentials'] = self._device.credentials
 
         return params, body
 

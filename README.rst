@@ -1,4 +1,4 @@
-Python Client for Google Cloud Internet of Things (IoT) Core API
+Python Client for ClearBlade Internet of Things (IoT) Core API
 ================================================================
 
 Quick Start
@@ -6,9 +6,13 @@ Quick Start
 
 In order to use this library, you first need to go through the following steps:
 
-1. set an environment variable CLEARBLADE_CONFIGURATION which should point to your service account json file.
-2. set an environment variable CLEARBLADE_REGISTRY which should be the name of registry we want to work upon.
-3. set an environment variable CLEARBLADE_REGION which should point to the region.
+1. Install pip package 
+```
+pip install clearblade-cloud-iot
+```
+
+2. Set an environment variable CLEARBLADE_CONFIGURATION which should point to your clearblade service account json file.
+
 
 Installation
 ~~~~~~~~~~~~

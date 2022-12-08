@@ -1,7 +1,8 @@
-from .http_client import SyncClient, AsyncClient
 from .config_manager import ClearBladeConfigManager
+from .http_client import AsyncClient, SyncClient
+from .pagers import ListDeviceRegistriesAsyncPager, ListDeviceRegistryPager
 from .registry_types import *
-from .pagers import ListDeviceRegistryPager, ListDeviceRegistriesAsyncPager
+
 
 class ClearBladeRegistryManager():
     def __init__(self) -> None:
@@ -49,13 +50,23 @@ class ClearBladeRegistryManager():
 
     def get(self,
             request: GetDeviceRegistryRequest = None):
-        sync_client = SyncClient(clearblade_config=self._cb_config.regional_config)
+        if request.name == None:
+            raise Exception('Registry Path is not present in the request')
+
+        clearblade_config = self._cb_config.regional_config(request.name)
+
+        sync_client = SyncClient(clearblade_config=clearblade_config)
         response = sync_client.get(api_name = "cloudiot")
         return DeviceRegistry.from_json(response.json())
 
     async def get_async(self,
                         request: GetDeviceRegistryRequest = None):
-        async_client = AsyncClient(clearblade_config=await self._cb_config.regional_config_async)
+        
+        if request.name == None:
+            raise Exception('Registry Path is not present in the request')
+
+        clearblade_config=await self._cb_config.regional_config_async(request.name)
+        async_client = AsyncClient(clearblade_config=clearblade_config)
         response = await async_client.get(api_name = "cloudiot")
         return DeviceRegistry.from_json(response.json())
 
@@ -110,16 +121,26 @@ class ClearBladeRegistryManager():
 
     def patch(self,
         request: UpdateDeviceRegistryRequest = None)->DeviceRegistry:
+        if request.name == None:
+            raise Exception('Registry Path is not present in the request')
+
+        clearblade_config = self._cb_config.regional_config(request.name)
+        
         body = self._create_registry_body(request.device_registry)
         params = {'name':request.name, 'updateMask': request.update_mask}
-        sync_client = SyncClient(clearblade_config=self._cb_config.regional_config)
+        sync_client = SyncClient(clearblade_config=clearblade_config)
         response = sync_client.patch(api_name = "cloudiot",request_body=body,request_params=params)
         return DeviceRegistry.from_json(response.json())
 
     async def patch_async(self,
         request: UpdateDeviceRegistryRequest = None)->DeviceRegistry:
+        
+        if request.name == None:
+            raise Exception('Registry Path is not present in the request')
+
         body = self._create_registry_body(request.device_registry)
         params = {'name':request.name, 'updateMask': request.update_mask}
-        async_client = AsyncClient(clearblade_config=await self._cb_config.regional_config_async)
+        clearblade_config=await self._cb_config.regional_config_async(request.name)
+        async_client = AsyncClient(clearblade_config=clearblade_config)
         response = await async_client.patch(api_name = "cloudiot",request_body=body,request_params=params)
         return DeviceRegistry.from_json(response.json())

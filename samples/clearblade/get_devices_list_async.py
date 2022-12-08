@@ -1,10 +1,22 @@
+import asyncio
+import os
+
 from clearblade.cloud import iot_v1
+
 
 async def sample_get_devices_list_async():
     client = iot_v1.DeviceManagerAsyncClient()
 
-    request = iot_v1.ListDevicesRequest(parent='projects/ingressdevelopmentenv/locations/us-central1')
+    registry_path = client.registry_path(
+       "api-project-320446546234", 
+        "us-central1", 
+        "rajas-test")
 
-    response = await client.list_devices(request)
-    for page_result in response:
-        print(page_result)
+    request = iot_v1.ListDevicesRequest(parent=registry_path)
+
+    page_result = await client.list_devices(request)
+    async for response in page_result:
+        print(response) 
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+asyncio.run(sample_get_devices_list_async())

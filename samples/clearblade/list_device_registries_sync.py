@@ -1,3 +1,5 @@
+import os
+
 from clearblade.cloud import iot_v1
 
 
@@ -7,7 +9,7 @@ def sample_list_device_registries():
 
     # Initialize request argument(s)
     request = iot_v1.ListDeviceRegistriesRequest(
-        parent="projects/ingressdevelopmentenv/locations/us-central1",
+        parent="projects/api-project-320446546234/locations/us-central1",
     )
 
     # Make the request
@@ -16,3 +18,6 @@ def sample_list_device_registries():
     # Handle the response
     for response in page_result:
         print(response)
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+sample_list_device_registries()
