@@ -131,7 +131,7 @@ class AsyncClient(HttpClient):
 
     async def patch(self, api_name:str = None, request_params:dict = {}, request_body:dict = {}):
         super().patch(api_name = api_name, request_body=request_body)
-        return await self._async_client.patch("PATCH", url=self._post_url,
+        return await self._async_client.patch(url=self._post_url,
                                               headers=self._request_headers,
                                               params = request_params,
                                               data=self._post_body)

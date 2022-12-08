@@ -1,3 +1,6 @@
+import asyncio
+import os
+
 from clearblade.cloud import iot_v1
 
 
@@ -14,7 +17,7 @@ async def sample_create_device_registry():
 
     # Initialize request argument(s)
     request = iot_v1.CreateDeviceRegistryRequest(
-        parent="projects/ingressdevelopmentenv/locations/us-central1",
+        parent="projects/api-project-320446546234/locations/us-central1",
         device_registry=registry
     )
 
@@ -23,3 +26,6 @@ async def sample_create_device_registry():
 
     # Handle the response
     print(response)
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+asyncio.run(sample_create_device_registry())
