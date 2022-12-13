@@ -9,7 +9,7 @@ def sample_update_device():
     registry_path = client.registry_path(
         "api-project-320446546234",
         "us-central1",
-        "rajas-test")
+        "test-registry")
 
     device = iot_v1.Device(id="test-dev-1", blocked=True, log_level='NONE')
 

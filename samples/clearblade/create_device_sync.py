@@ -8,7 +8,7 @@ def sample_create_device():
     parent = client.registry_path(
         "api-project-320446546234",
         "us-central1",
-        "deleteTest5")
+        "test-registry")
 
     device = iot_v1.Device(id="Python_11", name="Python_11")
     request = iot_v1.CreateDeviceRequest(parent=parent, device=device)

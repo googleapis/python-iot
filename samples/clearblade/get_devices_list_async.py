@@ -10,7 +10,7 @@ async def sample_get_devices_list_async():
     registry_path = client.registry_path(
         "api-project-320446546234",
         "us-central1",
-        "rajas-test")
+        "test-registry")
 
     request = iot_v1.ListDevicesRequest(parent=registry_path)
 

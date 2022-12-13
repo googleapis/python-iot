@@ -9,7 +9,7 @@ def sample_bind_device_to_gateway():
     parent = client.registry_path(
         "api-project-320446546234",
         "us-central1",
-        "rajas-test")
+        "test-registry")
 
     request = iot_v1.BindDeviceToGatewayRequest(
         parent=parent,

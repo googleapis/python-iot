@@ -8,7 +8,7 @@ def sample_get_device_states_list():
     device_path = client.device_path(
         "api-project-320446546234",
         "us-central1",
-        "rajas-test",
+        "test-registry",
         "test-dev-1"
     )
 

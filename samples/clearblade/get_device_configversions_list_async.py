@@ -10,7 +10,7 @@ async def sample_get_device_config_versions_list_async():
     device_path = async_client.device_path(
         "api-project-320446546234",
         "us-central1",
-        "rajas-test",
+        "test-registry",
         "test-dev-1")
 
     request = iot_v1.ListDeviceConfigVersionsRequest(name=device_path, numVersions=3)

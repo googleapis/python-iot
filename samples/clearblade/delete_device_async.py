@@ -10,7 +10,7 @@ async def sample_device_delete_async():
     device_path = client.device_path(
         "api-project-320446546234",
         "us-central1",
-        "deleteTest5",
+        "test-registry",
         "Python_11")
 
     request = iot_v1.DeleteDeviceRequest(name=device_path)

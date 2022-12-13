@@ -8,7 +8,7 @@ async def sample_create_device_registry():
     # Create a client
     client = iot_v1.DeviceManagerAsyncClient()
 
-    registry = iot_v1.DeviceRegistry(id='deleteTest5', name='deleteTest5',
+    registry = iot_v1.DeviceRegistry(id='test-registry', name='test-registry',
                                      mqttConfig={'mqttEnabledState':'MQTT_ENABLED'},
                                      httpConfig={'httpEnabledState':'HTTP_ENABLED'},
                                      logLevel='ERROR',

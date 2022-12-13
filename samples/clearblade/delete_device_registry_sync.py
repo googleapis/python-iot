@@ -10,7 +10,7 @@ def sample_delete_device_registry():
     registry_path = client.registry_path(
         "api-project-320446546234",
         "us-central1",
-        "deleteTest5"
+        "test-registry"
     )
 
     # Initialize request argument(s)

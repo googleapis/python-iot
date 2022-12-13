@@ -8,8 +8,8 @@ def sample_create_device_registry():
     client = iot_v1.DeviceManagerClient()
 
     registry = iot_v1.DeviceRegistry(
-        id='deleteTest5',
-        name='deleteTest5',
+        id='test-registry',
+        name='test-registry',
         mqttConfig={'mqttEnabledState':'MQTT_ENABLED'},
         httpConfig={'httpEnabledState':'HTTP_ENABLED'},
         logLevel='ERROR',

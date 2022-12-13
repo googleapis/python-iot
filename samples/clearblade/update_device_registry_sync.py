@@ -7,8 +7,8 @@ def sample_update_device_registry():
     # Create a client
     client = iot_v1.DeviceManagerClient()
     registry = iot_v1.DeviceRegistry(
-        id='deleteTest5',
-        name='deleteTest5',
+        id='test-registry',
+        name='test-registry',
         mqttConfig={'mqttEnabledState':'MQTT_DISABLED'},
         logLevel='ERROR'
     )
