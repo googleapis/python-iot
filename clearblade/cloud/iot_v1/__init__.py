@@ -2,6 +2,7 @@ from .client import DeviceManagerClient, DeviceManagerAsyncClient
 from .device_types import *
 from .registry_types import *
 from .pagers import *
+from .resources import *
 
 __all__ = ("DeviceManagerClient",
            "DeviceManagerAsyncClient",

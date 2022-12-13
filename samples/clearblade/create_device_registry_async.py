@@ -8,7 +8,7 @@ async def sample_create_device_registry():
     # Create a client
     client = iot_v1.DeviceManagerAsyncClient()
 
-    registry = iot_v1.DeviceRegistry(id='deleteTest5', name='deleteTest5',
+    registry = iot_v1.DeviceRegistry(id='test-registry', name='test-registry',
                                      mqttConfig={'mqttEnabledState':'MQTT_ENABLED'},
                                      httpConfig={'httpEnabledState':'HTTP_ENABLED'},
                                      logLevel='ERROR',
@@ -27,5 +27,5 @@ async def sample_create_device_registry():
     # Handle the response
     print(response)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/DummyUser/Downloads/test-credentials.json"
 asyncio.run(sample_create_device_registry())
