@@ -19,5 +19,5 @@ async def sample_create_device_async():
 
     print(response)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "D:/PythonIoTSDK/test-credentials.json"
+os.environ["CLEARBLADE_CONFIGURATION"] = "D:/DummyUser/test-credentials.json"
 asyncio.run(sample_create_device_async())
