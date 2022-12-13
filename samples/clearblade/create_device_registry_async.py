@@ -27,5 +27,5 @@ async def sample_create_device_registry():
     # Handle the response
     print(response)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/DummyUser/Downloads/test-credentials.json"
 asyncio.run(sample_create_device_registry())

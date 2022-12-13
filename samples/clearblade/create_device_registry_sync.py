@@ -8,7 +8,7 @@ def sample_create_device_registry():
     client = iot_v1.DeviceManagerClient()
 
     registry = iot_v1.DeviceRegistry(
-        id='deleteTest5', 
+        id='deleteTest5',
         name='deleteTest5',
         mqttConfig={'mqttEnabledState':'MQTT_ENABLED'},
         httpConfig={'httpEnabledState':'HTTP_ENABLED'},
@@ -28,5 +28,6 @@ def sample_create_device_registry():
     # Handle the response
     print(response)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/DummyUser/Downloads/test-credentials.json"
 sample_create_device_registry()

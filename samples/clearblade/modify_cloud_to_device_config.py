@@ -6,8 +6,8 @@ from clearblade.cloud import iot_v1
 def sample_modify_cloud_to_device_config():
     client = iot_v1.DeviceManagerClient()
     device_path = client.device_path(
-       "api-project-320446546234", 
-        "us-central1", 
+        "api-project-320446546234",
+        "us-central1",
         "rajas-test",
         "test-dev-1")
 
@@ -15,5 +15,6 @@ def sample_modify_cloud_to_device_config():
     response = client.modify_cloud_to_device_config(request=modify_cloud_config_device_request)
     print(response)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/DummyUser/Downloads/test-credentials.json"
 sample_modify_cloud_to_device_config()

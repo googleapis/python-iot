@@ -8,8 +8,8 @@ def sample_delete_device_registry():
     client = iot_v1.DeviceManagerClient()
 
     registry_path = client.registry_path(
-        "api-project-320446546234", 
-        "us-central1", 
+        "api-project-320446546234",
+        "us-central1",
         "deleteTest5"
     )
 
@@ -21,6 +21,7 @@ def sample_delete_device_registry():
 
     print(response)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/DummyUser/Downloads/test-credentials.json"
 
 sample_delete_device_registry()

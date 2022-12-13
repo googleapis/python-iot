@@ -8,8 +8,8 @@ def sample_get_device_registry():
     client = iot_v1.DeviceManagerClient()
 
     registry_path = client.registry_path(
-        "api-project-320446546234", 
-        "us-central1", 
+        "api-project-320446546234",
+        "us-central1",
         "rajas-test")
 
     # Initialize request argument(s)
@@ -23,5 +23,6 @@ def sample_get_device_registry():
     # Handle the response
     print(response.name)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/DummyUser/Downloads/test-credentials.json"
 sample_get_device_registry()

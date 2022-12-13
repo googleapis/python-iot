@@ -19,5 +19,6 @@ def sample_list_device_registries():
     for response in page_result:
         print(response)
 
-os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
+
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/DummyUser/Downloads/test-credentials.json"
 sample_list_device_registries()
