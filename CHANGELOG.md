@@ -4,6 +4,28 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.7.0](https://github.com/googleapis/python-iot/compare/v2.6.4...v2.7.0) (2022-12-14)
+
+
+### Features
+
+* Add support for `google.cloud.iot.__version__` ([9aa6b22](https://github.com/googleapis/python-iot/commit/9aa6b22b14ed7afd125895941ea943ceb8c777b2))
+* Add typing to proto.Message based class attributes ([9aa6b22](https://github.com/googleapis/python-iot/commit/9aa6b22b14ed7afd125895941ea943ceb8c777b2))
+
+
+### Bug Fixes
+
+* Add dict typing for client_options ([9aa6b22](https://github.com/googleapis/python-iot/commit/9aa6b22b14ed7afd125895941ea943ceb8c777b2))
+* **deps:** Require google-api-core &gt;=1.34.0, >=2.11.0  ([4eac6bb](https://github.com/googleapis/python-iot/commit/4eac6bbeb2770537885a72de56d04baca7c4c231))
+* Drop usage of pkg_resources ([4eac6bb](https://github.com/googleapis/python-iot/commit/4eac6bbeb2770537885a72de56d04baca7c4c231))
+* Fix timeout default values ([4eac6bb](https://github.com/googleapis/python-iot/commit/4eac6bbeb2770537885a72de56d04baca7c4c231))
+
+
+### Documentation
+
+* **samples:** Snippetgen handling of repeated enum field ([9aa6b22](https://github.com/googleapis/python-iot/commit/9aa6b22b14ed7afd125895941ea943ceb8c777b2))
+* **samples:** Snippetgen should call await on the operation coroutine before calling result ([4eac6bb](https://github.com/googleapis/python-iot/commit/4eac6bbeb2770537885a72de56d04baca7c4c231))
+
 ## [2.6.4](https://github.com/googleapis/python-iot/compare/v2.6.3...v2.6.4) (2022-10-07)
 
 
