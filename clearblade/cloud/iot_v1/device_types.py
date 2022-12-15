@@ -7,15 +7,16 @@ class Device():
     """
     Data class for Clearblade Device
     """
-    #TODO: find a better way to construct the Device object. I dont like so much parameter in a constructor
-    def __init__(self, id: str = None, name: str = None, num_id: str=None,
-                 credentials: list=[], last_heartbeat_time: str = None, last_event_time: str = None,
+    # TODO: find a better way to construct the Device object. I dont like so much parameter in a constructor
+
+    def __init__(self, id: str = None, name: str = None, num_id: str = None,
+                 credentials: list = [], last_heartbeat_time: str = None, last_event_time: str = None,
                  last_state_time: str = None, last_config_ack_time: str = None,
                  last_config_send_time: str = None, blocked: bool = False,
                  last_error_time: str = None, last_error_status_code: dict = {"code":None, "message":""},
                  config: dict = {"cloudUpdateTime":None, "version":""} ,
                  state: dict = {"updateTime":None, "binaryData":None},
-                 log_level: str = "NONE", meta_data: dict = {}, gateway_config : dict = {}  ) -> None:
+                 log_level: str = "NONE", meta_data: dict = {}, gateway_config : dict = {}) -> None:
 
         self._id = id
         self._name = name
@@ -30,21 +31,21 @@ class Device():
         self._last_error_time = last_error_time
         self._last_error_status_code = last_error_status_code
         self._config = config
-        self._state =  state
+        self._state = state
         self._log_level = log_level
         self._meta_data = meta_data
         self._gateway_config = gateway_config
 
     @staticmethod
     def from_json(json):
-        return Device(id= json['id'], name= json['name'], num_id= json['numId'],
-                      credentials= json['credentials'], last_heartbeat_time= json['lastHeartbeatTime'],
-                      last_event_time= json['lastEventTime'], last_state_time= json['lastStateTime'],
-                      last_config_ack_time= json['lastConfigAckTime'], last_config_send_time= json['lastConfigSendTime'],
-                      blocked= json['blocked'], last_error_time= json['lastErrorTime'],
-                      last_error_status_code= json['lastErrorStatus'], config= json['config'],
-                      state= json['state'], log_level= json['logLevel'], meta_data= json['metadata'],
-                      gateway_config= json['gatewayConfig'])
+        return Device(id=json['id'], name=json['name'], num_id=json['numId'],
+                      credentials=json['credentials'], last_heartbeat_time=json['lastHeartbeatTime'],
+                      last_event_time=json['lastEventTime'], last_state_time=json['lastStateTime'],
+                      last_config_ack_time=json['lastConfigAckTime'], last_config_send_time=json['lastConfigSendTime'],
+                      blocked=json['blocked'], last_error_time=json['lastErrorTime'],
+                      last_error_status_code=json['lastErrorStatus'], config=json['config'],
+                      state=json['state'], log_level=json['logLevel'], meta_data=json['metadata'],
+                      gateway_config=json['gatewayConfig'])
 
     @property
     def id(self):
@@ -90,10 +91,15 @@ class Device():
     def log_level(self):
         return self._log_level
 
-#classes to mock googles request & response
+    @property
+    def last_heartbeat_time(self):
+        return self._last_heartbeat_time
+
+
+# classes to mock googles request & response
 
 class DeviceState():
-    def __init__(self, updated_time: str =None, binary_data:str = None) -> None:
+    def __init__(self, updated_time: str = None, binary_data:str = None) -> None:
         self._updated_time = updated_time
         self._binary_data = binary_data
 
@@ -110,6 +116,7 @@ class DeviceState():
         return DeviceState(updated_time=get_value(response_json, 'updateTime'),
                            binary_data=get_value(response_json, 'binaryData'))
 
+
 class Request():
     def __init__(self, parent) -> None:
         self._parent = parent
@@ -118,10 +125,11 @@ class Request():
     def parent(self):
         return self._parent
 
+
 class SendCommandToDeviceRequest(Request):
     def __init__(self, name: str = None,
-                binary_data: bytes = None,
-                subfolder: str = None) -> None:
+                 binary_data: bytes = None,
+                 subfolder: str = None) -> None:
         super().__init__(name)
         self._binary_data = binary_data
         self._subfolder = subfolder
@@ -134,15 +142,17 @@ class SendCommandToDeviceRequest(Request):
     def sub_folder(self):
         return self._subfolder
 
+
 class CreateDeviceRequest(Request):
     def __init__(self, parent: str = None,
-                       device: Device = None) -> None:
+                 device: Device = None) -> None:
         super().__init__(parent)
         self._device = device
 
     @property
     def device(self):
         return self._device
+
 
 class ModifyCloudToDeviceConfigRequest(Request):
     def __init__(self, name:str = None ,
@@ -159,6 +169,7 @@ class ModifyCloudToDeviceConfigRequest(Request):
     @property
     def binary_data(self):
         return self._binary_data
+
 
 class DeviceConfig(Request):
     def __init__(self, name,
@@ -196,21 +207,24 @@ class DeviceConfig(Request):
                             device_ack_time=get_value(json, 'deviceAckTime'),
                             binary_data=get_value(json,'binaryData'))
 
+
 class DeleteDeviceRequest(Request):
     def __init__(self, name: str = None) -> None:
         super().__init__(name)
 
+
 class GetDeviceRequest(Request):
     def __init__(self, name: str = None) -> None:
         super().__init__(name)
+
 
 class BindUnBindGatewayDeviceRequest(Request):
     def __init__(self, parent:str = None,
                  deviceId: str = None,
                  gatewayId: str = None) -> None:
         self._parent = parent
-        self._deviceid=deviceId
-        self._gatewayid=gatewayId
+        self._deviceid = deviceId
+        self._gatewayid = gatewayId
 
     @property
     def parent(self):
@@ -224,11 +238,13 @@ class BindUnBindGatewayDeviceRequest(Request):
     def gatewayId(self):
         return self._gatewayid
 
+
 class BindDeviceToGatewayRequest(BindUnBindGatewayDeviceRequest):
     def __init__(self, parent: str = None,
                  deviceId: str = None,
                  gatewayId: str = None) -> None:
         super().__init__(parent, deviceId, gatewayId)
+
 
 class UnbindDeviceFromGatewayRequest(BindUnBindGatewayDeviceRequest):
     def __init__(self, parent: str = None,
@@ -236,15 +252,17 @@ class UnbindDeviceFromGatewayRequest(BindUnBindGatewayDeviceRequest):
                  gatewayId: str = None) -> None:
         super().__init__(parent, deviceId, gatewayId)
 
+
 class ListDeviceStatesRequest(Request):
     def __init__(self, name: str = None,
-                numStates: int = None) -> None:
+                 numStates: int = None) -> None:
         super().__init__(name)
         self._numStates = numStates
 
     @property
     def numStates(self):
         return self._numStates
+
 
 class ListDeviceStatesResponse():
     def __init__(self, device_states:List[DeviceState] = []) -> None:
@@ -265,16 +283,16 @@ class ListDeviceStatesResponse():
         return ListDeviceStatesResponse(device_states=device_states)
 
 
-
 class ListDeviceConfigVersionsRequest(Request):
     def __init__(self, name: str = None,
-                numVersions: int = None) -> None:
+                 numVersions: int = None) -> None:
         super().__init__(name)
         self._numversions = numVersions
 
     @property
     def numVersions(self):
         return self._numversions
+
 
 class ListDeviceConfigVersionsResponse():
     def __init__(self, device_configs) -> None:
@@ -293,6 +311,7 @@ class ListDeviceConfigVersionsResponse():
             deviceConfigs.append(deviceConfig)
 
         return ListDeviceConfigVersionsResponse(device_configs=deviceConfigs)
+
 
 class UpdateDeviceRequest(Request):
     def __init__(self, parent: str = None, device: Device = None, updateMask: str = None) -> None:
@@ -318,6 +337,7 @@ class UpdateDeviceRequest(Request):
             body['credentials'] = self._device.credentials
 
         return params, body
+
 
 class ListDevicesRequest(Request):
     def __init__(self, parent:str = None ,
@@ -384,6 +404,7 @@ class ListDevicesRequest(Request):
 
         return params
 
+
 class ListDevicesResponse():
 
     def __init__(self, devices, next_page_token) -> None:
@@ -416,4 +437,3 @@ class ListDevicesResponse():
             next_page_token = devices_list_json['nextPageToken']
 
         return ListDevicesResponse(devices=devices, next_page_token=next_page_token)
-
