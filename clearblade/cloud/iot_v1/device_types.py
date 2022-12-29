@@ -398,7 +398,12 @@ class ListDevicesRequest(Request):
         if self.field_mask:
             params['fieldMask'] = self.field_mask
         if self.gateway_list_options :
-            params['gatewayListOptions'] = self.gateway_list_options
+            if 'associationsDeviceId' in self.gateway_list_options:
+                params['gatewayListOptions.associationsDeviceId'] = self.gateway_list_options['associationsDeviceId']
+            if 'associationsGatewayId' in self.gateway_list_options:
+                params['gatewayListOptions.associationsGatewayId'] = self.gateway_list_options['associationsGatewayId']
+            if 'gatewayType' in self.gateway_list_options:
+                params['gatewayListOptions.gatewayType'] = self.gateway_list_options['gatewayType']
         if self.page_token:
             params['pageToken'] = self.page_token
 
