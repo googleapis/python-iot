@@ -2,6 +2,7 @@ from .config_manager import ClearBladeConfigManager
 from .device_types import *
 from .http_client import AsyncClient, SyncClient
 from .pagers import ListDevicesAsyncPager, ListDevicesPager
+import base64
 
 
 class ClearBladeDeviceManager():
@@ -25,7 +26,7 @@ class ClearBladeDeviceManager():
         if request is None:
             request = SendCommandToDeviceRequest(name, binary_data, subfolder)
         params = {'name':request.parent,'method':'sendCommandToDevice'}
-        body = {'binaryData':request.binary_data.decode("utf-8")}
+        body = {'binaryData':base64.b64encode(request.binary_data).decode("utf-8")}
 
         return params,body
 
