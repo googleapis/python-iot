@@ -3,21 +3,21 @@ class MqttState():
     r"""Indicates whether an MQTT connection is enabled or disabled.
     See the field description for details.
     """
-    MQTT_STATE_UNSPECIFIED = 0
-    MQTT_ENABLED = 1
-    MQTT_DISABLED = 2
+    MQTT_STATE_UNSPECIFIED = "MQTT_STATE_UNSPECIFIED"
+    MQTT_ENABLED = "MQTT_ENABLED"
+    MQTT_DISABLED = "MQTT_DISABLED"
 
 
 class HttpState():
     r"""Indicates whether DeviceService (HTTP) is enabled or disabled
     for the registry. See the field description for details.
     """
-    HTTP_STATE_UNSPECIFIED = 0
-    HTTP_ENABLED = 1
-    HTTP_DISABLED = 2
+    HTTP_STATE_UNSPECIFIED = "HTTP_STATE_UNSPECIFIED"
+    HTTP_ENABLED = "HTTP_ENABLED"
+    HTTP_DISABLED = "HTTP_DISABLED"
 
 
-class LogLevel():
+class LogLevel:
     r"""**Beta Feature**
 
     The logging verbosity for device activity. Specifies which events
@@ -25,18 +25,18 @@ class LogLevel():
     only events that terminate in errors will be logged. LogLevel is
     inclusive; enabling INFO logging will also enable ERROR logging.
     """
-    LOG_LEVEL_UNSPECIFIED = 0
-    NONE = 10
-    ERROR = 20
-    INFO = 30
-    DEBUG = 40
+    LOG_LEVEL_UNSPECIFIED = "LOG_LEVEL_UNSPECIFIED"
+    NONE = "NONE"
+    ERROR = "ERROR"
+    INFO = "INFO"
+    DEBUG = "DEBUG"
 
 
-class GatewayType():
+class GatewayType:
     r"""Gateway type."""
-    GATEWAY_TYPE_UNSPECIFIED = 0
-    GATEWAY = 1
-    NON_GATEWAY = 2
+    GATEWAY_TYPE_UNSPECIFIED = "GATEWAY_TYPE_UNSPECIFIED"
+    GATEWAY = "GATEWAY"
+    NON_GATEWAY = "NON_GATEWAY"
 
 
 class GatewayAuthMethod():
@@ -44,16 +44,16 @@ class GatewayAuthMethod():
     determines how Cloud IoT Core authorizes/authenticate devices to
     access the gateway.
     """
-    GATEWAY_AUTH_METHOD_UNSPECIFIED = 0
-    ASSOCIATION_ONLY = 1
-    DEVICE_AUTH_TOKEN_ONLY = 2
-    ASSOCIATION_AND_DEVICE_AUTH_TOKEN = 3
+    GATEWAY_AUTH_METHOD_UNSPECIFIED = "GATEWAY_AUTH_METHOD_UNSPECIFIED"
+    ASSOCIATION_ONLY = "ASSOCIATION_ONLY"
+    DEVICE_AUTH_TOKEN_ONLY = "DEVICE_AUTH_TOKEN_ONLY"
+    ASSOCIATION_AND_DEVICE_AUTH_TOKEN = "ASSOCIATION_AND_DEVICE_AUTH_TOKEN"
 
 
 class PublicKeyCertificateFormat():
     r"""The supported formats for the public key."""
-    UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT = 0
-    X509_CERTIFICATE_PEM = 1
+    UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT = "UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT"
+    X509_CERTIFICATE_PEM = "X509_CERTIFICATE_PEM"
 
 
 class PublicKeyFormat:

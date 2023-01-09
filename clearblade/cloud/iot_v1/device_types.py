@@ -1,5 +1,5 @@
 from typing import List
-
+from .resources import GatewayType, LogLevel
 from .utils import get_value
 
 
@@ -9,17 +9,16 @@ class Device():
     """
     # TODO: find a better way to construct the Device object. I dont like so much parameter in a constructor
 
-    def __init__(self, id: str = None, name: str = None, num_id: str = None,
+    def __init__(self, id: str, num_id: str = None,
                  credentials: list = [], last_heartbeat_time: str = None, last_event_time: str = None,
                  last_state_time: str = None, last_config_ack_time: str = None,
                  last_config_send_time: str = None, blocked: bool = False,
-                 last_error_time: str = None, last_error_status_code: dict = {"code":None, "message":""},
+                 last_error_time: str = None, last_error_status_code: dict = None,
                  config: dict = {"cloudUpdateTime":None, "version":""} ,
                  state: dict = {"updateTime":None, "binaryData":None},
-                 log_level: str = "NONE", meta_data: dict = {}, gateway_config : dict = {}) -> None:
+                 log_level: str = LogLevel.NONE, meta_data: dict = {}, gateway_config : dict = {"gatewayType": GatewayType.NON_GATEWAY}) -> None:
 
         self._id = id
-        self._name = name
         self._num_id = num_id
         self._credentials = credentials
         self._last_heartbeat_time = last_heartbeat_time
@@ -38,7 +37,7 @@ class Device():
 
     @staticmethod
     def from_json(json):
-        return Device(id=json['id'], name=json['name'], num_id=json['numId'],
+        return Device(id=json['id'], num_id=json['numId'],
                       credentials=json['credentials'], last_heartbeat_time=json['lastHeartbeatTime'],
                       last_event_time=json['lastEventTime'], last_state_time=json['lastStateTime'],
                       last_config_ack_time=json['lastConfigAckTime'], last_config_send_time=json['lastConfigSendTime'],
@@ -52,16 +51,16 @@ class Device():
         return self._id
 
     @property
-    def name(self):
-        return self._name
-
-    @property
     def num_id(self):
         return self._num_id
 
     @property
     def credentials(self):
         return self._credentials
+
+    @credentials.setter
+    def credentials(self, credentials):
+        self._credentials = credentials
 
     @property
     def last_error_status(self):
@@ -78,14 +77,26 @@ class Device():
     @property
     def log_level(self):
         return self._log_level
+    
+    @log_level.setter
+    def log_level(self, log_level):
+        self._log_level = log_level
 
     @property
     def meta_data(self):
         return self._meta_data
 
+    @meta_data.setter
+    def meta_data(self, meta_data):
+        self._meta_data = meta_data
+
     @property
     def gateway_config(self):
         return self._gateway_config
+
+    @gateway_config.setter
+    def gateway_config(self, gateway_config):
+        self._gateway_config = gateway_config
 
     @property
     def log_level(self):
@@ -94,18 +105,26 @@ class Device():
     @property
     def last_heartbeat_time(self):
         return self._last_heartbeat_time
+    
+    @property
+    def blocked(self):
+        return self._blocked
+
+    @blocked.setter
+    def blocked(self, blocked):
+        self._blocked = blocked
 
 
 # classes to mock googles request & response
 
 class DeviceState():
-    def __init__(self, updated_time: str = None, binary_data:str = None) -> None:
-        self._updated_time = updated_time
+    def __init__(self, update_time: str = None, binary_data:str = None) -> None:
+        self._update_time = update_time
         self._binary_data = binary_data
 
     @property
-    def updated_time(self):
-        return self._updated_time
+    def update_time(self):
+        return self._update_time
 
     @property
     def binary_data(self):
@@ -113,7 +132,7 @@ class DeviceState():
 
     @staticmethod
     def from_json(response_json):
-        return DeviceState(updated_time=get_value(response_json, 'updateTime'),
+        return DeviceState(update_time=get_value(response_json, 'updateTime'),
                            binary_data=get_value(response_json, 'binaryData'))
 
 

@@ -10,15 +10,14 @@ def create_device_in_dev_iot(name, keyFile):
 
     parent = client.registry_path(
         "api-project-320446546234",
-        "asia-east1",
-        "test-asia-east1")
+        "us-central1",
+        "test-registry")
 
     with io.open(keyFile) as f:
         public_key = f.read()
 
     device = iot_v1.Device(
-        id="python_sdk_device_dummy",
-        name=name,
+        id=name,
         credentials=[
             {
                 "publicKey": {
@@ -32,4 +31,5 @@ def create_device_in_dev_iot(name, keyFile):
 
 device_name = "python_sdk_device_dummy"
 key_path = "../api-client/manager/resources/ec_public.pem"
+os.environ["CLEARBLADE_CONFIGURATION"] = "/Users/rajas/Downloads/test-credentials.json"
 create_device_in_dev_iot(device_name, key_path)

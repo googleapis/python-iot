@@ -30,10 +30,10 @@ class ClearBladeDeviceManager():
         return params,body
 
     def _create_device_body(self, device: Device) :
-        return {'id':device.name, 'name':device.name,
+        return {'id':device.id, 
                 'credentials':device.credentials, 'lastErrorStatus':device.last_error_status,
                 'config':device.config, 'state':device.state,
-                'loglevel':device.log_level, 'metadata':device.meta_data,
+                'logLevel':device.log_level, 'metadata':device.meta_data,
                 'gatewayConfig':device.gateway_config}
 
     def _create_device_from_response(self, json_response) -> Device :

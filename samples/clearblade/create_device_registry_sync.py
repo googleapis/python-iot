@@ -9,10 +9,9 @@ def sample_create_device_registry():
 
     registry = iot_v1.DeviceRegistry(
         id='test-registry',
-        name='test-registry',
-        mqttConfig={'mqttEnabledState':'MQTT_ENABLED'},
-        httpConfig={'httpEnabledState':'HTTP_ENABLED'},
-        logLevel='ERROR',
+        mqttConfig={'mqttEnabledState':iot_v1.MqttState.MQTT_ENABLED},
+        httpConfig={'httpEnabledState':iot_v1.HttpState.HTTP_ENABLED},
+        logLevel=iot_v1.LogLevel.NONE,
         eventNotificationConfigs=[{'pubsubTopicName':'projects/api-project-320446546234/topics/deleting'}]
     )
 

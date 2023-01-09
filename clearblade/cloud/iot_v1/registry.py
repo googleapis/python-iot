@@ -21,7 +21,7 @@ class ClearBladeRegistryManager():
         if registry.event_notification_configs:
             registry_json['eventNotificationConfigs']=registry.event_notification_configs
         if registry.log_level:
-            registry_json['loglevel']=registry.log_level
+            registry_json['logLevel']=registry.log_level
         return registry_json
 
     def _prepare_params_for_registry_list(self, request:ListDeviceRegistriesRequest):
