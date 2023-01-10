@@ -12,7 +12,7 @@ async def sample_update_device_async():
         "us-central1",
         "test-registry")
 
-    device = iot_v1.Device(id="test-dev-1", blocked=True, log_level='NONE')
+    device = iot_v1.Device(id="test-dev-1", blocked=True, log_level=iot_v1.LogLevel.ERROR)
 
     request = iot_v1.UpdateDeviceRequest(
         parent=registry_path,

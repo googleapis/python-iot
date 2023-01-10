@@ -10,7 +10,11 @@ def sample_create_device():
         "us-central1",
         "test-registry")
 
-    device = iot_v1.Device(id="Python_11", name="Python_11")
+    device = iot_v1.Device(
+        id="Python_12", 
+        gateway_config={"gatewayType": iot_v1.GatewayType.NON_GATEWAY},
+        log_level=iot_v1.LogLevel.ERROR)
+    
     request = iot_v1.CreateDeviceRequest(parent=parent, device=device)
 
     response = client.create_device(request)

@@ -1,4 +1,5 @@
 from .utils import get_value
+from .resources import HttpState, MqttState, LogLevel
 
 class EventNotificationConfig:
     def __init__(self, pub_sub_topic_name, subfolder_matches=None) -> None:
@@ -17,9 +18,9 @@ class DeviceRegistry:
     def __init__(self, id:str = None, name:str = None,
                  eventNotificationConfigs:list = [],
                  stateNotificationConfig:dict = {'pubsubTopicName': ''},
-                 mqttConfig:dict = {'mqttEnabledState':'MQTT_ENABLED'},
-                 httpConfig:dict = {'httpEnabledState':'HTTP_ENABLED'},
-                 logLevel:str = None, credentials:list = []) -> None:
+                 mqttConfig:dict = {'mqttEnabledState': MqttState.MQTT_ENABLED},
+                 httpConfig:dict = {'httpEnabledState': HttpState.HTTP_ENABLED},
+                 logLevel:str = LogLevel.NONE, credentials:list = []) -> None:
         self._id = id
         self._name = name
         self._event_notification_configs = eventNotificationConfigs

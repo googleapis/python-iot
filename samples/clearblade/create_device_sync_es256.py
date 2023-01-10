@@ -18,11 +18,10 @@ def create_device_in_dev_iot(name, keyFile):
 
     device = iot_v1.Device(
         id="my_test_device",
-        name=name,
         credentials=[
             {
                 "publicKey": {
-                    "format": "ES256_PEM",
+                    "format": iot_v1.PublicKeyFormat.ES256_PEM,
                     "key": public_key,
                 }
             }])

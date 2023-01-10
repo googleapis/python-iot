@@ -109,7 +109,7 @@ def test_get_device_configVersions():
     device_configs = response.device_configs
     for device_config in device_configs:
         print("Device version = {} Device Ack Time {} \n".format(device_config.version,
-        device_config.cloud_ack_time))
+        device_config.cloud_update_time))
 
 async def test_get_device_configVersions_async():
     async_client = DeviceManagerAsyncClient()

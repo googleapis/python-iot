@@ -12,7 +12,7 @@ async def sample_create_device_async():
         "asia-east1",
         "test-asia-east1")
 
-    device = iot_v1.Device(id="Python_SDK", name="Python_SDK")
+    device = iot_v1.Device(id="Python_SDK")
     request = iot_v1.CreateDeviceRequest(parent=parent, device=device)
 
     response = await async_client.create_device(request)

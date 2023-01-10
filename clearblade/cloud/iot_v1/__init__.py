@@ -34,4 +34,12 @@ __all__ = ("DeviceManagerClient",
            "ListDeviceRegistryPager",
            "ListDeviceRegistriesAsyncPager",
            "ListDevicesPager",
-           "ListDevicesAsyncPager")
+           "ListDevicesAsyncPager",
+           "MqttState",
+           "HtttState",
+           "LogLevel",
+           "GatewayType",
+           "GatewayAuthMethod",
+           "PublicKeyCertificateFormat",
+           "PublicKeyFormat"
+           )
