@@ -193,12 +193,12 @@ class ModifyCloudToDeviceConfigRequest(Request):
 class DeviceConfig(Request):
     def __init__(self, name,
                  version,
-                 cloud_ack_time,
+                 cloud_update_time,
                  device_ack_time,
                  binary_data) -> None:
         super().__init__(name)
         self._version = version
-        self._cloud_ack_time = cloud_ack_time
+        self._cloud_update_time = cloud_update_time
         self._device_ack_time = device_ack_time
         self._binary_data = binary_data
 
@@ -207,8 +207,8 @@ class DeviceConfig(Request):
         return self._version
 
     @property
-    def cloud_ack_time(self):
-        return self._cloud_ack_time
+    def cloud_update_time(self):
+        return self._cloud_update_time
 
     @property
     def device_ack_time(self):
@@ -222,7 +222,7 @@ class DeviceConfig(Request):
     def from_json(json):
         return DeviceConfig(name='',
                             version=get_value(json, 'version'),
-                            cloud_ack_time=get_value(json,'cloudUpdateTime'),
+                            cloud_update_time=get_value(json,'cloudUpdateTime'),
                             device_ack_time=get_value(json, 'deviceAckTime'),
                             binary_data=get_value(json,'binaryData'))
 
