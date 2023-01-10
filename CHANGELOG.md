@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.8.0](https://github.com/googleapis/python-iot/compare/v2.7.0...v2.8.0) (2023-01-10)
+
+
+### Features
+
+* Add support for python 3.11 ([#426](https://github.com/googleapis/python-iot/issues/426)) ([ce371c7](https://github.com/googleapis/python-iot/commit/ce371c7f39d51a434b8f73e7445ad5283ac769d0))
+
 ## [2.7.0](https://github.com/googleapis/python-iot/compare/v2.6.4...v2.7.0) (2022-12-14)
 
 
