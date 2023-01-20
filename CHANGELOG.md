@@ -4,6 +4,18 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.8.1](https://github.com/googleapis/python-iot/compare/v2.8.0...v2.8.1) (2023-01-20)
+
+
+### Bug Fixes
+
+* Add context manager return types ([b6a2a25](https://github.com/googleapis/python-iot/commit/b6a2a25c71c66065208e04d4954f5e4fa0bc4ee8))
+
+
+### Documentation
+
+* Add documentation for enums ([b6a2a25](https://github.com/googleapis/python-iot/commit/b6a2a25c71c66065208e04d4954f5e4fa0bc4ee8))
+
 ## [2.8.0](https://github.com/googleapis/python-iot/compare/v2.7.0...v2.8.0) (2023-01-10)
 
 
