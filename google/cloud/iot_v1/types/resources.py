@@ -50,6 +50,15 @@ __protobuf__ = proto.module(
 class MqttState(proto.Enum):
     r"""Indicates whether an MQTT connection is enabled or disabled.
     See the field description for details.
+
+    Values:
+        MQTT_STATE_UNSPECIFIED (0):
+            No MQTT state specified. If not specified,
+            MQTT will be enabled by default.
+        MQTT_ENABLED (1):
+            Enables a MQTT connection.
+        MQTT_DISABLED (2):
+            Disables a MQTT connection.
     """
     MQTT_STATE_UNSPECIFIED = 0
     MQTT_ENABLED = 1
@@ -59,6 +68,17 @@ class MqttState(proto.Enum):
 class HttpState(proto.Enum):
     r"""Indicates whether DeviceService (HTTP) is enabled or disabled
     for the registry. See the field description for details.
+
+    Values:
+        HTTP_STATE_UNSPECIFIED (0):
+            No HTTP state specified. If not specified,
+            DeviceService will be enabled by default.
+        HTTP_ENABLED (1):
+            Enables DeviceService (HTTP) service for the
+            registry.
+        HTTP_DISABLED (2):
+            Disables DeviceService (HTTP) service for the
+            registry.
     """
     HTTP_STATE_UNSPECIFIED = 0
     HTTP_ENABLED = 1
@@ -72,6 +92,20 @@ class LogLevel(proto.Enum):
     should be written to logs. For example, if the LogLevel is ERROR,
     only events that terminate in errors will be logged. LogLevel is
     inclusive; enabling INFO logging will also enable ERROR logging.
+
+    Values:
+        LOG_LEVEL_UNSPECIFIED (0):
+            No logging specified. If not specified,
+            logging will be disabled.
+        NONE (10):
+            Disables logging.
+        ERROR (20):
+            Error events will be logged.
+        INFO (30):
+            Informational events will be logged, such as
+            connections and disconnections.
+        DEBUG (40):
+            All events will be logged.
     """
     LOG_LEVEL_UNSPECIFIED = 0
     NONE = 10
@@ -81,7 +115,17 @@ class LogLevel(proto.Enum):
 
 
 class GatewayType(proto.Enum):
-    r"""Gateway type."""
+    r"""Gateway type.
+
+    Values:
+        GATEWAY_TYPE_UNSPECIFIED (0):
+            If unspecified, the device is considered a
+            non-gateway device.
+        GATEWAY (1):
+            The device is a gateway.
+        NON_GATEWAY (2):
+            The device is not a gateway.
+    """
     GATEWAY_TYPE_UNSPECIFIED = 0
     GATEWAY = 1
     NON_GATEWAY = 2
@@ -91,6 +135,24 @@ class GatewayAuthMethod(proto.Enum):
     r"""The gateway authorization/authentication method. This setting
     determines how Cloud IoT Core authorizes/authenticate devices to
     access the gateway.
+
+    Values:
+        GATEWAY_AUTH_METHOD_UNSPECIFIED (0):
+            No authentication/authorization method
+            specified. No devices are allowed to access the
+            gateway.
+        ASSOCIATION_ONLY (1):
+            The device is authenticated through the
+            gateway association only. Device credentials are
+            ignored even if provided.
+        DEVICE_AUTH_TOKEN_ONLY (2):
+            The device is authenticated through its own
+            credentials. Gateway association is not checked.
+        ASSOCIATION_AND_DEVICE_AUTH_TOKEN (3):
+            The device is authenticated through both
+            device credentials and gateway association. The
+            device must be bound to the gateway and must
+            provide its own credentials.
     """
     GATEWAY_AUTH_METHOD_UNSPECIFIED = 0
     ASSOCIATION_ONLY = 1
@@ -99,13 +161,58 @@ class GatewayAuthMethod(proto.Enum):
 
 
 class PublicKeyCertificateFormat(proto.Enum):
-    r"""The supported formats for the public key."""
+    r"""The supported formats for the public key.
+
+    Values:
+        UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT (0):
+            The format has not been specified. This is an
+            invalid default value and must not be used.
+        X509_CERTIFICATE_PEM (1):
+            An X.509v3 certificate
+            (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__),
+            encoded in base64, and wrapped by
+            ``-----BEGIN CERTIFICATE-----`` and
+            ``-----END CERTIFICATE-----``.
+    """
     UNSPECIFIED_PUBLIC_KEY_CERTIFICATE_FORMAT = 0
     X509_CERTIFICATE_PEM = 1
 
 
 class PublicKeyFormat(proto.Enum):
-    r"""The supported formats for the public key."""
+    r"""The supported formats for the public key.
+
+    Values:
+        UNSPECIFIED_PUBLIC_KEY_FORMAT (0):
+            The format has not been specified. This is an
+            invalid default value and must not be used.
+        RSA_PEM (3):
+            An RSA public key encoded in base64, and wrapped by
+            ``-----BEGIN PUBLIC KEY-----`` and
+            ``-----END PUBLIC KEY-----``. This can be used to verify
+            ``RS256`` signatures in JWT tokens
+            (`RFC7518 <https://www.ietf.org/rfc/rfc7518.txt>`__).
+        RSA_X509_PEM (1):
+            As RSA_PEM, but wrapped in an X.509v3 certificate
+            (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__),
+            encoded in base64, and wrapped by
+            ``-----BEGIN CERTIFICATE-----`` and
+            ``-----END CERTIFICATE-----``.
+        ES256_PEM (2):
+            Public key for the ECDSA algorithm using P-256 and SHA-256,
+            encoded in base64, and wrapped by
+            ``-----BEGIN PUBLIC KEY-----`` and
+            ``-----END PUBLIC KEY-----``. This can be used to verify JWT
+            tokens with the ``ES256`` algorithm
+            (`RFC7518 <https://www.ietf.org/rfc/rfc7518.txt>`__). This
+            curve is defined in `OpenSSL <https://www.openssl.org/>`__
+            as the ``prime256v1`` curve.
+        ES256_X509_PEM (4):
+            As ES256_PEM, but wrapped in an X.509v3 certificate
+            (`RFC5280 <https://www.ietf.org/rfc/rfc5280.txt>`__),
+            encoded in base64, and wrapped by
+            ``-----BEGIN CERTIFICATE-----`` and
+            ``-----END CERTIFICATE-----``.
+    """
     UNSPECIFIED_PUBLIC_KEY_FORMAT = 0
     RSA_PEM = 3
     RSA_X509_PEM = 1

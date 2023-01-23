@@ -2720,7 +2720,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
         # Done; return the response.
         return response
 
-    def __enter__(self):
+    def __enter__(self) -> "DeviceManagerClient":
         return self
 
     def __exit__(self, type, value, traceback):
