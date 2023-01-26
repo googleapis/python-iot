@@ -1,8 +1,9 @@
+import base64
+
 from .config_manager import ClearBladeConfigManager
 from .device_types import *
 from .http_client import AsyncClient, SyncClient
 from .pagers import ListDevicesAsyncPager, ListDevicesPager
-import base64
 
 
 class ClearBladeDeviceManager():
@@ -32,8 +33,9 @@ class ClearBladeDeviceManager():
 
     def _create_device_body(self, device: Device) :
         return {'id':device.id, 
-                'credentials':device.credentials, 'lastErrorStatus':device.last_error_status,
-                'config':device.config, 'state':device.state,
+                'credentials':device.credentials,
+                'config':device.config,
+                'blocked': device.blocked,
                 'logLevel':device.log_level, 'metadata':device.meta_data,
                 'gatewayConfig':device.gateway_config}
 
