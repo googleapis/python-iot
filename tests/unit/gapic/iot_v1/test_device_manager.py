@@ -22,6 +22,8 @@ try:
 except ImportError:  # pragma: NO COVER
     import mock
 
+from collections.abc import Iterable
+import json
 import math
 
 from google.api_core import gapic_v1, grpc_helpers, grpc_helpers_async, path_template
@@ -36,6 +38,7 @@ from google.iam.v1 import policy_pb2  # type: ignore
 from google.oauth2 import service_account
 from google.protobuf import any_pb2  # type: ignore
 from google.protobuf import field_mask_pb2  # type: ignore
+from google.protobuf import json_format
 from google.protobuf import timestamp_pb2  # type: ignore
 from google.rpc import status_pb2  # type: ignore
 from google.type import expr_pb2  # type: ignore
@@ -44,6 +47,8 @@ from grpc.experimental import aio
 from proto.marshal.rules import wrappers
 from proto.marshal.rules.dates import DurationRule, TimestampRule
 import pytest
+from requests import PreparedRequest, Request, Response
+from requests.sessions import Session
 
 from google.cloud.iot_v1.services.device_manager import (
     DeviceManagerAsyncClient,
@@ -103,6 +108,7 @@ def test__get_default_mtls_endpoint():
     [
         (DeviceManagerClient, "grpc"),
         (DeviceManagerAsyncClient, "grpc_asyncio"),
+        (DeviceManagerClient, "rest"),
     ],
 )
 def test_device_manager_client_from_service_account_info(client_class, transport_name):
@@ -116,7 +122,11 @@ def test_device_manager_client_from_service_account_info(client_class, transport
         assert client.transport._credentials == creds
         assert isinstance(client, client_class)
 
-        assert client.transport._host == ("cloudiot.googleapis.com:443")
+        assert client.transport._host == (
+            "cloudiot.googleapis.com:443"
+            if transport_name in ["grpc", "grpc_asyncio"]
+            else "https://cloudiot.googleapis.com"
+        )
 
 
 @pytest.mark.parametrize(
@@ -124,6 +134,7 @@ def test_device_manager_client_from_service_account_info(client_class, transport
     [
         (transports.DeviceManagerGrpcTransport, "grpc"),
         (transports.DeviceManagerGrpcAsyncIOTransport, "grpc_asyncio"),
+        (transports.DeviceManagerRestTransport, "rest"),
     ],
 )
 def test_device_manager_client_service_account_always_use_jwt(
@@ -149,6 +160,7 @@ def test_device_manager_client_service_account_always_use_jwt(
     [
         (DeviceManagerClient, "grpc"),
         (DeviceManagerAsyncClient, "grpc_asyncio"),
+        (DeviceManagerClient, "rest"),
     ],
 )
 def test_device_manager_client_from_service_account_file(client_class, transport_name):
@@ -169,13 +181,18 @@ def test_device_manager_client_from_service_account_file(client_class, transport
         assert client.transport._credentials == creds
         assert isinstance(client, client_class)
 
-        assert client.transport._host == ("cloudiot.googleapis.com:443")
+        assert client.transport._host == (
+            "cloudiot.googleapis.com:443"
+            if transport_name in ["grpc", "grpc_asyncio"]
+            else "https://cloudiot.googleapis.com"
+        )
 
 
 def test_device_manager_client_get_transport_class():
     transport = DeviceManagerClient.get_transport_class()
     available_transports = [
         transports.DeviceManagerGrpcTransport,
+        transports.DeviceManagerRestTransport,
     ]
     assert transport in available_transports
 
@@ -192,6 +209,7 @@ def test_device_manager_client_get_transport_class():
             transports.DeviceManagerGrpcAsyncIOTransport,
             "grpc_asyncio",
         ),
+        (DeviceManagerClient, transports.DeviceManagerRestTransport, "rest"),
     ],
 )
 @mock.patch.object(
@@ -337,6 +355,8 @@ def test_device_manager_client_client_options(
             "grpc_asyncio",
             "false",
         ),
+        (DeviceManagerClient, transports.DeviceManagerRestTransport, "rest", "true"),
+        (DeviceManagerClient, transports.DeviceManagerRestTransport, "rest", "false"),
     ],
 )
 @mock.patch.object(
@@ -536,6 +556,7 @@ def test_device_manager_client_get_mtls_endpoint_and_cert_source(client_class):
             transports.DeviceManagerGrpcAsyncIOTransport,
             "grpc_asyncio",
         ),
+        (DeviceManagerClient, transports.DeviceManagerRestTransport, "rest"),
     ],
 )
 def test_device_manager_client_client_options_scopes(
@@ -576,6 +597,7 @@ def test_device_manager_client_client_options_scopes(
             "grpc_asyncio",
             grpc_helpers_async,
         ),
+        (DeviceManagerClient, transports.DeviceManagerRestTransport, "rest", None),
     ],
 )
 def test_device_manager_client_client_options_credentials_file(
@@ -5846,6 +5868,5767 @@ async def test_unbind_device_from_gateway_flattened_error_async():
         )
 
 
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.CreateDeviceRegistryRequest,
+        dict,
+    ],
+)
+def test_create_device_registry_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2"}
+    request_init["device_registry"] = {
+        "id": "id_value",
+        "name": "name_value",
+        "event_notification_configs": [
+            {
+                "subfolder_matches": "subfolder_matches_value",
+                "pubsub_topic_name": "pubsub_topic_name_value",
+            }
+        ],
+        "state_notification_config": {"pubsub_topic_name": "pubsub_topic_name_value"},
+        "mqtt_config": {"mqtt_enabled_state": 1},
+        "http_config": {"http_enabled_state": 1},
+        "log_level": 10,
+        "credentials": [
+            {
+                "public_key_certificate": {
+                    "format_": 1,
+                    "certificate": "certificate_value",
+                    "x509_details": {
+                        "issuer": "issuer_value",
+                        "subject": "subject_value",
+                        "start_time": {"seconds": 751, "nanos": 543},
+                        "expiry_time": {},
+                        "signature_algorithm": "signature_algorithm_value",
+                        "public_key_type": "public_key_type_value",
+                    },
+                }
+            }
+        ],
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceRegistry(
+            id="id_value",
+            name="name_value",
+            log_level=resources.LogLevel.NONE,
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceRegistry.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.create_device_registry(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, resources.DeviceRegistry)
+    assert response.id == "id_value"
+    assert response.name == "name_value"
+    assert response.log_level == resources.LogLevel.NONE
+
+
+def test_create_device_registry_rest_required_fields(
+    request_type=device_manager.CreateDeviceRegistryRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["parent"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).create_device_registry._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["parent"] = "parent_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).create_device_registry._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "parent" in jsonified_request
+    assert jsonified_request["parent"] == "parent_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = resources.DeviceRegistry()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = resources.DeviceRegistry.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.create_device_registry(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_create_device_registry_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.create_device_registry._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "parent",
+                "deviceRegistry",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_create_device_registry_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_create_device_registry"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_create_device_registry"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.CreateDeviceRegistryRequest.pb(
+            device_manager.CreateDeviceRegistryRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = resources.DeviceRegistry.to_json(
+            resources.DeviceRegistry()
+        )
+
+        request = device_manager.CreateDeviceRegistryRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = resources.DeviceRegistry()
+
+        client.create_device_registry(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_create_device_registry_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.CreateDeviceRegistryRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2"}
+    request_init["device_registry"] = {
+        "id": "id_value",
+        "name": "name_value",
+        "event_notification_configs": [
+            {
+                "subfolder_matches": "subfolder_matches_value",
+                "pubsub_topic_name": "pubsub_topic_name_value",
+            }
+        ],
+        "state_notification_config": {"pubsub_topic_name": "pubsub_topic_name_value"},
+        "mqtt_config": {"mqtt_enabled_state": 1},
+        "http_config": {"http_enabled_state": 1},
+        "log_level": 10,
+        "credentials": [
+            {
+                "public_key_certificate": {
+                    "format_": 1,
+                    "certificate": "certificate_value",
+                    "x509_details": {
+                        "issuer": "issuer_value",
+                        "subject": "subject_value",
+                        "start_time": {"seconds": 751, "nanos": 543},
+                        "expiry_time": {},
+                        "signature_algorithm": "signature_algorithm_value",
+                        "public_key_type": "public_key_type_value",
+                    },
+                }
+            }
+        ],
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.create_device_registry(request)
+
+
+def test_create_device_registry_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceRegistry()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {"parent": "projects/sample1/locations/sample2"}
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            parent="parent_value",
+            device_registry=resources.DeviceRegistry(id="id_value"),
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceRegistry.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.create_device_registry(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{parent=projects/*/locations/*}/registries" % client.transport._host,
+            args[1],
+        )
+
+
+def test_create_device_registry_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.create_device_registry(
+            device_manager.CreateDeviceRegistryRequest(),
+            parent="parent_value",
+            device_registry=resources.DeviceRegistry(id="id_value"),
+        )
+
+
+def test_create_device_registry_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.GetDeviceRegistryRequest,
+        dict,
+    ],
+)
+def test_get_device_registry_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"name": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceRegistry(
+            id="id_value",
+            name="name_value",
+            log_level=resources.LogLevel.NONE,
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceRegistry.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.get_device_registry(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, resources.DeviceRegistry)
+    assert response.id == "id_value"
+    assert response.name == "name_value"
+    assert response.log_level == resources.LogLevel.NONE
+
+
+def test_get_device_registry_rest_required_fields(
+    request_type=device_manager.GetDeviceRegistryRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).get_device_registry._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).get_device_registry._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = resources.DeviceRegistry()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "get",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = resources.DeviceRegistry.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.get_device_registry(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_get_device_registry_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.get_device_registry._get_unset_required_fields({})
+    assert set(unset_fields) == (set(()) & set(("name",)))
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_get_device_registry_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_get_device_registry"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_get_device_registry"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.GetDeviceRegistryRequest.pb(
+            device_manager.GetDeviceRegistryRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = resources.DeviceRegistry.to_json(
+            resources.DeviceRegistry()
+        )
+
+        request = device_manager.GetDeviceRegistryRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = resources.DeviceRegistry()
+
+        client.get_device_registry(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_get_device_registry_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.GetDeviceRegistryRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"name": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.get_device_registry(request)
+
+
+def test_get_device_registry_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceRegistry()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceRegistry.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.get_device_registry(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*}" % client.transport._host,
+            args[1],
+        )
+
+
+def test_get_device_registry_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.get_device_registry(
+            device_manager.GetDeviceRegistryRequest(),
+            name="name_value",
+        )
+
+
+def test_get_device_registry_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.UpdateDeviceRegistryRequest,
+        dict,
+    ],
+)
+def test_update_device_registry_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "device_registry": {
+            "name": "projects/sample1/locations/sample2/registries/sample3"
+        }
+    }
+    request_init["device_registry"] = {
+        "id": "id_value",
+        "name": "projects/sample1/locations/sample2/registries/sample3",
+        "event_notification_configs": [
+            {
+                "subfolder_matches": "subfolder_matches_value",
+                "pubsub_topic_name": "pubsub_topic_name_value",
+            }
+        ],
+        "state_notification_config": {"pubsub_topic_name": "pubsub_topic_name_value"},
+        "mqtt_config": {"mqtt_enabled_state": 1},
+        "http_config": {"http_enabled_state": 1},
+        "log_level": 10,
+        "credentials": [
+            {
+                "public_key_certificate": {
+                    "format_": 1,
+                    "certificate": "certificate_value",
+                    "x509_details": {
+                        "issuer": "issuer_value",
+                        "subject": "subject_value",
+                        "start_time": {"seconds": 751, "nanos": 543},
+                        "expiry_time": {},
+                        "signature_algorithm": "signature_algorithm_value",
+                        "public_key_type": "public_key_type_value",
+                    },
+                }
+            }
+        ],
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceRegistry(
+            id="id_value",
+            name="name_value",
+            log_level=resources.LogLevel.NONE,
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceRegistry.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.update_device_registry(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, resources.DeviceRegistry)
+    assert response.id == "id_value"
+    assert response.name == "name_value"
+    assert response.log_level == resources.LogLevel.NONE
+
+
+def test_update_device_registry_rest_required_fields(
+    request_type=device_manager.UpdateDeviceRegistryRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).update_device_registry._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).update_device_registry._get_unset_required_fields(jsonified_request)
+    # Check that path parameters and body parameters are not mixing in.
+    assert not set(unset_fields) - set(("update_mask",))
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = resources.DeviceRegistry()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "patch",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = resources.DeviceRegistry.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.update_device_registry(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_update_device_registry_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.update_device_registry._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(("updateMask",))
+        & set(
+            (
+                "deviceRegistry",
+                "updateMask",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_update_device_registry_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_update_device_registry"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_update_device_registry"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.UpdateDeviceRegistryRequest.pb(
+            device_manager.UpdateDeviceRegistryRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = resources.DeviceRegistry.to_json(
+            resources.DeviceRegistry()
+        )
+
+        request = device_manager.UpdateDeviceRegistryRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = resources.DeviceRegistry()
+
+        client.update_device_registry(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_update_device_registry_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.UpdateDeviceRegistryRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "device_registry": {
+            "name": "projects/sample1/locations/sample2/registries/sample3"
+        }
+    }
+    request_init["device_registry"] = {
+        "id": "id_value",
+        "name": "projects/sample1/locations/sample2/registries/sample3",
+        "event_notification_configs": [
+            {
+                "subfolder_matches": "subfolder_matches_value",
+                "pubsub_topic_name": "pubsub_topic_name_value",
+            }
+        ],
+        "state_notification_config": {"pubsub_topic_name": "pubsub_topic_name_value"},
+        "mqtt_config": {"mqtt_enabled_state": 1},
+        "http_config": {"http_enabled_state": 1},
+        "log_level": 10,
+        "credentials": [
+            {
+                "public_key_certificate": {
+                    "format_": 1,
+                    "certificate": "certificate_value",
+                    "x509_details": {
+                        "issuer": "issuer_value",
+                        "subject": "subject_value",
+                        "start_time": {"seconds": 751, "nanos": 543},
+                        "expiry_time": {},
+                        "signature_algorithm": "signature_algorithm_value",
+                        "public_key_type": "public_key_type_value",
+                    },
+                }
+            }
+        ],
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.update_device_registry(request)
+
+
+def test_update_device_registry_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceRegistry()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "device_registry": {
+                "name": "projects/sample1/locations/sample2/registries/sample3"
+            }
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            device_registry=resources.DeviceRegistry(id="id_value"),
+            update_mask=field_mask_pb2.FieldMask(paths=["paths_value"]),
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceRegistry.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.update_device_registry(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{device_registry.name=projects/*/locations/*/registries/*}"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_update_device_registry_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.update_device_registry(
+            device_manager.UpdateDeviceRegistryRequest(),
+            device_registry=resources.DeviceRegistry(id="id_value"),
+            update_mask=field_mask_pb2.FieldMask(paths=["paths_value"]),
+        )
+
+
+def test_update_device_registry_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.DeleteDeviceRegistryRequest,
+        dict,
+    ],
+)
+def test_delete_device_registry_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"name": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = None
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        json_return_value = ""
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.delete_device_registry(request)
+
+    # Establish that the response is the type that we expect.
+    assert response is None
+
+
+def test_delete_device_registry_rest_required_fields(
+    request_type=device_manager.DeleteDeviceRegistryRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).delete_device_registry._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).delete_device_registry._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = None
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "delete",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+            json_return_value = ""
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.delete_device_registry(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_delete_device_registry_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.delete_device_registry._get_unset_required_fields({})
+    assert set(unset_fields) == (set(()) & set(("name",)))
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_delete_device_registry_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_delete_device_registry"
+    ) as pre:
+        pre.assert_not_called()
+        pb_message = device_manager.DeleteDeviceRegistryRequest.pb(
+            device_manager.DeleteDeviceRegistryRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+
+        request = device_manager.DeleteDeviceRegistryRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+
+        client.delete_device_registry(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+
+
+def test_delete_device_registry_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.DeleteDeviceRegistryRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"name": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.delete_device_registry(request)
+
+
+def test_delete_device_registry_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = None
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        json_return_value = ""
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.delete_device_registry(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*}" % client.transport._host,
+            args[1],
+        )
+
+
+def test_delete_device_registry_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.delete_device_registry(
+            device_manager.DeleteDeviceRegistryRequest(),
+            name="name_value",
+        )
+
+
+def test_delete_device_registry_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.ListDeviceRegistriesRequest,
+        dict,
+    ],
+)
+def test_list_device_registries_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDeviceRegistriesResponse(
+            next_page_token="next_page_token_value",
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDeviceRegistriesResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.list_device_registries(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, pagers.ListDeviceRegistriesPager)
+    assert response.next_page_token == "next_page_token_value"
+
+
+def test_list_device_registries_rest_required_fields(
+    request_type=device_manager.ListDeviceRegistriesRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["parent"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_device_registries._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["parent"] = "parent_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_device_registries._get_unset_required_fields(jsonified_request)
+    # Check that path parameters and body parameters are not mixing in.
+    assert not set(unset_fields) - set(
+        (
+            "page_size",
+            "page_token",
+        )
+    )
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "parent" in jsonified_request
+    assert jsonified_request["parent"] == "parent_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = device_manager.ListDeviceRegistriesResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "get",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = device_manager.ListDeviceRegistriesResponse.pb(
+                return_value
+            )
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.list_device_registries(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_list_device_registries_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.list_device_registries._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(
+            (
+                "pageSize",
+                "pageToken",
+            )
+        )
+        & set(("parent",))
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_list_device_registries_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_list_device_registries"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_list_device_registries"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.ListDeviceRegistriesRequest.pb(
+            device_manager.ListDeviceRegistriesRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = device_manager.ListDeviceRegistriesResponse.to_json(
+            device_manager.ListDeviceRegistriesResponse()
+        )
+
+        request = device_manager.ListDeviceRegistriesRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = device_manager.ListDeviceRegistriesResponse()
+
+        client.list_device_registries(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_list_device_registries_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.ListDeviceRegistriesRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.list_device_registries(request)
+
+
+def test_list_device_registries_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDeviceRegistriesResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {"parent": "projects/sample1/locations/sample2"}
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            parent="parent_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDeviceRegistriesResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.list_device_registries(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{parent=projects/*/locations/*}/registries" % client.transport._host,
+            args[1],
+        )
+
+
+def test_list_device_registries_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.list_device_registries(
+            device_manager.ListDeviceRegistriesRequest(),
+            parent="parent_value",
+        )
+
+
+def test_list_device_registries_rest_pager(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # TODO(kbandes): remove this mock unless there's a good reason for it.
+        # with mock.patch.object(path_template, 'transcode') as transcode:
+        # Set the response as a series of pages
+        response = (
+            device_manager.ListDeviceRegistriesResponse(
+                device_registries=[
+                    resources.DeviceRegistry(),
+                    resources.DeviceRegistry(),
+                    resources.DeviceRegistry(),
+                ],
+                next_page_token="abc",
+            ),
+            device_manager.ListDeviceRegistriesResponse(
+                device_registries=[],
+                next_page_token="def",
+            ),
+            device_manager.ListDeviceRegistriesResponse(
+                device_registries=[
+                    resources.DeviceRegistry(),
+                ],
+                next_page_token="ghi",
+            ),
+            device_manager.ListDeviceRegistriesResponse(
+                device_registries=[
+                    resources.DeviceRegistry(),
+                    resources.DeviceRegistry(),
+                ],
+            ),
+        )
+        # Two responses for two calls
+        response = response + response
+
+        # Wrap the values into proper Response objs
+        response = tuple(
+            device_manager.ListDeviceRegistriesResponse.to_json(x) for x in response
+        )
+        return_values = tuple(Response() for i in response)
+        for return_val, response_val in zip(return_values, response):
+            return_val._content = response_val.encode("UTF-8")
+            return_val.status_code = 200
+        req.side_effect = return_values
+
+        sample_request = {"parent": "projects/sample1/locations/sample2"}
+
+        pager = client.list_device_registries(request=sample_request)
+
+        results = list(pager)
+        assert len(results) == 6
+        assert all(isinstance(i, resources.DeviceRegistry) for i in results)
+
+        pages = list(client.list_device_registries(request=sample_request).pages)
+        for page_, token in zip(pages, ["abc", "def", "ghi", ""]):
+            assert page_.raw_page.next_page_token == token
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.CreateDeviceRequest,
+        dict,
+    ],
+)
+def test_create_device_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request_init["device"] = {
+        "id": "id_value",
+        "name": "name_value",
+        "num_id": 636,
+        "credentials": [
+            {
+                "public_key": {"format_": 3, "key": "key_value"},
+                "expiration_time": {"seconds": 751, "nanos": 543},
+            }
+        ],
+        "last_heartbeat_time": {},
+        "last_event_time": {},
+        "last_state_time": {},
+        "last_config_ack_time": {},
+        "last_config_send_time": {},
+        "blocked": True,
+        "last_error_time": {},
+        "last_error_status": {
+            "code": 411,
+            "message": "message_value",
+            "details": [
+                {
+                    "type_url": "type.googleapis.com/google.protobuf.Duration",
+                    "value": b"\x08\x0c\x10\xdb\x07",
+                }
+            ],
+        },
+        "config": {
+            "version": 774,
+            "cloud_update_time": {},
+            "device_ack_time": {},
+            "binary_data": b"binary_data_blob",
+        },
+        "state": {"update_time": {}, "binary_data": b"binary_data_blob"},
+        "log_level": 10,
+        "metadata": {},
+        "gateway_config": {
+            "gateway_type": 1,
+            "gateway_auth_method": 1,
+            "last_accessed_gateway_id": "last_accessed_gateway_id_value",
+            "last_accessed_gateway_time": {},
+        },
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.Device(
+            id="id_value",
+            name="name_value",
+            num_id=636,
+            blocked=True,
+            log_level=resources.LogLevel.NONE,
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.Device.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.create_device(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, resources.Device)
+    assert response.id == "id_value"
+    assert response.name == "name_value"
+    assert response.num_id == 636
+    assert response.blocked is True
+    assert response.log_level == resources.LogLevel.NONE
+
+
+def test_create_device_rest_required_fields(
+    request_type=device_manager.CreateDeviceRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["parent"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).create_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["parent"] = "parent_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).create_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "parent" in jsonified_request
+    assert jsonified_request["parent"] == "parent_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = resources.Device()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = resources.Device.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.create_device(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_create_device_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.create_device._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "parent",
+                "device",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_create_device_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_create_device"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_create_device"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.CreateDeviceRequest.pb(
+            device_manager.CreateDeviceRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = resources.Device.to_json(resources.Device())
+
+        request = device_manager.CreateDeviceRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = resources.Device()
+
+        client.create_device(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_create_device_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.CreateDeviceRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request_init["device"] = {
+        "id": "id_value",
+        "name": "name_value",
+        "num_id": 636,
+        "credentials": [
+            {
+                "public_key": {"format_": 3, "key": "key_value"},
+                "expiration_time": {"seconds": 751, "nanos": 543},
+            }
+        ],
+        "last_heartbeat_time": {},
+        "last_event_time": {},
+        "last_state_time": {},
+        "last_config_ack_time": {},
+        "last_config_send_time": {},
+        "blocked": True,
+        "last_error_time": {},
+        "last_error_status": {
+            "code": 411,
+            "message": "message_value",
+            "details": [
+                {
+                    "type_url": "type.googleapis.com/google.protobuf.Duration",
+                    "value": b"\x08\x0c\x10\xdb\x07",
+                }
+            ],
+        },
+        "config": {
+            "version": 774,
+            "cloud_update_time": {},
+            "device_ack_time": {},
+            "binary_data": b"binary_data_blob",
+        },
+        "state": {"update_time": {}, "binary_data": b"binary_data_blob"},
+        "log_level": 10,
+        "metadata": {},
+        "gateway_config": {
+            "gateway_type": 1,
+            "gateway_auth_method": 1,
+            "last_accessed_gateway_id": "last_accessed_gateway_id_value",
+            "last_accessed_gateway_time": {},
+        },
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.create_device(request)
+
+
+def test_create_device_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.Device()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "parent": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            parent="parent_value",
+            device=resources.Device(id="id_value"),
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.Device.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.create_device(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{parent=projects/*/locations/*/registries/*}/devices"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_create_device_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.create_device(
+            device_manager.CreateDeviceRequest(),
+            parent="parent_value",
+            device=resources.Device(id="id_value"),
+        )
+
+
+def test_create_device_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.GetDeviceRequest,
+        dict,
+    ],
+)
+def test_get_device_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.Device(
+            id="id_value",
+            name="name_value",
+            num_id=636,
+            blocked=True,
+            log_level=resources.LogLevel.NONE,
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.Device.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.get_device(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, resources.Device)
+    assert response.id == "id_value"
+    assert response.name == "name_value"
+    assert response.num_id == 636
+    assert response.blocked is True
+    assert response.log_level == resources.LogLevel.NONE
+
+
+def test_get_device_rest_required_fields(request_type=device_manager.GetDeviceRequest):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).get_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).get_device._get_unset_required_fields(jsonified_request)
+    # Check that path parameters and body parameters are not mixing in.
+    assert not set(unset_fields) - set(("field_mask",))
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = resources.Device()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "get",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = resources.Device.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.get_device(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_get_device_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.get_device._get_unset_required_fields({})
+    assert set(unset_fields) == (set(("fieldMask",)) & set(("name",)))
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_get_device_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_get_device"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_get_device"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.GetDeviceRequest.pb(
+            device_manager.GetDeviceRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = resources.Device.to_json(resources.Device())
+
+        request = device_manager.GetDeviceRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = resources.Device()
+
+        client.get_device(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_get_device_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.GetDeviceRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.get_device(request)
+
+
+def test_get_device_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.Device()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.Device.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.get_device(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*/devices/*}"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_get_device_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.get_device(
+            device_manager.GetDeviceRequest(),
+            name="name_value",
+        )
+
+
+def test_get_device_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.UpdateDeviceRequest,
+        dict,
+    ],
+)
+def test_update_device_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "device": {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+    }
+    request_init["device"] = {
+        "id": "id_value",
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4",
+        "num_id": 636,
+        "credentials": [
+            {
+                "public_key": {"format_": 3, "key": "key_value"},
+                "expiration_time": {"seconds": 751, "nanos": 543},
+            }
+        ],
+        "last_heartbeat_time": {},
+        "last_event_time": {},
+        "last_state_time": {},
+        "last_config_ack_time": {},
+        "last_config_send_time": {},
+        "blocked": True,
+        "last_error_time": {},
+        "last_error_status": {
+            "code": 411,
+            "message": "message_value",
+            "details": [
+                {
+                    "type_url": "type.googleapis.com/google.protobuf.Duration",
+                    "value": b"\x08\x0c\x10\xdb\x07",
+                }
+            ],
+        },
+        "config": {
+            "version": 774,
+            "cloud_update_time": {},
+            "device_ack_time": {},
+            "binary_data": b"binary_data_blob",
+        },
+        "state": {"update_time": {}, "binary_data": b"binary_data_blob"},
+        "log_level": 10,
+        "metadata": {},
+        "gateway_config": {
+            "gateway_type": 1,
+            "gateway_auth_method": 1,
+            "last_accessed_gateway_id": "last_accessed_gateway_id_value",
+            "last_accessed_gateway_time": {},
+        },
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.Device(
+            id="id_value",
+            name="name_value",
+            num_id=636,
+            blocked=True,
+            log_level=resources.LogLevel.NONE,
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.Device.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.update_device(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, resources.Device)
+    assert response.id == "id_value"
+    assert response.name == "name_value"
+    assert response.num_id == 636
+    assert response.blocked is True
+    assert response.log_level == resources.LogLevel.NONE
+
+
+def test_update_device_rest_required_fields(
+    request_type=device_manager.UpdateDeviceRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).update_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).update_device._get_unset_required_fields(jsonified_request)
+    # Check that path parameters and body parameters are not mixing in.
+    assert not set(unset_fields) - set(("update_mask",))
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = resources.Device()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "patch",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = resources.Device.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.update_device(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_update_device_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.update_device._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(("updateMask",))
+        & set(
+            (
+                "device",
+                "updateMask",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_update_device_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_update_device"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_update_device"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.UpdateDeviceRequest.pb(
+            device_manager.UpdateDeviceRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = resources.Device.to_json(resources.Device())
+
+        request = device_manager.UpdateDeviceRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = resources.Device()
+
+        client.update_device(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_update_device_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.UpdateDeviceRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "device": {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+    }
+    request_init["device"] = {
+        "id": "id_value",
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4",
+        "num_id": 636,
+        "credentials": [
+            {
+                "public_key": {"format_": 3, "key": "key_value"},
+                "expiration_time": {"seconds": 751, "nanos": 543},
+            }
+        ],
+        "last_heartbeat_time": {},
+        "last_event_time": {},
+        "last_state_time": {},
+        "last_config_ack_time": {},
+        "last_config_send_time": {},
+        "blocked": True,
+        "last_error_time": {},
+        "last_error_status": {
+            "code": 411,
+            "message": "message_value",
+            "details": [
+                {
+                    "type_url": "type.googleapis.com/google.protobuf.Duration",
+                    "value": b"\x08\x0c\x10\xdb\x07",
+                }
+            ],
+        },
+        "config": {
+            "version": 774,
+            "cloud_update_time": {},
+            "device_ack_time": {},
+            "binary_data": b"binary_data_blob",
+        },
+        "state": {"update_time": {}, "binary_data": b"binary_data_blob"},
+        "log_level": 10,
+        "metadata": {},
+        "gateway_config": {
+            "gateway_type": 1,
+            "gateway_auth_method": 1,
+            "last_accessed_gateway_id": "last_accessed_gateway_id_value",
+            "last_accessed_gateway_time": {},
+        },
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.update_device(request)
+
+
+def test_update_device_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.Device()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "device": {
+                "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+            }
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            device=resources.Device(id="id_value"),
+            update_mask=field_mask_pb2.FieldMask(paths=["paths_value"]),
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.Device.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.update_device(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{device.name=projects/*/locations/*/registries/*/devices/*}"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_update_device_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.update_device(
+            device_manager.UpdateDeviceRequest(),
+            device=resources.Device(id="id_value"),
+            update_mask=field_mask_pb2.FieldMask(paths=["paths_value"]),
+        )
+
+
+def test_update_device_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.DeleteDeviceRequest,
+        dict,
+    ],
+)
+def test_delete_device_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = None
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        json_return_value = ""
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.delete_device(request)
+
+    # Establish that the response is the type that we expect.
+    assert response is None
+
+
+def test_delete_device_rest_required_fields(
+    request_type=device_manager.DeleteDeviceRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).delete_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).delete_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = None
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "delete",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+            json_return_value = ""
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.delete_device(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_delete_device_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.delete_device._get_unset_required_fields({})
+    assert set(unset_fields) == (set(()) & set(("name",)))
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_delete_device_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_delete_device"
+    ) as pre:
+        pre.assert_not_called()
+        pb_message = device_manager.DeleteDeviceRequest.pb(
+            device_manager.DeleteDeviceRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+
+        request = device_manager.DeleteDeviceRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+
+        client.delete_device(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+
+
+def test_delete_device_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.DeleteDeviceRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.delete_device(request)
+
+
+def test_delete_device_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = None
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        json_return_value = ""
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.delete_device(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*/devices/*}"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_delete_device_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.delete_device(
+            device_manager.DeleteDeviceRequest(),
+            name="name_value",
+        )
+
+
+def test_delete_device_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.ListDevicesRequest,
+        dict,
+    ],
+)
+def test_list_devices_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDevicesResponse(
+            next_page_token="next_page_token_value",
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDevicesResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.list_devices(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, pagers.ListDevicesPager)
+    assert response.next_page_token == "next_page_token_value"
+
+
+def test_list_devices_rest_required_fields(
+    request_type=device_manager.ListDevicesRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["parent"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_devices._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["parent"] = "parent_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_devices._get_unset_required_fields(jsonified_request)
+    # Check that path parameters and body parameters are not mixing in.
+    assert not set(unset_fields) - set(
+        (
+            "device_ids",
+            "device_num_ids",
+            "field_mask",
+            "gateway_list_options",
+            "page_size",
+            "page_token",
+        )
+    )
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "parent" in jsonified_request
+    assert jsonified_request["parent"] == "parent_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = device_manager.ListDevicesResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "get",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = device_manager.ListDevicesResponse.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.list_devices(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_list_devices_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.list_devices._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(
+            (
+                "deviceIds",
+                "deviceNumIds",
+                "fieldMask",
+                "gatewayListOptions",
+                "pageSize",
+                "pageToken",
+            )
+        )
+        & set(("parent",))
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_list_devices_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_list_devices"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_list_devices"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.ListDevicesRequest.pb(
+            device_manager.ListDevicesRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = device_manager.ListDevicesResponse.to_json(
+            device_manager.ListDevicesResponse()
+        )
+
+        request = device_manager.ListDevicesRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = device_manager.ListDevicesResponse()
+
+        client.list_devices(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_list_devices_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.ListDevicesRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.list_devices(request)
+
+
+def test_list_devices_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDevicesResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "parent": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            parent="parent_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDevicesResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.list_devices(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{parent=projects/*/locations/*/registries/*}/devices"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_list_devices_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.list_devices(
+            device_manager.ListDevicesRequest(),
+            parent="parent_value",
+        )
+
+
+def test_list_devices_rest_pager(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # TODO(kbandes): remove this mock unless there's a good reason for it.
+        # with mock.patch.object(path_template, 'transcode') as transcode:
+        # Set the response as a series of pages
+        response = (
+            device_manager.ListDevicesResponse(
+                devices=[
+                    resources.Device(),
+                    resources.Device(),
+                    resources.Device(),
+                ],
+                next_page_token="abc",
+            ),
+            device_manager.ListDevicesResponse(
+                devices=[],
+                next_page_token="def",
+            ),
+            device_manager.ListDevicesResponse(
+                devices=[
+                    resources.Device(),
+                ],
+                next_page_token="ghi",
+            ),
+            device_manager.ListDevicesResponse(
+                devices=[
+                    resources.Device(),
+                    resources.Device(),
+                ],
+            ),
+        )
+        # Two responses for two calls
+        response = response + response
+
+        # Wrap the values into proper Response objs
+        response = tuple(
+            device_manager.ListDevicesResponse.to_json(x) for x in response
+        )
+        return_values = tuple(Response() for i in response)
+        for return_val, response_val in zip(return_values, response):
+            return_val._content = response_val.encode("UTF-8")
+            return_val.status_code = 200
+        req.side_effect = return_values
+
+        sample_request = {
+            "parent": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        pager = client.list_devices(request=sample_request)
+
+        results = list(pager)
+        assert len(results) == 6
+        assert all(isinstance(i, resources.Device) for i in results)
+
+        pages = list(client.list_devices(request=sample_request).pages)
+        for page_, token in zip(pages, ["abc", "def", "ghi", ""]):
+            assert page_.raw_page.next_page_token == token
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.ModifyCloudToDeviceConfigRequest,
+        dict,
+    ],
+)
+def test_modify_cloud_to_device_config_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceConfig(
+            version=774,
+            binary_data=b"binary_data_blob",
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceConfig.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.modify_cloud_to_device_config(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, resources.DeviceConfig)
+    assert response.version == 774
+    assert response.binary_data == b"binary_data_blob"
+
+
+def test_modify_cloud_to_device_config_rest_required_fields(
+    request_type=device_manager.ModifyCloudToDeviceConfigRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request_init["binary_data"] = b""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).modify_cloud_to_device_config._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+    jsonified_request["binaryData"] = b"binary_data_blob"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).modify_cloud_to_device_config._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+    assert "binaryData" in jsonified_request
+    assert jsonified_request["binaryData"] == b"binary_data_blob"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = resources.DeviceConfig()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = resources.DeviceConfig.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.modify_cloud_to_device_config(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_modify_cloud_to_device_config_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.modify_cloud_to_device_config._get_unset_required_fields(
+        {}
+    )
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "name",
+                "binaryData",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_modify_cloud_to_device_config_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_modify_cloud_to_device_config"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_modify_cloud_to_device_config"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.ModifyCloudToDeviceConfigRequest.pb(
+            device_manager.ModifyCloudToDeviceConfigRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = resources.DeviceConfig.to_json(
+            resources.DeviceConfig()
+        )
+
+        request = device_manager.ModifyCloudToDeviceConfigRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = resources.DeviceConfig()
+
+        client.modify_cloud_to_device_config(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_modify_cloud_to_device_config_rest_bad_request(
+    transport: str = "rest",
+    request_type=device_manager.ModifyCloudToDeviceConfigRequest,
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.modify_cloud_to_device_config(request)
+
+
+def test_modify_cloud_to_device_config_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = resources.DeviceConfig()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+            binary_data=b"binary_data_blob",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = resources.DeviceConfig.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.modify_cloud_to_device_config(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*/devices/*}:modifyCloudToDeviceConfig"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_modify_cloud_to_device_config_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.modify_cloud_to_device_config(
+            device_manager.ModifyCloudToDeviceConfigRequest(),
+            name="name_value",
+            binary_data=b"binary_data_blob",
+        )
+
+
+def test_modify_cloud_to_device_config_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.ListDeviceConfigVersionsRequest,
+        dict,
+    ],
+)
+def test_list_device_config_versions_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDeviceConfigVersionsResponse()
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDeviceConfigVersionsResponse.pb(
+            return_value
+        )
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.list_device_config_versions(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, device_manager.ListDeviceConfigVersionsResponse)
+
+
+def test_list_device_config_versions_rest_required_fields(
+    request_type=device_manager.ListDeviceConfigVersionsRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_device_config_versions._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_device_config_versions._get_unset_required_fields(jsonified_request)
+    # Check that path parameters and body parameters are not mixing in.
+    assert not set(unset_fields) - set(("num_versions",))
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = device_manager.ListDeviceConfigVersionsResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "get",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = device_manager.ListDeviceConfigVersionsResponse.pb(
+                return_value
+            )
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.list_device_config_versions(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_list_device_config_versions_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.list_device_config_versions._get_unset_required_fields({})
+    assert set(unset_fields) == (set(("numVersions",)) & set(("name",)))
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_list_device_config_versions_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_list_device_config_versions"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_list_device_config_versions"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.ListDeviceConfigVersionsRequest.pb(
+            device_manager.ListDeviceConfigVersionsRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = (
+            device_manager.ListDeviceConfigVersionsResponse.to_json(
+                device_manager.ListDeviceConfigVersionsResponse()
+            )
+        )
+
+        request = device_manager.ListDeviceConfigVersionsRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = device_manager.ListDeviceConfigVersionsResponse()
+
+        client.list_device_config_versions(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_list_device_config_versions_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.ListDeviceConfigVersionsRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.list_device_config_versions(request)
+
+
+def test_list_device_config_versions_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDeviceConfigVersionsResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDeviceConfigVersionsResponse.pb(
+            return_value
+        )
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.list_device_config_versions(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*/devices/*}/configVersions"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_list_device_config_versions_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.list_device_config_versions(
+            device_manager.ListDeviceConfigVersionsRequest(),
+            name="name_value",
+        )
+
+
+def test_list_device_config_versions_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.ListDeviceStatesRequest,
+        dict,
+    ],
+)
+def test_list_device_states_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDeviceStatesResponse()
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDeviceStatesResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.list_device_states(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, device_manager.ListDeviceStatesResponse)
+
+
+def test_list_device_states_rest_required_fields(
+    request_type=device_manager.ListDeviceStatesRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_device_states._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).list_device_states._get_unset_required_fields(jsonified_request)
+    # Check that path parameters and body parameters are not mixing in.
+    assert not set(unset_fields) - set(("num_states",))
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = device_manager.ListDeviceStatesResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "get",
+                "query_params": pb_request,
+            }
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = device_manager.ListDeviceStatesResponse.pb(return_value)
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.list_device_states(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_list_device_states_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.list_device_states._get_unset_required_fields({})
+    assert set(unset_fields) == (set(("numStates",)) & set(("name",)))
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_list_device_states_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_list_device_states"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_list_device_states"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.ListDeviceStatesRequest.pb(
+            device_manager.ListDeviceStatesRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = device_manager.ListDeviceStatesResponse.to_json(
+            device_manager.ListDeviceStatesResponse()
+        )
+
+        request = device_manager.ListDeviceStatesRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = device_manager.ListDeviceStatesResponse()
+
+        client.list_device_states(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_list_device_states_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.ListDeviceStatesRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.list_device_states(request)
+
+
+def test_list_device_states_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.ListDeviceStatesResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.ListDeviceStatesResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.list_device_states(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*/devices/*}/states"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_list_device_states_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.list_device_states(
+            device_manager.ListDeviceStatesRequest(),
+            name="name_value",
+        )
+
+
+def test_list_device_states_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        iam_policy_pb2.SetIamPolicyRequest,
+        dict,
+    ],
+)
+def test_set_iam_policy_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"resource": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = policy_pb2.Policy(
+            version=774,
+            etag=b"etag_blob",
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = return_value
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.set_iam_policy(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, policy_pb2.Policy)
+    assert response.version == 774
+    assert response.etag == b"etag_blob"
+
+
+def test_set_iam_policy_rest_required_fields(
+    request_type=iam_policy_pb2.SetIamPolicyRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["resource"] = ""
+    request = request_type(**request_init)
+    pb_request = request
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).set_iam_policy._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["resource"] = "resource_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).set_iam_policy._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "resource" in jsonified_request
+    assert jsonified_request["resource"] == "resource_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = policy_pb2.Policy()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = return_value
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.set_iam_policy(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_set_iam_policy_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.set_iam_policy._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "resource",
+                "policy",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_set_iam_policy_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_set_iam_policy"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_set_iam_policy"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = iam_policy_pb2.SetIamPolicyRequest()
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = json_format.MessageToJson(policy_pb2.Policy())
+
+        request = iam_policy_pb2.SetIamPolicyRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = policy_pb2.Policy()
+
+        client.set_iam_policy(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_set_iam_policy_rest_bad_request(
+    transport: str = "rest", request_type=iam_policy_pb2.SetIamPolicyRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"resource": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.set_iam_policy(request)
+
+
+def test_set_iam_policy_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = policy_pb2.Policy()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "resource": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            resource="resource_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = return_value
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.set_iam_policy(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{resource=projects/*/locations/*/registries/*}:setIamPolicy"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_set_iam_policy_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.set_iam_policy(
+            iam_policy_pb2.SetIamPolicyRequest(),
+            resource="resource_value",
+        )
+
+
+def test_set_iam_policy_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        iam_policy_pb2.GetIamPolicyRequest,
+        dict,
+    ],
+)
+def test_get_iam_policy_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"resource": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = policy_pb2.Policy(
+            version=774,
+            etag=b"etag_blob",
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = return_value
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.get_iam_policy(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, policy_pb2.Policy)
+    assert response.version == 774
+    assert response.etag == b"etag_blob"
+
+
+def test_get_iam_policy_rest_required_fields(
+    request_type=iam_policy_pb2.GetIamPolicyRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["resource"] = ""
+    request = request_type(**request_init)
+    pb_request = request
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).get_iam_policy._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["resource"] = "resource_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).get_iam_policy._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "resource" in jsonified_request
+    assert jsonified_request["resource"] == "resource_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = policy_pb2.Policy()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = return_value
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.get_iam_policy(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_get_iam_policy_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.get_iam_policy._get_unset_required_fields({})
+    assert set(unset_fields) == (set(()) & set(("resource",)))
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_get_iam_policy_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_get_iam_policy"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_get_iam_policy"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = iam_policy_pb2.GetIamPolicyRequest()
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = json_format.MessageToJson(policy_pb2.Policy())
+
+        request = iam_policy_pb2.GetIamPolicyRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = policy_pb2.Policy()
+
+        client.get_iam_policy(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_get_iam_policy_rest_bad_request(
+    transport: str = "rest", request_type=iam_policy_pb2.GetIamPolicyRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"resource": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.get_iam_policy(request)
+
+
+def test_get_iam_policy_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = policy_pb2.Policy()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "resource": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            resource="resource_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = return_value
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.get_iam_policy(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{resource=projects/*/locations/*/registries/*}:getIamPolicy"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_get_iam_policy_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.get_iam_policy(
+            iam_policy_pb2.GetIamPolicyRequest(),
+            resource="resource_value",
+        )
+
+
+def test_get_iam_policy_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        iam_policy_pb2.TestIamPermissionsRequest,
+        dict,
+    ],
+)
+def test_test_iam_permissions_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"resource": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = iam_policy_pb2.TestIamPermissionsResponse(
+            permissions=["permissions_value"],
+        )
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = return_value
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.test_iam_permissions(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, iam_policy_pb2.TestIamPermissionsResponse)
+    assert response.permissions == ["permissions_value"]
+
+
+def test_test_iam_permissions_rest_required_fields(
+    request_type=iam_policy_pb2.TestIamPermissionsRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["resource"] = ""
+    request_init["permissions"] = ""
+    request = request_type(**request_init)
+    pb_request = request
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).test_iam_permissions._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["resource"] = "resource_value"
+    jsonified_request["permissions"] = "permissions_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).test_iam_permissions._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "resource" in jsonified_request
+    assert jsonified_request["resource"] == "resource_value"
+    assert "permissions" in jsonified_request
+    assert jsonified_request["permissions"] == "permissions_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = iam_policy_pb2.TestIamPermissionsResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = return_value
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.test_iam_permissions(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_test_iam_permissions_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.test_iam_permissions._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "resource",
+                "permissions",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_test_iam_permissions_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_test_iam_permissions"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_test_iam_permissions"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = iam_policy_pb2.TestIamPermissionsRequest()
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = json_format.MessageToJson(
+            iam_policy_pb2.TestIamPermissionsResponse()
+        )
+
+        request = iam_policy_pb2.TestIamPermissionsRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = iam_policy_pb2.TestIamPermissionsResponse()
+
+        client.test_iam_permissions(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_test_iam_permissions_rest_bad_request(
+    transport: str = "rest", request_type=iam_policy_pb2.TestIamPermissionsRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"resource": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.test_iam_permissions(request)
+
+
+def test_test_iam_permissions_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = iam_policy_pb2.TestIamPermissionsResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "resource": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            resource="resource_value",
+            permissions=["permissions_value"],
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = return_value
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.test_iam_permissions(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{resource=projects/*/locations/*/registries/*}:testIamPermissions"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_test_iam_permissions_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.test_iam_permissions(
+            iam_policy_pb2.TestIamPermissionsRequest(),
+            resource="resource_value",
+            permissions=["permissions_value"],
+        )
+
+
+def test_test_iam_permissions_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.SendCommandToDeviceRequest,
+        dict,
+    ],
+)
+def test_send_command_to_device_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.SendCommandToDeviceResponse()
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.SendCommandToDeviceResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.send_command_to_device(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, device_manager.SendCommandToDeviceResponse)
+
+
+def test_send_command_to_device_rest_required_fields(
+    request_type=device_manager.SendCommandToDeviceRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["name"] = ""
+    request_init["binary_data"] = b""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).send_command_to_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["name"] = "name_value"
+    jsonified_request["binaryData"] = b"binary_data_blob"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).send_command_to_device._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "name" in jsonified_request
+    assert jsonified_request["name"] == "name_value"
+    assert "binaryData" in jsonified_request
+    assert jsonified_request["binaryData"] == b"binary_data_blob"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = device_manager.SendCommandToDeviceResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = device_manager.SendCommandToDeviceResponse.pb(
+                return_value
+            )
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.send_command_to_device(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_send_command_to_device_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.send_command_to_device._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "name",
+                "binaryData",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_send_command_to_device_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_send_command_to_device"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_send_command_to_device"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.SendCommandToDeviceRequest.pb(
+            device_manager.SendCommandToDeviceRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = device_manager.SendCommandToDeviceResponse.to_json(
+            device_manager.SendCommandToDeviceResponse()
+        )
+
+        request = device_manager.SendCommandToDeviceRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = device_manager.SendCommandToDeviceResponse()
+
+        client.send_command_to_device(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_send_command_to_device_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.SendCommandToDeviceRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {
+        "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+    }
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.send_command_to_device(request)
+
+
+def test_send_command_to_device_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.SendCommandToDeviceResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "name": "projects/sample1/locations/sample2/registries/sample3/devices/sample4"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            name="name_value",
+            binary_data=b"binary_data_blob",
+            subfolder="subfolder_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.SendCommandToDeviceResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.send_command_to_device(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{name=projects/*/locations/*/registries/*/devices/*}:sendCommandToDevice"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_send_command_to_device_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.send_command_to_device(
+            device_manager.SendCommandToDeviceRequest(),
+            name="name_value",
+            binary_data=b"binary_data_blob",
+            subfolder="subfolder_value",
+        )
+
+
+def test_send_command_to_device_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.BindDeviceToGatewayRequest,
+        dict,
+    ],
+)
+def test_bind_device_to_gateway_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.BindDeviceToGatewayResponse()
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.BindDeviceToGatewayResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.bind_device_to_gateway(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, device_manager.BindDeviceToGatewayResponse)
+
+
+def test_bind_device_to_gateway_rest_required_fields(
+    request_type=device_manager.BindDeviceToGatewayRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["parent"] = ""
+    request_init["gateway_id"] = ""
+    request_init["device_id"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).bind_device_to_gateway._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["parent"] = "parent_value"
+    jsonified_request["gatewayId"] = "gateway_id_value"
+    jsonified_request["deviceId"] = "device_id_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).bind_device_to_gateway._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "parent" in jsonified_request
+    assert jsonified_request["parent"] == "parent_value"
+    assert "gatewayId" in jsonified_request
+    assert jsonified_request["gatewayId"] == "gateway_id_value"
+    assert "deviceId" in jsonified_request
+    assert jsonified_request["deviceId"] == "device_id_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = device_manager.BindDeviceToGatewayResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = device_manager.BindDeviceToGatewayResponse.pb(
+                return_value
+            )
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.bind_device_to_gateway(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_bind_device_to_gateway_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.bind_device_to_gateway._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "parent",
+                "gatewayId",
+                "deviceId",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_bind_device_to_gateway_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_bind_device_to_gateway"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_bind_device_to_gateway"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.BindDeviceToGatewayRequest.pb(
+            device_manager.BindDeviceToGatewayRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = device_manager.BindDeviceToGatewayResponse.to_json(
+            device_manager.BindDeviceToGatewayResponse()
+        )
+
+        request = device_manager.BindDeviceToGatewayRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = device_manager.BindDeviceToGatewayResponse()
+
+        client.bind_device_to_gateway(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_bind_device_to_gateway_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.BindDeviceToGatewayRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.bind_device_to_gateway(request)
+
+
+def test_bind_device_to_gateway_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.BindDeviceToGatewayResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "parent": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            parent="parent_value",
+            gateway_id="gateway_id_value",
+            device_id="device_id_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.BindDeviceToGatewayResponse.pb(return_value)
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.bind_device_to_gateway(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{parent=projects/*/locations/*/registries/*}:bindDeviceToGateway"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_bind_device_to_gateway_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.bind_device_to_gateway(
+            device_manager.BindDeviceToGatewayRequest(),
+            parent="parent_value",
+            gateway_id="gateway_id_value",
+            device_id="device_id_value",
+        )
+
+
+def test_bind_device_to_gateway_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
+@pytest.mark.parametrize(
+    "request_type",
+    [
+        device_manager.UnbindDeviceFromGatewayRequest,
+        dict,
+    ],
+)
+def test_unbind_device_from_gateway_rest(request_type):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.UnbindDeviceFromGatewayResponse()
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.UnbindDeviceFromGatewayResponse.pb(
+            return_value
+        )
+        json_return_value = json_format.MessageToJson(pb_return_value)
+
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+        response = client.unbind_device_from_gateway(request)
+
+    # Establish that the response is the type that we expect.
+    assert isinstance(response, device_manager.UnbindDeviceFromGatewayResponse)
+
+
+def test_unbind_device_from_gateway_rest_required_fields(
+    request_type=device_manager.UnbindDeviceFromGatewayRequest,
+):
+    transport_class = transports.DeviceManagerRestTransport
+
+    request_init = {}
+    request_init["parent"] = ""
+    request_init["gateway_id"] = ""
+    request_init["device_id"] = ""
+    request = request_type(**request_init)
+    pb_request = request_type.pb(request)
+    jsonified_request = json.loads(
+        json_format.MessageToJson(
+            pb_request,
+            including_default_value_fields=False,
+            use_integers_for_enums=False,
+        )
+    )
+
+    # verify fields with default values are dropped
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).unbind_device_from_gateway._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with default values are now present
+
+    jsonified_request["parent"] = "parent_value"
+    jsonified_request["gatewayId"] = "gateway_id_value"
+    jsonified_request["deviceId"] = "device_id_value"
+
+    unset_fields = transport_class(
+        credentials=ga_credentials.AnonymousCredentials()
+    ).unbind_device_from_gateway._get_unset_required_fields(jsonified_request)
+    jsonified_request.update(unset_fields)
+
+    # verify required fields with non-default values are left alone
+    assert "parent" in jsonified_request
+    assert jsonified_request["parent"] == "parent_value"
+    assert "gatewayId" in jsonified_request
+    assert jsonified_request["gatewayId"] == "gateway_id_value"
+    assert "deviceId" in jsonified_request
+    assert jsonified_request["deviceId"] == "device_id_value"
+
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+    request = request_type(**request_init)
+
+    # Designate an appropriate value for the returned response.
+    return_value = device_manager.UnbindDeviceFromGatewayResponse()
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(Session, "request") as req:
+        # We need to mock transcode() because providing default values
+        # for required fields will fail the real version if the http_options
+        # expect actual values for those fields.
+        with mock.patch.object(path_template, "transcode") as transcode:
+            # A uri without fields and an empty body will force all the
+            # request fields to show up in the query_params.
+            pb_request = request_type.pb(request)
+            transcode_result = {
+                "uri": "v1/sample_method",
+                "method": "post",
+                "query_params": pb_request,
+            }
+            transcode_result["body"] = pb_request
+            transcode.return_value = transcode_result
+
+            response_value = Response()
+            response_value.status_code = 200
+
+            pb_return_value = device_manager.UnbindDeviceFromGatewayResponse.pb(
+                return_value
+            )
+            json_return_value = json_format.MessageToJson(pb_return_value)
+
+            response_value._content = json_return_value.encode("UTF-8")
+            req.return_value = response_value
+
+            response = client.unbind_device_from_gateway(request)
+
+            expected_params = [("$alt", "json;enum-encoding=int")]
+            actual_params = req.call_args.kwargs["params"]
+            assert expected_params == actual_params
+
+
+def test_unbind_device_from_gateway_rest_unset_required_fields():
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials
+    )
+
+    unset_fields = transport.unbind_device_from_gateway._get_unset_required_fields({})
+    assert set(unset_fields) == (
+        set(())
+        & set(
+            (
+                "parent",
+                "gatewayId",
+                "deviceId",
+            )
+        )
+    )
+
+
+@pytest.mark.parametrize("null_interceptor", [True, False])
+def test_unbind_device_from_gateway_rest_interceptors(null_interceptor):
+    transport = transports.DeviceManagerRestTransport(
+        credentials=ga_credentials.AnonymousCredentials(),
+        interceptor=None
+        if null_interceptor
+        else transports.DeviceManagerRestInterceptor(),
+    )
+    client = DeviceManagerClient(transport=transport)
+    with mock.patch.object(
+        type(client.transport._session), "request"
+    ) as req, mock.patch.object(
+        path_template, "transcode"
+    ) as transcode, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "post_unbind_device_from_gateway"
+    ) as post, mock.patch.object(
+        transports.DeviceManagerRestInterceptor, "pre_unbind_device_from_gateway"
+    ) as pre:
+        pre.assert_not_called()
+        post.assert_not_called()
+        pb_message = device_manager.UnbindDeviceFromGatewayRequest.pb(
+            device_manager.UnbindDeviceFromGatewayRequest()
+        )
+        transcode.return_value = {
+            "method": "post",
+            "uri": "my_uri",
+            "body": pb_message,
+            "query_params": pb_message,
+        }
+
+        req.return_value = Response()
+        req.return_value.status_code = 200
+        req.return_value.request = PreparedRequest()
+        req.return_value._content = (
+            device_manager.UnbindDeviceFromGatewayResponse.to_json(
+                device_manager.UnbindDeviceFromGatewayResponse()
+            )
+        )
+
+        request = device_manager.UnbindDeviceFromGatewayRequest()
+        metadata = [
+            ("key", "val"),
+            ("cephalopod", "squid"),
+        ]
+        pre.return_value = request, metadata
+        post.return_value = device_manager.UnbindDeviceFromGatewayResponse()
+
+        client.unbind_device_from_gateway(
+            request,
+            metadata=[
+                ("key", "val"),
+                ("cephalopod", "squid"),
+            ],
+        )
+
+        pre.assert_called_once()
+        post.assert_called_once()
+
+
+def test_unbind_device_from_gateway_rest_bad_request(
+    transport: str = "rest", request_type=device_manager.UnbindDeviceFromGatewayRequest
+):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # send a request that will satisfy transcoding
+    request_init = {"parent": "projects/sample1/locations/sample2/registries/sample3"}
+    request = request_type(**request_init)
+
+    # Mock the http request call within the method and fake a BadRequest error.
+    with mock.patch.object(Session, "request") as req, pytest.raises(
+        core_exceptions.BadRequest
+    ):
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 400
+        response_value.request = Request()
+        req.return_value = response_value
+        client.unbind_device_from_gateway(request)
+
+
+def test_unbind_device_from_gateway_rest_flattened():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport="rest",
+    )
+
+    # Mock the http request call within the method and fake a response.
+    with mock.patch.object(type(client.transport._session), "request") as req:
+        # Designate an appropriate value for the returned response.
+        return_value = device_manager.UnbindDeviceFromGatewayResponse()
+
+        # get arguments that satisfy an http rule for this method
+        sample_request = {
+            "parent": "projects/sample1/locations/sample2/registries/sample3"
+        }
+
+        # get truthy value for each flattened field
+        mock_args = dict(
+            parent="parent_value",
+            gateway_id="gateway_id_value",
+            device_id="device_id_value",
+        )
+        mock_args.update(sample_request)
+
+        # Wrap the value into a proper Response obj
+        response_value = Response()
+        response_value.status_code = 200
+        pb_return_value = device_manager.UnbindDeviceFromGatewayResponse.pb(
+            return_value
+        )
+        json_return_value = json_format.MessageToJson(pb_return_value)
+        response_value._content = json_return_value.encode("UTF-8")
+        req.return_value = response_value
+
+        client.unbind_device_from_gateway(**mock_args)
+
+        # Establish that the underlying call was made with the expected
+        # request object values.
+        assert len(req.mock_calls) == 1
+        _, args, _ = req.mock_calls[0]
+        assert path_template.validate(
+            "%s/v1/{parent=projects/*/locations/*/registries/*}:unbindDeviceFromGateway"
+            % client.transport._host,
+            args[1],
+        )
+
+
+def test_unbind_device_from_gateway_rest_flattened_error(transport: str = "rest"):
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(),
+        transport=transport,
+    )
+
+    # Attempting to call a method with both a request object and flattened
+    # fields is an error.
+    with pytest.raises(ValueError):
+        client.unbind_device_from_gateway(
+            device_manager.UnbindDeviceFromGatewayRequest(),
+            parent="parent_value",
+            gateway_id="gateway_id_value",
+            device_id="device_id_value",
+        )
+
+
+def test_unbind_device_from_gateway_rest_error():
+    client = DeviceManagerClient(
+        credentials=ga_credentials.AnonymousCredentials(), transport="rest"
+    )
+
+
 def test_credentials_transport_error():
     # It is an error to provide credentials and a transport instance.
     transport = transports.DeviceManagerGrpcTransport(
@@ -5927,6 +11710,7 @@ def test_transport_get_channel():
     [
         transports.DeviceManagerGrpcTransport,
         transports.DeviceManagerGrpcAsyncIOTransport,
+        transports.DeviceManagerRestTransport,
     ],
 )
 def test_transport_adc(transport_class):
@@ -5941,6 +11725,7 @@ def test_transport_adc(transport_class):
     "transport_name",
     [
         "grpc",
+        "rest",
     ],
 )
 def test_transport_kind(transport_name):
@@ -6097,6 +11882,7 @@ def test_device_manager_transport_auth_adc(transport_class):
     [
         transports.DeviceManagerGrpcTransport,
         transports.DeviceManagerGrpcAsyncIOTransport,
+        transports.DeviceManagerRestTransport,
     ],
 )
 def test_device_manager_transport_auth_gdch_credentials(transport_class):
@@ -6197,11 +11983,23 @@ def test_device_manager_grpc_transport_client_cert_source_for_mtls(transport_cla
             )
 
 
+def test_device_manager_http_transport_client_cert_source_for_mtls():
+    cred = ga_credentials.AnonymousCredentials()
+    with mock.patch(
+        "google.auth.transport.requests.AuthorizedSession.configure_mtls_channel"
+    ) as mock_configure_mtls_channel:
+        transports.DeviceManagerRestTransport(
+            credentials=cred, client_cert_source_for_mtls=client_cert_source_callback
+        )
+        mock_configure_mtls_channel.assert_called_once_with(client_cert_source_callback)
+
+
 @pytest.mark.parametrize(
     "transport_name",
     [
         "grpc",
         "grpc_asyncio",
+        "rest",
     ],
 )
 def test_device_manager_host_no_port(transport_name):
@@ -6212,7 +12010,11 @@ def test_device_manager_host_no_port(transport_name):
         ),
         transport=transport_name,
     )
-    assert client.transport._host == ("cloudiot.googleapis.com:443")
+    assert client.transport._host == (
+        "cloudiot.googleapis.com:443"
+        if transport_name in ["grpc", "grpc_asyncio"]
+        else "https://cloudiot.googleapis.com"
+    )
 
 
 @pytest.mark.parametrize(
@@ -6220,6 +12022,7 @@ def test_device_manager_host_no_port(transport_name):
     [
         "grpc",
         "grpc_asyncio",
+        "rest",
     ],
 )
 def test_device_manager_host_with_port(transport_name):
@@ -6230,7 +12033,87 @@ def test_device_manager_host_with_port(transport_name):
         ),
         transport=transport_name,
     )
-    assert client.transport._host == ("cloudiot.googleapis.com:8000")
+    assert client.transport._host == (
+        "cloudiot.googleapis.com:8000"
+        if transport_name in ["grpc", "grpc_asyncio"]
+        else "https://cloudiot.googleapis.com:8000"
+    )
+
+
+@pytest.mark.parametrize(
+    "transport_name",
+    [
+        "rest",
+    ],
+)
+def test_device_manager_client_transport_session_collision(transport_name):
+    creds1 = ga_credentials.AnonymousCredentials()
+    creds2 = ga_credentials.AnonymousCredentials()
+    client1 = DeviceManagerClient(
+        credentials=creds1,
+        transport=transport_name,
+    )
+    client2 = DeviceManagerClient(
+        credentials=creds2,
+        transport=transport_name,
+    )
+    session1 = client1.transport.create_device_registry._session
+    session2 = client2.transport.create_device_registry._session
+    assert session1 != session2
+    session1 = client1.transport.get_device_registry._session
+    session2 = client2.transport.get_device_registry._session
+    assert session1 != session2
+    session1 = client1.transport.update_device_registry._session
+    session2 = client2.transport.update_device_registry._session
+    assert session1 != session2
+    session1 = client1.transport.delete_device_registry._session
+    session2 = client2.transport.delete_device_registry._session
+    assert session1 != session2
+    session1 = client1.transport.list_device_registries._session
+    session2 = client2.transport.list_device_registries._session
+    assert session1 != session2
+    session1 = client1.transport.create_device._session
+    session2 = client2.transport.create_device._session
+    assert session1 != session2
+    session1 = client1.transport.get_device._session
+    session2 = client2.transport.get_device._session
+    assert session1 != session2
+    session1 = client1.transport.update_device._session
+    session2 = client2.transport.update_device._session
+    assert session1 != session2
+    session1 = client1.transport.delete_device._session
+    session2 = client2.transport.delete_device._session
+    assert session1 != session2
+    session1 = client1.transport.list_devices._session
+    session2 = client2.transport.list_devices._session
+    assert session1 != session2
+    session1 = client1.transport.modify_cloud_to_device_config._session
+    session2 = client2.transport.modify_cloud_to_device_config._session
+    assert session1 != session2
+    session1 = client1.transport.list_device_config_versions._session
+    session2 = client2.transport.list_device_config_versions._session
+    assert session1 != session2
+    session1 = client1.transport.list_device_states._session
+    session2 = client2.transport.list_device_states._session
+    assert session1 != session2
+    session1 = client1.transport.set_iam_policy._session
+    session2 = client2.transport.set_iam_policy._session
+    assert session1 != session2
+    session1 = client1.transport.get_iam_policy._session
+    session2 = client2.transport.get_iam_policy._session
+    assert session1 != session2
+    session1 = client1.transport.test_iam_permissions._session
+    session2 = client2.transport.test_iam_permissions._session
+    assert session1 != session2
+    session1 = client1.transport.send_command_to_device._session
+    session2 = client2.transport.send_command_to_device._session
+    assert session1 != session2
+    session1 = client1.transport.bind_device_to_gateway._session
+    session2 = client2.transport.bind_device_to_gateway._session
+    assert session1 != session2
+    session1 = client1.transport.unbind_device_from_gateway._session
+    session2 = client2.transport.unbind_device_from_gateway._session
+    assert session1 != session2
 
 
 def test_device_manager_grpc_transport_channel():
@@ -6554,6 +12437,7 @@ async def test_transport_close_async():
 
 def test_transport_close():
     transports = {
+        "rest": "_session",
         "grpc": "_grpc_channel",
     }
 
@@ -6571,6 +12455,7 @@ def test_transport_close():
 
 def test_client_ctx():
     transports = [
+        "rest",
         "grpc",
     ]
     for transport in transports:

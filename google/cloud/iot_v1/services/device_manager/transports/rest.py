@@ -14,24 +14,21 @@
 # limitations under the License.
 #
 
-from google.auth.transport.requests import AuthorizedSession  # type: ignore
-import json  # type: ignore
-import grpc  # type: ignore
-from google.auth.transport.grpc import SslCredentials  # type: ignore
-from google.auth import credentials as ga_credentials  # type: ignore
-from google.api_core import exceptions as core_exceptions
-from google.api_core import retry as retries
-from google.api_core import rest_helpers
-from google.api_core import rest_streaming
-from google.api_core import path_template
-from google.api_core import gapic_v1
-
-from google.protobuf import json_format
-from requests import __version__ as requests_version
 import dataclasses
+import json  # type: ignore
 import re
 from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
 import warnings
+
+from google.api_core import gapic_v1, path_template, rest_helpers, rest_streaming
+from google.api_core import exceptions as core_exceptions
+from google.api_core import retry as retries
+from google.auth import credentials as ga_credentials  # type: ignore
+from google.auth.transport.grpc import SslCredentials  # type: ignore
+from google.auth.transport.requests import AuthorizedSession  # type: ignore
+from google.protobuf import json_format
+import grpc  # type: ignore
+from requests import __version__ as requests_version
 
 try:
     OptionalRetry = Union[retries.Retry, gapic_v1.method._MethodDefault]
@@ -39,14 +36,14 @@ except AttributeError:  # pragma: NO COVER
     OptionalRetry = Union[retries.Retry, object]  # type: ignore
 
 
-from google.cloud.iot_v1.types import device_manager
-from google.cloud.iot_v1.types import resources
 from google.iam.v1 import iam_policy_pb2  # type: ignore
 from google.iam.v1 import policy_pb2  # type: ignore
 from google.protobuf import empty_pb2  # type: ignore
 
-from .base import DeviceManagerTransport, DEFAULT_CLIENT_INFO as BASE_DEFAULT_CLIENT_INFO
+from google.cloud.iot_v1.types import device_manager, resources
 
+from .base import DEFAULT_CLIENT_INFO as BASE_DEFAULT_CLIENT_INFO
+from .base import DeviceManagerTransport
 
 DEFAULT_CLIENT_INFO = gapic_v1.client_info.ClientInfo(
     gapic_version=BASE_DEFAULT_CLIENT_INFO.gapic_version,
@@ -219,7 +216,12 @@ class DeviceManagerRestInterceptor:
 
 
     """
-    def pre_bind_device_to_gateway(self, request: device_manager.BindDeviceToGatewayRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.BindDeviceToGatewayRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_bind_device_to_gateway(
+        self,
+        request: device_manager.BindDeviceToGatewayRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.BindDeviceToGatewayRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for bind_device_to_gateway
 
         Override in a subclass to manipulate the request or metadata
@@ -227,7 +229,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_bind_device_to_gateway(self, response: device_manager.BindDeviceToGatewayResponse) -> device_manager.BindDeviceToGatewayResponse:
+    def post_bind_device_to_gateway(
+        self, response: device_manager.BindDeviceToGatewayResponse
+    ) -> device_manager.BindDeviceToGatewayResponse:
         """Post-rpc interceptor for bind_device_to_gateway
 
         Override in a subclass to manipulate the response
@@ -235,7 +239,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_create_device(self, request: device_manager.CreateDeviceRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.CreateDeviceRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_create_device(
+        self,
+        request: device_manager.CreateDeviceRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.CreateDeviceRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for create_device
 
         Override in a subclass to manipulate the request or metadata
@@ -251,7 +260,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_create_device_registry(self, request: device_manager.CreateDeviceRegistryRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.CreateDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_create_device_registry(
+        self,
+        request: device_manager.CreateDeviceRegistryRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.CreateDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for create_device_registry
 
         Override in a subclass to manipulate the request or metadata
@@ -259,7 +273,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_create_device_registry(self, response: resources.DeviceRegistry) -> resources.DeviceRegistry:
+    def post_create_device_registry(
+        self, response: resources.DeviceRegistry
+    ) -> resources.DeviceRegistry:
         """Post-rpc interceptor for create_device_registry
 
         Override in a subclass to manipulate the response
@@ -267,7 +283,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_delete_device(self, request: device_manager.DeleteDeviceRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.DeleteDeviceRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_delete_device(
+        self,
+        request: device_manager.DeleteDeviceRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.DeleteDeviceRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for delete_device
 
         Override in a subclass to manipulate the request or metadata
@@ -275,7 +296,11 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def pre_delete_device_registry(self, request: device_manager.DeleteDeviceRegistryRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.DeleteDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
+    def pre_delete_device_registry(
+        self,
+        request: device_manager.DeleteDeviceRegistryRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.DeleteDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for delete_device_registry
 
         Override in a subclass to manipulate the request or metadata
@@ -283,7 +308,11 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def pre_get_device(self, request: device_manager.GetDeviceRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.GetDeviceRequest, Sequence[Tuple[str, str]]]:
+    def pre_get_device(
+        self,
+        request: device_manager.GetDeviceRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.GetDeviceRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for get_device
 
         Override in a subclass to manipulate the request or metadata
@@ -299,7 +328,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_get_device_registry(self, request: device_manager.GetDeviceRegistryRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.GetDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_get_device_registry(
+        self,
+        request: device_manager.GetDeviceRegistryRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.GetDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for get_device_registry
 
         Override in a subclass to manipulate the request or metadata
@@ -307,7 +341,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_get_device_registry(self, response: resources.DeviceRegistry) -> resources.DeviceRegistry:
+    def post_get_device_registry(
+        self, response: resources.DeviceRegistry
+    ) -> resources.DeviceRegistry:
         """Post-rpc interceptor for get_device_registry
 
         Override in a subclass to manipulate the response
@@ -315,7 +351,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_get_iam_policy(self, request: iam_policy_pb2.GetIamPolicyRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[iam_policy_pb2.GetIamPolicyRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_get_iam_policy(
+        self,
+        request: iam_policy_pb2.GetIamPolicyRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[iam_policy_pb2.GetIamPolicyRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for get_iam_policy
 
         Override in a subclass to manipulate the request or metadata
@@ -331,7 +372,14 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_list_device_config_versions(self, request: device_manager.ListDeviceConfigVersionsRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.ListDeviceConfigVersionsRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_list_device_config_versions(
+        self,
+        request: device_manager.ListDeviceConfigVersionsRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[
+        device_manager.ListDeviceConfigVersionsRequest, Sequence[Tuple[str, str]]
+    ]:
         """Pre-rpc interceptor for list_device_config_versions
 
         Override in a subclass to manipulate the request or metadata
@@ -339,7 +387,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_list_device_config_versions(self, response: device_manager.ListDeviceConfigVersionsResponse) -> device_manager.ListDeviceConfigVersionsResponse:
+    def post_list_device_config_versions(
+        self, response: device_manager.ListDeviceConfigVersionsResponse
+    ) -> device_manager.ListDeviceConfigVersionsResponse:
         """Post-rpc interceptor for list_device_config_versions
 
         Override in a subclass to manipulate the response
@@ -347,7 +397,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_list_device_registries(self, request: device_manager.ListDeviceRegistriesRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.ListDeviceRegistriesRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_list_device_registries(
+        self,
+        request: device_manager.ListDeviceRegistriesRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.ListDeviceRegistriesRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for list_device_registries
 
         Override in a subclass to manipulate the request or metadata
@@ -355,7 +410,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_list_device_registries(self, response: device_manager.ListDeviceRegistriesResponse) -> device_manager.ListDeviceRegistriesResponse:
+    def post_list_device_registries(
+        self, response: device_manager.ListDeviceRegistriesResponse
+    ) -> device_manager.ListDeviceRegistriesResponse:
         """Post-rpc interceptor for list_device_registries
 
         Override in a subclass to manipulate the response
@@ -363,7 +420,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_list_devices(self, request: device_manager.ListDevicesRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.ListDevicesRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_list_devices(
+        self,
+        request: device_manager.ListDevicesRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.ListDevicesRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for list_devices
 
         Override in a subclass to manipulate the request or metadata
@@ -371,7 +433,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_list_devices(self, response: device_manager.ListDevicesResponse) -> device_manager.ListDevicesResponse:
+    def post_list_devices(
+        self, response: device_manager.ListDevicesResponse
+    ) -> device_manager.ListDevicesResponse:
         """Post-rpc interceptor for list_devices
 
         Override in a subclass to manipulate the response
@@ -379,7 +443,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_list_device_states(self, request: device_manager.ListDeviceStatesRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.ListDeviceStatesRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_list_device_states(
+        self,
+        request: device_manager.ListDeviceStatesRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.ListDeviceStatesRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for list_device_states
 
         Override in a subclass to manipulate the request or metadata
@@ -387,7 +456,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_list_device_states(self, response: device_manager.ListDeviceStatesResponse) -> device_manager.ListDeviceStatesResponse:
+    def post_list_device_states(
+        self, response: device_manager.ListDeviceStatesResponse
+    ) -> device_manager.ListDeviceStatesResponse:
         """Post-rpc interceptor for list_device_states
 
         Override in a subclass to manipulate the response
@@ -395,7 +466,14 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_modify_cloud_to_device_config(self, request: device_manager.ModifyCloudToDeviceConfigRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.ModifyCloudToDeviceConfigRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_modify_cloud_to_device_config(
+        self,
+        request: device_manager.ModifyCloudToDeviceConfigRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[
+        device_manager.ModifyCloudToDeviceConfigRequest, Sequence[Tuple[str, str]]
+    ]:
         """Pre-rpc interceptor for modify_cloud_to_device_config
 
         Override in a subclass to manipulate the request or metadata
@@ -403,7 +481,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_modify_cloud_to_device_config(self, response: resources.DeviceConfig) -> resources.DeviceConfig:
+    def post_modify_cloud_to_device_config(
+        self, response: resources.DeviceConfig
+    ) -> resources.DeviceConfig:
         """Post-rpc interceptor for modify_cloud_to_device_config
 
         Override in a subclass to manipulate the response
@@ -411,7 +491,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_send_command_to_device(self, request: device_manager.SendCommandToDeviceRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.SendCommandToDeviceRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_send_command_to_device(
+        self,
+        request: device_manager.SendCommandToDeviceRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.SendCommandToDeviceRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for send_command_to_device
 
         Override in a subclass to manipulate the request or metadata
@@ -419,7 +504,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_send_command_to_device(self, response: device_manager.SendCommandToDeviceResponse) -> device_manager.SendCommandToDeviceResponse:
+    def post_send_command_to_device(
+        self, response: device_manager.SendCommandToDeviceResponse
+    ) -> device_manager.SendCommandToDeviceResponse:
         """Post-rpc interceptor for send_command_to_device
 
         Override in a subclass to manipulate the response
@@ -427,7 +514,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_set_iam_policy(self, request: iam_policy_pb2.SetIamPolicyRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[iam_policy_pb2.SetIamPolicyRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_set_iam_policy(
+        self,
+        request: iam_policy_pb2.SetIamPolicyRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[iam_policy_pb2.SetIamPolicyRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for set_iam_policy
 
         Override in a subclass to manipulate the request or metadata
@@ -443,7 +535,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_test_iam_permissions(self, request: iam_policy_pb2.TestIamPermissionsRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[iam_policy_pb2.TestIamPermissionsRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_test_iam_permissions(
+        self,
+        request: iam_policy_pb2.TestIamPermissionsRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[iam_policy_pb2.TestIamPermissionsRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for test_iam_permissions
 
         Override in a subclass to manipulate the request or metadata
@@ -451,7 +548,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_test_iam_permissions(self, response: iam_policy_pb2.TestIamPermissionsResponse) -> iam_policy_pb2.TestIamPermissionsResponse:
+    def post_test_iam_permissions(
+        self, response: iam_policy_pb2.TestIamPermissionsResponse
+    ) -> iam_policy_pb2.TestIamPermissionsResponse:
         """Post-rpc interceptor for test_iam_permissions
 
         Override in a subclass to manipulate the response
@@ -459,7 +558,14 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_unbind_device_from_gateway(self, request: device_manager.UnbindDeviceFromGatewayRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.UnbindDeviceFromGatewayRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_unbind_device_from_gateway(
+        self,
+        request: device_manager.UnbindDeviceFromGatewayRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[
+        device_manager.UnbindDeviceFromGatewayRequest, Sequence[Tuple[str, str]]
+    ]:
         """Pre-rpc interceptor for unbind_device_from_gateway
 
         Override in a subclass to manipulate the request or metadata
@@ -467,7 +573,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_unbind_device_from_gateway(self, response: device_manager.UnbindDeviceFromGatewayResponse) -> device_manager.UnbindDeviceFromGatewayResponse:
+    def post_unbind_device_from_gateway(
+        self, response: device_manager.UnbindDeviceFromGatewayResponse
+    ) -> device_manager.UnbindDeviceFromGatewayResponse:
         """Post-rpc interceptor for unbind_device_from_gateway
 
         Override in a subclass to manipulate the response
@@ -475,7 +583,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_update_device(self, request: device_manager.UpdateDeviceRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.UpdateDeviceRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_update_device(
+        self,
+        request: device_manager.UpdateDeviceRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.UpdateDeviceRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for update_device
 
         Override in a subclass to manipulate the request or metadata
@@ -491,7 +604,12 @@ class DeviceManagerRestInterceptor:
         it is returned to user code.
         """
         return response
-    def pre_update_device_registry(self, request: device_manager.UpdateDeviceRegistryRequest, metadata: Sequence[Tuple[str, str]]) -> Tuple[device_manager.UpdateDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
+
+    def pre_update_device_registry(
+        self,
+        request: device_manager.UpdateDeviceRegistryRequest,
+        metadata: Sequence[Tuple[str, str]],
+    ) -> Tuple[device_manager.UpdateDeviceRegistryRequest, Sequence[Tuple[str, str]]]:
         """Pre-rpc interceptor for update_device_registry
 
         Override in a subclass to manipulate the request or metadata
@@ -499,7 +617,9 @@ class DeviceManagerRestInterceptor:
         """
         return request, metadata
 
-    def post_update_device_registry(self, response: resources.DeviceRegistry) -> resources.DeviceRegistry:
+    def post_update_device_registry(
+        self, response: resources.DeviceRegistry
+    ) -> resources.DeviceRegistry:
         """Post-rpc interceptor for update_device_registry
 
         Override in a subclass to manipulate the response
@@ -530,20 +650,21 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
 
     """
 
-    def __init__(self, *,
-            host: str = 'cloudiot.googleapis.com',
-            credentials: Optional[ga_credentials.Credentials] = None,
-            credentials_file: Optional[str] = None,
-            scopes: Optional[Sequence[str]] = None,
-            client_cert_source_for_mtls: Optional[Callable[[
-                ], Tuple[bytes, bytes]]] = None,
-            quota_project_id: Optional[str] = None,
-            client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
-            always_use_jwt_access: Optional[bool] = False,
-            url_scheme: str = 'https',
-            interceptor: Optional[DeviceManagerRestInterceptor] = None,
-            api_audience: Optional[str] = None,
-            ) -> None:
+    def __init__(
+        self,
+        *,
+        host: str = "cloudiot.googleapis.com",
+        credentials: Optional[ga_credentials.Credentials] = None,
+        credentials_file: Optional[str] = None,
+        scopes: Optional[Sequence[str]] = None,
+        client_cert_source_for_mtls: Optional[Callable[[], Tuple[bytes, bytes]]] = None,
+        quota_project_id: Optional[str] = None,
+        client_info: gapic_v1.client_info.ClientInfo = DEFAULT_CLIENT_INFO,
+        always_use_jwt_access: Optional[bool] = False,
+        url_scheme: str = "https",
+        interceptor: Optional[DeviceManagerRestInterceptor] = None,
+        api_audience: Optional[str] = None,
+    ) -> None:
         """Instantiate the transport.
 
         Args:
@@ -582,7 +703,9 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         # credentials object
         maybe_url_match = re.match("^(?P<scheme>http(?:s)?://)?(?P<host>.*)$", host)
         if maybe_url_match is None:
-            raise ValueError(f"Unexpected hostname structure: {host}")  # pragma: NO COVER
+            raise ValueError(
+                f"Unexpected hostname structure: {host}"
+            )  # pragma: NO COVER
 
         url_match_items = maybe_url_match.groupdict()
 
@@ -593,10 +716,11 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
             credentials=credentials,
             client_info=client_info,
             always_use_jwt_access=always_use_jwt_access,
-            api_audience=api_audience
+            api_audience=api_audience,
         )
         self._session = AuthorizedSession(
-            self._credentials, default_host=self.DEFAULT_HOST)
+            self._credentials, default_host=self.DEFAULT_HOST
+        )
         if client_cert_source_for_mtls:
             self._session.configure_mtls_channel(client_cert_source_for_mtls)
         self._interceptor = interceptor or DeviceManagerRestInterceptor()
@@ -606,19 +730,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("BindDeviceToGateway")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.BindDeviceToGatewayRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> device_manager.BindDeviceToGatewayResponse:
+        def __call__(
+            self,
+            request: device_manager.BindDeviceToGatewayRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> device_manager.BindDeviceToGatewayResponse:
             r"""Call the bind device to gateway method over HTTP.
 
             Args:
@@ -635,51 +764,56 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     Response for ``BindDeviceToGateway``.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{parent=projects/*/locations/*/registries/*}:bindDeviceToGateway',
-                'body': '*',
-            },
-{
-                'method': 'post',
-                'uri': '/v1/{parent=projects/*/locations/*/registries/*/groups/*}:bindDeviceToGateway',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{parent=projects/*/locations/*/registries/*}:bindDeviceToGateway",
+                    "body": "*",
+                },
+                {
+                    "method": "post",
+                    "uri": "/v1/{parent=projects/*/locations/*/registries/*/groups/*}:bindDeviceToGateway",
+                    "body": "*",
+                },
             ]
-            request, metadata = self._interceptor.pre_bind_device_to_gateway(request, metadata)
+            request, metadata = self._interceptor.pre_bind_device_to_gateway(
+                request, metadata
+            )
             pb_request = device_manager.BindDeviceToGatewayRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -698,19 +832,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("CreateDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.CreateDeviceRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> resources.Device:
+        def __call__(
+            self,
+            request: device_manager.CreateDeviceRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> resources.Device:
             r"""Call the create device method over HTTP.
 
             Args:
@@ -727,11 +866,12 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     The device resource.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{parent=projects/*/locations/*/registries/*}/devices',
-                'body': 'device',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{parent=projects/*/locations/*/registries/*}/devices",
+                    "body": "device",
+                },
             ]
             request, metadata = self._interceptor.pre_create_device(request, metadata)
             pb_request = device_manager.CreateDeviceRequest.pb(request)
@@ -740,33 +880,35 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -785,19 +927,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("CreateDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.CreateDeviceRegistryRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> resources.DeviceRegistry:
+        def __call__(
+            self,
+            request: device_manager.CreateDeviceRegistryRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> resources.DeviceRegistry:
             r"""Call the create device registry method over HTTP.
 
             Args:
@@ -814,46 +961,51 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     A container for a group of devices.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{parent=projects/*/locations/*}/registries',
-                'body': 'device_registry',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{parent=projects/*/locations/*}/registries",
+                    "body": "device_registry",
+                },
             ]
-            request, metadata = self._interceptor.pre_create_device_registry(request, metadata)
+            request, metadata = self._interceptor.pre_create_device_registry(
+                request, metadata
+            )
             pb_request = device_manager.CreateDeviceRegistryRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -872,19 +1024,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("DeleteDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.DeleteDeviceRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ):
+        def __call__(
+            self,
+            request: device_manager.DeleteDeviceRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ):
             r"""Call the delete device method over HTTP.
 
             Args:
@@ -897,37 +1054,40 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     sent along with the request as metadata.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'delete',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/devices/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "delete",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/devices/*}",
+                },
             ]
             request, metadata = self._interceptor.pre_delete_device(request, metadata)
             pb_request = device_manager.DeleteDeviceRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -938,19 +1098,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("DeleteDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.DeleteDeviceRegistryRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ):
+        def __call__(
+            self,
+            request: device_manager.DeleteDeviceRegistryRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ):
             r"""Call the delete device registry method over HTTP.
 
             Args:
@@ -963,37 +1128,42 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     sent along with the request as metadata.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'delete',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "delete",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*}",
+                },
             ]
-            request, metadata = self._interceptor.pre_delete_device_registry(request, metadata)
+            request, metadata = self._interceptor.pre_delete_device_registry(
+                request, metadata
+            )
             pb_request = device_manager.DeleteDeviceRegistryRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1004,19 +1174,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("GetDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.GetDeviceRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> resources.Device:
+        def __call__(
+            self,
+            request: device_manager.GetDeviceRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> resources.Device:
             r"""Call the get device method over HTTP.
 
             Args:
@@ -1033,41 +1208,44 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     The device resource.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/devices/*}',
-            },
-{
-                'method': 'get',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/devices/*}",
+                },
+                {
+                    "method": "get",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}",
+                },
             ]
             request, metadata = self._interceptor.pre_get_device(request, metadata)
             pb_request = device_manager.GetDeviceRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1086,19 +1264,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("GetDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.GetDeviceRegistryRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> resources.DeviceRegistry:
+        def __call__(
+            self,
+            request: device_manager.GetDeviceRegistryRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> resources.DeviceRegistry:
             r"""Call the get device registry method over HTTP.
 
             Args:
@@ -1115,37 +1298,42 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     A container for a group of devices.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*}',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*}",
+                },
             ]
-            request, metadata = self._interceptor.pre_get_device_registry(request, metadata)
+            request, metadata = self._interceptor.pre_get_device_registry(
+                request, metadata
+            )
             pb_request = device_manager.GetDeviceRegistryRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1164,19 +1352,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("GetIamPolicy")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: iam_policy_pb2.GetIamPolicyRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> policy_pb2.Policy:
+        def __call__(
+            self,
+            request: iam_policy_pb2.GetIamPolicyRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> policy_pb2.Policy:
             r"""Call the get iam policy method over HTTP.
 
             Args:
@@ -1267,16 +1460,17 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{resource=projects/*/locations/*/registries/*}:getIamPolicy',
-                'body': '*',
-            },
-{
-                'method': 'post',
-                'uri': '/v1/{resource=projects/*/locations/*/registries/*/groups/*}:getIamPolicy',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{resource=projects/*/locations/*/registries/*}:getIamPolicy",
+                    "body": "*",
+                },
+                {
+                    "method": "post",
+                    "uri": "/v1/{resource=projects/*/locations/*/registries/*/groups/*}:getIamPolicy",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_get_iam_policy(request, metadata)
             pb_request = request
@@ -1285,33 +1479,35 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1330,71 +1526,81 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDeviceConfigVersions")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.ListDeviceConfigVersionsRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> device_manager.ListDeviceConfigVersionsResponse:
+        def __call__(
+            self,
+            request: device_manager.ListDeviceConfigVersionsRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> device_manager.ListDeviceConfigVersionsResponse:
             r"""Call the list device config
-        versions method over HTTP.
+            versions method over HTTP.
 
-            Args:
-                request (~.device_manager.ListDeviceConfigVersionsRequest):
-                    The request object. Request for ``ListDeviceConfigVersions``.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, str]]): Strings which should be
-                    sent along with the request as metadata.
+                Args:
+                    request (~.device_manager.ListDeviceConfigVersionsRequest):
+                        The request object. Request for ``ListDeviceConfigVersions``.
+                    retry (google.api_core.retry.Retry): Designation of what errors, if any,
+                        should be retried.
+                    timeout (float): The timeout for this request.
+                    metadata (Sequence[Tuple[str, str]]): Strings which should be
+                        sent along with the request as metadata.
 
-            Returns:
-                ~.device_manager.ListDeviceConfigVersionsResponse:
-                    Response for ``ListDeviceConfigVersions``.
+                Returns:
+                    ~.device_manager.ListDeviceConfigVersionsResponse:
+                        Response for ``ListDeviceConfigVersions``.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/devices/*}/configVersions',
-            },
-{
-                'method': 'get',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}/configVersions',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/devices/*}/configVersions",
+                },
+                {
+                    "method": "get",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}/configVersions",
+                },
             ]
-            request, metadata = self._interceptor.pre_list_device_config_versions(request, metadata)
+            request, metadata = self._interceptor.pre_list_device_config_versions(
+                request, metadata
+            )
             pb_request = device_manager.ListDeviceConfigVersionsRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1413,19 +1619,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDeviceRegistries")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.ListDeviceRegistriesRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> device_manager.ListDeviceRegistriesResponse:
+        def __call__(
+            self,
+            request: device_manager.ListDeviceRegistriesRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> device_manager.ListDeviceRegistriesResponse:
             r"""Call the list device registries method over HTTP.
 
             Args:
@@ -1442,37 +1653,42 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     Response for ``ListDeviceRegistries``.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v1/{parent=projects/*/locations/*}/registries',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v1/{parent=projects/*/locations/*}/registries",
+                },
             ]
-            request, metadata = self._interceptor.pre_list_device_registries(request, metadata)
+            request, metadata = self._interceptor.pre_list_device_registries(
+                request, metadata
+            )
             pb_request = device_manager.ListDeviceRegistriesRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1491,19 +1707,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDevices")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.ListDevicesRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> device_manager.ListDevicesResponse:
+        def __call__(
+            self,
+            request: device_manager.ListDevicesRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> device_manager.ListDevicesResponse:
             r"""Call the list devices method over HTTP.
 
             Args:
@@ -1520,41 +1741,44 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     Response for ``ListDevices``.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v1/{parent=projects/*/locations/*/registries/*}/devices',
-            },
-{
-                'method': 'get',
-                'uri': '/v1/{parent=projects/*/locations/*/registries/*/groups/*}/devices',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v1/{parent=projects/*/locations/*/registries/*}/devices",
+                },
+                {
+                    "method": "get",
+                    "uri": "/v1/{parent=projects/*/locations/*/registries/*/groups/*}/devices",
+                },
             ]
             request, metadata = self._interceptor.pre_list_devices(request, metadata)
             pb_request = device_manager.ListDevicesRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1573,19 +1797,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDeviceStates")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.ListDeviceStatesRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> device_manager.ListDeviceStatesResponse:
+        def __call__(
+            self,
+            request: device_manager.ListDeviceStatesRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> device_manager.ListDeviceStatesResponse:
             r"""Call the list device states method over HTTP.
 
             Args:
@@ -1602,41 +1831,46 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     Response for ``ListDeviceStates``.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'get',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/devices/*}/states',
-            },
-{
-                'method': 'get',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}/states',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "get",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/devices/*}/states",
+                },
+                {
+                    "method": "get",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}/states",
+                },
             ]
-            request, metadata = self._interceptor.pre_list_device_states(request, metadata)
+            request, metadata = self._interceptor.pre_list_device_states(
+                request, metadata
+            )
             pb_request = device_manager.ListDeviceStatesRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
 
             # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True,
-            ))
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1655,83 +1889,93 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ModifyCloudToDeviceConfig")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.ModifyCloudToDeviceConfigRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> resources.DeviceConfig:
+        def __call__(
+            self,
+            request: device_manager.ModifyCloudToDeviceConfigRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> resources.DeviceConfig:
             r"""Call the modify cloud to device
-        config method over HTTP.
+            config method over HTTP.
 
-            Args:
-                request (~.device_manager.ModifyCloudToDeviceConfigRequest):
-                    The request object. Request for ``ModifyCloudToDeviceConfig``.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, str]]): Strings which should be
-                    sent along with the request as metadata.
+                Args:
+                    request (~.device_manager.ModifyCloudToDeviceConfigRequest):
+                        The request object. Request for ``ModifyCloudToDeviceConfig``.
+                    retry (google.api_core.retry.Retry): Designation of what errors, if any,
+                        should be retried.
+                    timeout (float): The timeout for this request.
+                    metadata (Sequence[Tuple[str, str]]): Strings which should be
+                        sent along with the request as metadata.
 
-            Returns:
-                ~.resources.DeviceConfig:
-                    The device configuration. Eventually
-                delivered to devices.
+                Returns:
+                    ~.resources.DeviceConfig:
+                        The device configuration. Eventually
+                    delivered to devices.
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/devices/*}:modifyCloudToDeviceConfig',
-                'body': '*',
-            },
-{
-                'method': 'post',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}:modifyCloudToDeviceConfig',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/devices/*}:modifyCloudToDeviceConfig",
+                    "body": "*",
+                },
+                {
+                    "method": "post",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}:modifyCloudToDeviceConfig",
+                    "body": "*",
+                },
             ]
-            request, metadata = self._interceptor.pre_modify_cloud_to_device_config(request, metadata)
+            request, metadata = self._interceptor.pre_modify_cloud_to_device_config(
+                request, metadata
+            )
             pb_request = device_manager.ModifyCloudToDeviceConfigRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1750,19 +1994,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("SendCommandToDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.SendCommandToDeviceRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> device_manager.SendCommandToDeviceResponse:
+        def __call__(
+            self,
+            request: device_manager.SendCommandToDeviceRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> device_manager.SendCommandToDeviceResponse:
             r"""Call the send command to device method over HTTP.
 
             Args:
@@ -1779,51 +2028,56 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     Response for ``SendCommandToDevice``.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/devices/*}:sendCommandToDevice',
-                'body': '*',
-            },
-{
-                'method': 'post',
-                'uri': '/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}:sendCommandToDevice',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/devices/*}:sendCommandToDevice",
+                    "body": "*",
+                },
+                {
+                    "method": "post",
+                    "uri": "/v1/{name=projects/*/locations/*/registries/*/groups/*/devices/*}:sendCommandToDevice",
+                    "body": "*",
+                },
             ]
-            request, metadata = self._interceptor.pre_send_command_to_device(request, metadata)
+            request, metadata = self._interceptor.pre_send_command_to_device(
+                request, metadata
+            )
             pb_request = device_manager.SendCommandToDeviceRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -1842,19 +2096,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("SetIamPolicy")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: iam_policy_pb2.SetIamPolicyRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> policy_pb2.Policy:
+        def __call__(
+            self,
+            request: iam_policy_pb2.SetIamPolicyRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> policy_pb2.Policy:
             r"""Call the set iam policy method over HTTP.
 
             Args:
@@ -1945,16 +2204,17 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
 
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{resource=projects/*/locations/*/registries/*}:setIamPolicy',
-                'body': '*',
-            },
-{
-                'method': 'post',
-                'uri': '/v1/{resource=projects/*/locations/*/registries/*/groups/*}:setIamPolicy',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{resource=projects/*/locations/*/registries/*}:setIamPolicy",
+                    "body": "*",
+                },
+                {
+                    "method": "post",
+                    "uri": "/v1/{resource=projects/*/locations/*/registries/*/groups/*}:setIamPolicy",
+                    "body": "*",
+                },
             ]
             request, metadata = self._interceptor.pre_set_iam_policy(request, metadata)
             pb_request = request
@@ -1963,33 +2223,35 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2008,19 +2270,24 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("TestIamPermissions")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: iam_policy_pb2.TestIamPermissionsRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> iam_policy_pb2.TestIamPermissionsResponse:
+        def __call__(
+            self,
+            request: iam_policy_pb2.TestIamPermissionsRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> iam_policy_pb2.TestIamPermissionsResponse:
             r"""Call the test iam permissions method over HTTP.
 
             Args:
@@ -2037,51 +2304,56 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     Response message for ``TestIamPermissions`` method.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{resource=projects/*/locations/*/registries/*}:testIamPermissions',
-                'body': '*',
-            },
-{
-                'method': 'post',
-                'uri': '/v1/{resource=projects/*/locations/*/registries/*/groups/*}:testIamPermissions',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{resource=projects/*/locations/*/registries/*}:testIamPermissions",
+                    "body": "*",
+                },
+                {
+                    "method": "post",
+                    "uri": "/v1/{resource=projects/*/locations/*/registries/*/groups/*}:testIamPermissions",
+                    "body": "*",
+                },
             ]
-            request, metadata = self._interceptor.pre_test_iam_permissions(request, metadata)
+            request, metadata = self._interceptor.pre_test_iam_permissions(
+                request, metadata
+            )
             pb_request = request
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2100,81 +2372,91 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("UnbindDeviceFromGateway")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.UnbindDeviceFromGatewayRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> device_manager.UnbindDeviceFromGatewayResponse:
+        def __call__(
+            self,
+            request: device_manager.UnbindDeviceFromGatewayRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> device_manager.UnbindDeviceFromGatewayResponse:
             r"""Call the unbind device from
-        gateway method over HTTP.
+            gateway method over HTTP.
 
-            Args:
-                request (~.device_manager.UnbindDeviceFromGatewayRequest):
-                    The request object. Request for ``UnbindDeviceFromGateway``.
-                retry (google.api_core.retry.Retry): Designation of what errors, if any,
-                    should be retried.
-                timeout (float): The timeout for this request.
-                metadata (Sequence[Tuple[str, str]]): Strings which should be
-                    sent along with the request as metadata.
+                Args:
+                    request (~.device_manager.UnbindDeviceFromGatewayRequest):
+                        The request object. Request for ``UnbindDeviceFromGateway``.
+                    retry (google.api_core.retry.Retry): Designation of what errors, if any,
+                        should be retried.
+                    timeout (float): The timeout for this request.
+                    metadata (Sequence[Tuple[str, str]]): Strings which should be
+                        sent along with the request as metadata.
 
-            Returns:
-                ~.device_manager.UnbindDeviceFromGatewayResponse:
-                    Response for ``UnbindDeviceFromGateway``.
+                Returns:
+                    ~.device_manager.UnbindDeviceFromGatewayResponse:
+                        Response for ``UnbindDeviceFromGateway``.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'post',
-                'uri': '/v1/{parent=projects/*/locations/*/registries/*}:unbindDeviceFromGateway',
-                'body': '*',
-            },
-{
-                'method': 'post',
-                'uri': '/v1/{parent=projects/*/locations/*/registries/*/groups/*}:unbindDeviceFromGateway',
-                'body': '*',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "post",
+                    "uri": "/v1/{parent=projects/*/locations/*/registries/*}:unbindDeviceFromGateway",
+                    "body": "*",
+                },
+                {
+                    "method": "post",
+                    "uri": "/v1/{parent=projects/*/locations/*/registries/*/groups/*}:unbindDeviceFromGateway",
+                    "body": "*",
+                },
             ]
-            request, metadata = self._interceptor.pre_unbind_device_from_gateway(request, metadata)
+            request, metadata = self._interceptor.pre_unbind_device_from_gateway(
+                request, metadata
+            )
             pb_request = device_manager.UnbindDeviceFromGatewayRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2193,19 +2475,26 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("UpdateDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-            "updateMask" : {},        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {
+            "updateMask": {},
+        }
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.UpdateDeviceRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> resources.Device:
+        def __call__(
+            self,
+            request: device_manager.UpdateDeviceRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> resources.Device:
             r"""Call the update device method over HTTP.
 
             Args:
@@ -2222,16 +2511,17 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     The device resource.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'patch',
-                'uri': '/v1/{device.name=projects/*/locations/*/registries/*/devices/*}',
-                'body': 'device',
-            },
-{
-                'method': 'patch',
-                'uri': '/v1/{device.name=projects/*/locations/*/registries/*/groups/*/devices/*}',
-                'body': 'device',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "patch",
+                    "uri": "/v1/{device.name=projects/*/locations/*/registries/*/devices/*}",
+                    "body": "device",
+                },
+                {
+                    "method": "patch",
+                    "uri": "/v1/{device.name=projects/*/locations/*/registries/*/groups/*/devices/*}",
+                    "body": "device",
+                },
             ]
             request, metadata = self._interceptor.pre_update_device(request, metadata)
             pb_request = device_manager.UpdateDeviceRequest.pb(request)
@@ -2240,33 +2530,35 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2285,19 +2577,26 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("UpdateDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] =  {
-            "updateMask" : {},        }
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {
+            "updateMask": {},
+        }
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
-            return {k: v for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items() if k not in message_dict}
+            return {
+                k: v
+                for k, v in cls.__REQUIRED_FIELDS_DEFAULT_VALUES.items()
+                if k not in message_dict
+            }
 
-        def __call__(self,
-                request: device_manager.UpdateDeviceRegistryRequest, *,
-                retry: OptionalRetry=gapic_v1.method.DEFAULT,
-                timeout: Optional[float]=None,
-                metadata: Sequence[Tuple[str, str]]=(),
-                ) -> resources.DeviceRegistry:
+        def __call__(
+            self,
+            request: device_manager.UpdateDeviceRegistryRequest,
+            *,
+            retry: OptionalRetry = gapic_v1.method.DEFAULT,
+            timeout: Optional[float] = None,
+            metadata: Sequence[Tuple[str, str]] = (),
+        ) -> resources.DeviceRegistry:
             r"""Call the update device registry method over HTTP.
 
             Args:
@@ -2314,46 +2613,51 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
                     A container for a group of devices.
             """
 
-            http_options: List[Dict[str, str]] = [{
-                'method': 'patch',
-                'uri': '/v1/{device_registry.name=projects/*/locations/*/registries/*}',
-                'body': 'device_registry',
-            },
+            http_options: List[Dict[str, str]] = [
+                {
+                    "method": "patch",
+                    "uri": "/v1/{device_registry.name=projects/*/locations/*/registries/*}",
+                    "body": "device_registry",
+                },
             ]
-            request, metadata = self._interceptor.pre_update_device_registry(request, metadata)
+            request, metadata = self._interceptor.pre_update_device_registry(
+                request, metadata
+            )
             pb_request = device_manager.UpdateDeviceRegistryRequest.pb(request)
             transcoded_request = path_template.transcode(http_options, pb_request)
 
             # Jsonify the request body
 
             body = json_format.MessageToJson(
-                transcoded_request['body'],
-                including_default_value_fields=False,
-                use_integers_for_enums=True
-            )
-            uri = transcoded_request['uri']
-            method = transcoded_request['method']
-
-            # Jsonify the query params
-            query_params = json.loads(json_format.MessageToJson(
-                transcoded_request['query_params'],
+                transcoded_request["body"],
                 including_default_value_fields=False,
                 use_integers_for_enums=True,
-            ))
+            )
+            uri = transcoded_request["uri"]
+            method = transcoded_request["method"]
+
+            # Jsonify the query params
+            query_params = json.loads(
+                json_format.MessageToJson(
+                    transcoded_request["query_params"],
+                    including_default_value_fields=False,
+                    use_integers_for_enums=True,
+                )
+            )
             query_params.update(self._get_unset_required_fields(query_params))
 
             query_params["$alt"] = "json;enum-encoding=int"
 
             # Send the request
             headers = dict(metadata)
-            headers['Content-Type'] = 'application/json'
+            headers["Content-Type"] = "application/json"
             response = getattr(self._session, method)(
                 "{host}{uri}".format(host=self._host, uri=uri),
                 timeout=timeout,
                 headers=headers,
                 params=rest_helpers.flatten_query_params(query_params, strict=True),
                 data=body,
-                )
+            )
 
             # In case of error, raise the appropriate core_exceptions.GoogleAPICallError exception
             # subclass.
@@ -2369,156 +2673,185 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
             return resp
 
     @property
-    def bind_device_to_gateway(self) -> Callable[
-            [device_manager.BindDeviceToGatewayRequest],
-            device_manager.BindDeviceToGatewayResponse]:
+    def bind_device_to_gateway(
+        self,
+    ) -> Callable[
+        [device_manager.BindDeviceToGatewayRequest],
+        device_manager.BindDeviceToGatewayResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._BindDeviceToGateway(self._session, self._host, self._interceptor) # type: ignore
+        return self._BindDeviceToGateway(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def create_device(self) -> Callable[
-            [device_manager.CreateDeviceRequest],
-            resources.Device]:
+    def create_device(
+        self,
+    ) -> Callable[[device_manager.CreateDeviceRequest], resources.Device]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._CreateDevice(self._session, self._host, self._interceptor) # type: ignore
+        return self._CreateDevice(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def create_device_registry(self) -> Callable[
-            [device_manager.CreateDeviceRegistryRequest],
-            resources.DeviceRegistry]:
+    def create_device_registry(
+        self,
+    ) -> Callable[
+        [device_manager.CreateDeviceRegistryRequest], resources.DeviceRegistry
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._CreateDeviceRegistry(self._session, self._host, self._interceptor) # type: ignore
+        return self._CreateDeviceRegistry(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def delete_device(self) -> Callable[
-            [device_manager.DeleteDeviceRequest],
-            empty_pb2.Empty]:
+    def delete_device(
+        self,
+    ) -> Callable[[device_manager.DeleteDeviceRequest], empty_pb2.Empty]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._DeleteDevice(self._session, self._host, self._interceptor) # type: ignore
+        return self._DeleteDevice(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def delete_device_registry(self) -> Callable[
-            [device_manager.DeleteDeviceRegistryRequest],
-            empty_pb2.Empty]:
+    def delete_device_registry(
+        self,
+    ) -> Callable[[device_manager.DeleteDeviceRegistryRequest], empty_pb2.Empty]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._DeleteDeviceRegistry(self._session, self._host, self._interceptor) # type: ignore
+        return self._DeleteDeviceRegistry(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def get_device(self) -> Callable[
-            [device_manager.GetDeviceRequest],
-            resources.Device]:
+    def get_device(
+        self,
+    ) -> Callable[[device_manager.GetDeviceRequest], resources.Device]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._GetDevice(self._session, self._host, self._interceptor) # type: ignore
+        return self._GetDevice(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def get_device_registry(self) -> Callable[
-            [device_manager.GetDeviceRegistryRequest],
-            resources.DeviceRegistry]:
+    def get_device_registry(
+        self,
+    ) -> Callable[[device_manager.GetDeviceRegistryRequest], resources.DeviceRegistry]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._GetDeviceRegistry(self._session, self._host, self._interceptor) # type: ignore
+        return self._GetDeviceRegistry(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def get_iam_policy(self) -> Callable[
-            [iam_policy_pb2.GetIamPolicyRequest],
-            policy_pb2.Policy]:
+    def get_iam_policy(
+        self,
+    ) -> Callable[[iam_policy_pb2.GetIamPolicyRequest], policy_pb2.Policy]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._GetIamPolicy(self._session, self._host, self._interceptor) # type: ignore
+        return self._GetIamPolicy(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def list_device_config_versions(self) -> Callable[
-            [device_manager.ListDeviceConfigVersionsRequest],
-            device_manager.ListDeviceConfigVersionsResponse]:
+    def list_device_config_versions(
+        self,
+    ) -> Callable[
+        [device_manager.ListDeviceConfigVersionsRequest],
+        device_manager.ListDeviceConfigVersionsResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ListDeviceConfigVersions(self._session, self._host, self._interceptor) # type: ignore
+        return self._ListDeviceConfigVersions(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def list_device_registries(self) -> Callable[
-            [device_manager.ListDeviceRegistriesRequest],
-            device_manager.ListDeviceRegistriesResponse]:
+    def list_device_registries(
+        self,
+    ) -> Callable[
+        [device_manager.ListDeviceRegistriesRequest],
+        device_manager.ListDeviceRegistriesResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ListDeviceRegistries(self._session, self._host, self._interceptor) # type: ignore
+        return self._ListDeviceRegistries(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def list_devices(self) -> Callable[
-            [device_manager.ListDevicesRequest],
-            device_manager.ListDevicesResponse]:
+    def list_devices(
+        self,
+    ) -> Callable[
+        [device_manager.ListDevicesRequest], device_manager.ListDevicesResponse
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ListDevices(self._session, self._host, self._interceptor) # type: ignore
+        return self._ListDevices(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def list_device_states(self) -> Callable[
-            [device_manager.ListDeviceStatesRequest],
-            device_manager.ListDeviceStatesResponse]:
+    def list_device_states(
+        self,
+    ) -> Callable[
+        [device_manager.ListDeviceStatesRequest],
+        device_manager.ListDeviceStatesResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ListDeviceStates(self._session, self._host, self._interceptor) # type: ignore
+        return self._ListDeviceStates(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def modify_cloud_to_device_config(self) -> Callable[
-            [device_manager.ModifyCloudToDeviceConfigRequest],
-            resources.DeviceConfig]:
+    def modify_cloud_to_device_config(
+        self,
+    ) -> Callable[
+        [device_manager.ModifyCloudToDeviceConfigRequest], resources.DeviceConfig
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._ModifyCloudToDeviceConfig(self._session, self._host, self._interceptor) # type: ignore
+        return self._ModifyCloudToDeviceConfig(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def send_command_to_device(self) -> Callable[
-            [device_manager.SendCommandToDeviceRequest],
-            device_manager.SendCommandToDeviceResponse]:
+    def send_command_to_device(
+        self,
+    ) -> Callable[
+        [device_manager.SendCommandToDeviceRequest],
+        device_manager.SendCommandToDeviceResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._SendCommandToDevice(self._session, self._host, self._interceptor) # type: ignore
+        return self._SendCommandToDevice(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def set_iam_policy(self) -> Callable[
-            [iam_policy_pb2.SetIamPolicyRequest],
-            policy_pb2.Policy]:
+    def set_iam_policy(
+        self,
+    ) -> Callable[[iam_policy_pb2.SetIamPolicyRequest], policy_pb2.Policy]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._SetIamPolicy(self._session, self._host, self._interceptor) # type: ignore
+        return self._SetIamPolicy(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def test_iam_permissions(self) -> Callable[
-            [iam_policy_pb2.TestIamPermissionsRequest],
-            iam_policy_pb2.TestIamPermissionsResponse]:
+    def test_iam_permissions(
+        self,
+    ) -> Callable[
+        [iam_policy_pb2.TestIamPermissionsRequest],
+        iam_policy_pb2.TestIamPermissionsResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._TestIamPermissions(self._session, self._host, self._interceptor) # type: ignore
+        return self._TestIamPermissions(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def unbind_device_from_gateway(self) -> Callable[
-            [device_manager.UnbindDeviceFromGatewayRequest],
-            device_manager.UnbindDeviceFromGatewayResponse]:
+    def unbind_device_from_gateway(
+        self,
+    ) -> Callable[
+        [device_manager.UnbindDeviceFromGatewayRequest],
+        device_manager.UnbindDeviceFromGatewayResponse,
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._UnbindDeviceFromGateway(self._session, self._host, self._interceptor) # type: ignore
+        return self._UnbindDeviceFromGateway(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def update_device(self) -> Callable[
-            [device_manager.UpdateDeviceRequest],
-            resources.Device]:
+    def update_device(
+        self,
+    ) -> Callable[[device_manager.UpdateDeviceRequest], resources.Device]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._UpdateDevice(self._session, self._host, self._interceptor) # type: ignore
+        return self._UpdateDevice(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
-    def update_device_registry(self) -> Callable[
-            [device_manager.UpdateDeviceRegistryRequest],
-            resources.DeviceRegistry]:
+    def update_device_registry(
+        self,
+    ) -> Callable[
+        [device_manager.UpdateDeviceRegistryRequest], resources.DeviceRegistry
+    ]:
         # The return type is fine, but mypy isn't sophisticated enough to determine what's going on here.
         # In C++ this would require a dynamic_cast
-        return self._UpdateDeviceRegistry(self._session, self._host, self._interceptor) # type: ignore
+        return self._UpdateDeviceRegistry(self._session, self._host, self._interceptor)  # type: ignore
 
     @property
     def kind(self) -> str:
@@ -2528,6 +2861,4 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         self._session.close()
 
 
-__all__=(
-    'DeviceManagerRestTransport',
-)
+__all__ = ("DeviceManagerRestTransport",)
