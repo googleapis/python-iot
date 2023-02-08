@@ -99,15 +99,6 @@ def clean_up_registries():
                         )
                         .execute()
                     )
-                    if "devices" in bound:
-                        for device in bound["devices"]:
-                            bind_request = {
-                                "deviceId": device.get("id"),
-                                "gatewayId": gateway_id,
-                            }
-                            client.projects().locations().registries().unbindDeviceFromGateway(
-                                parent=registry.get("name"), body=bind_request
-                            ).execute()
                     gateway_name = "{}/devices/{}".format(registry.name, gateway_id)
                     client.projects().locations().registries().devices().delete(
                         name=gateway_name
