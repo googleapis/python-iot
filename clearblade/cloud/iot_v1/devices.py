@@ -9,7 +9,7 @@ from .pagers import ListDevicesAsyncPager, ListDevicesPager
 class ClearBladeDeviceManager():
 
     def __init__(self) -> None:
-        #create the ClearBladeConfig object
+        # create the ClearBladeConfig object
         self._config_manager = ClearBladeConfigManager()
 
     def _prepare_for_send_command(self,
@@ -27,12 +27,12 @@ class ClearBladeDeviceManager():
         if request is None:
             request = SendCommandToDeviceRequest(name, binary_data, subfolder)
         params = {'name':request.parent,'method':'sendCommandToDevice'}
-        body = {'binaryData':base64.b64encode(request.binary_data).decode("utf-8")}
+        body = {'binaryData':base64.b64encode(request.binary_data).decode("utf-8"), 'subfolder':request.sub_folder}
 
         return params,body
 
     def _create_device_body(self, device: Device) :
-        return {'id':device.id, 
+        return {'id':device.id,
                 'credentials':device.credentials,
                 'config':device.config,
                 'blocked': device.blocked,
@@ -78,12 +78,12 @@ class ClearBladeDeviceManager():
             self._config_manager.registry_name = data['registries']
 
     def device_path(self,
-        project, 
-        location, 
-        registry, 
-        device) -> str:
+                    project,
+                    location,
+                    registry,
+                    device) -> str:
         """Returns a fully-qualified device string."""
-        
+
         return "projects/{project}/locations/{location}/registries/{registry}/devices/{device}".format(
             project=project,
             location=location,
@@ -92,10 +92,10 @@ class ClearBladeDeviceManager():
         )
 
     def registry_path(self,
-        project: str,
-        location: str,
-        registry: str,
-        ) -> str:
+                      project: str,
+                      location: str,
+                      registry: str,
+                      ) -> str:
         """Returns a fully-qualified registry string."""
 
         return "projects/{project}/locations/{location}/registries/{registry}".format(
@@ -104,12 +104,11 @@ class ClearBladeDeviceManager():
             registry=registry,
         )
 
-
     def send_command(self,
-                    request: SendCommandToDeviceRequest,
-                    name: str = None,
-                    binary_data: bytes = None,
-                    subfolder: str = None):
+                     request: SendCommandToDeviceRequest,
+                     name: str = None,
+                     binary_data: bytes = None,
+                     subfolder: str = None):
         if not request.parent:
             raise Exception('Device path must be supplied to the request object.')
 
@@ -123,13 +122,13 @@ class ClearBladeDeviceManager():
                                  request: SendCommandToDeviceRequest = None,
                                  name: str = None,
                                  binary_data: str = None,
-                                 subfolder: str = None ):
+                                 subfolder: str = None):
 
         if not request.parent:
             raise Exception('Device path must be supplied to the request object.')
 
         params, body = self._prepare_for_send_command(request, name, binary_data, subfolder)
-        clearblade_config=await self._config_manager.regional_config_async(request.parent)
+        clearblade_config = await self._config_manager.regional_config_async(request.parent)
         async_client = AsyncClient(clearblade_config=clearblade_config)
         return await async_client.post(api_name="cloudiot_devices",
                                        request_params=params,
@@ -190,19 +189,18 @@ class ClearBladeDeviceManager():
         return response.json()
 
     async def modify_cloud_device_config_async(self,
-                                        request: ModifyCloudToDeviceConfigRequest,
-                                        name:str = None,
-                                        version_to_update : int = None,
-                                        binary_data: bytes = None):
+                                               request: ModifyCloudToDeviceConfigRequest,
+                                               name:str = None,
+                                               version_to_update : int = None,
+                                               binary_data: bytes = None):
         if not request.parent:
             raise Exception('Device path must be supplied to the request object.')
 
-        
         params, body = self._prepare_modify_cloud_config_device(request=request, name=name,
                                                                 binary_data=binary_data,
                                                                 version_to_update=version_to_update)
-        
-        clearblade_config=await self._config_manager.regional_config_async(request.parent)
+
+        clearblade_config = await self._config_manager.regional_config_async(request.parent)
         async_client = AsyncClient(clearblade_config=clearblade_config)
         response = await async_client.post(api_name="cloudiot_devices",
                                            request_params=params,
@@ -241,7 +239,7 @@ class ClearBladeDeviceManager():
             raise Exception('Registry path must be supplied to the request object.')
 
         params = request._prepare_params_for_list()
-        clearblade_config=await self._config_manager.regional_config_async(request.parent)
+        clearblade_config = await self._config_manager.regional_config_async(request.parent)
         async_client = AsyncClient(clearblade_config=clearblade_config)
         response = await async_client.get(api_name="cloudiot_devices",request_params=params)
 
@@ -253,7 +251,7 @@ class ClearBladeDeviceManager():
                          request: ListDevicesRequest):
         device_list_response = await self.get_device_list_async(request=request)
         if device_list_response:
-            return ListDevicesAsyncPager(method= self.get_device_list_async,
+            return ListDevicesAsyncPager(method=self.get_device_list_async,
                                          request=request, response=device_list_response)
         return None
 
@@ -277,7 +275,7 @@ class ClearBladeDeviceManager():
                         request: GetDeviceRequest) -> Device:
         if not request.parent:
             raise Exception('Device path must be supplied to the request object.')
-        
+
         params = {'name':request.parent}
         clearblade_config = await self._config_manager.regional_config_async(request.parent)
         async_client = AsyncClient(clearblade_config=clearblade_config)
@@ -285,7 +283,7 @@ class ClearBladeDeviceManager():
 
         if response.status_code == 200:
             return self._create_device_from_response(response.json())
-        
+
         return response
 
     def delete(self,
@@ -296,13 +294,13 @@ class ClearBladeDeviceManager():
         clearblade_config = self._config_manager.regional_config(parent=request.parent)
 
         params = {'name':request.parent}
-        
+
         sync_client = SyncClient(clearblade_config=clearblade_config)
         response = sync_client.delete(api_name="cloudiot_devices",request_params=params)
         return response
 
     async def delete_async(self,
-               request: DeleteDeviceRequest):
+                           request: DeleteDeviceRequest):
 
         if not request.parent:
             raise Exception('Device path must be supplied to the request object.')
@@ -322,7 +320,7 @@ class ClearBladeDeviceManager():
 
         params, body = request._prepare_params_body_for_update()
         sync_client = SyncClient(clearblade_config=clearblade_config)
-        response = sync_client.patch(api_name= "cloudiot_devices",request_body=body, request_params=params)
+        response = sync_client.patch(api_name="cloudiot_devices",request_body=body, request_params=params)
 
         if response.status_code == 200:
             return self._create_device_from_response(json_response=response.json())
@@ -334,14 +332,13 @@ class ClearBladeDeviceManager():
             raise Exception('Parent must be supplied to the request object.')
 
         params, body = request._prepare_params_body_for_update()
-        clearblade_config=await self._config_manager.regional_config_async(request.parent)
+        clearblade_config = await self._config_manager.regional_config_async(request.parent)
         async_client = AsyncClient(clearblade_config=clearblade_config)
         response = await async_client.patch(api_name="cloudiot_devices",request_body=body, request_params=params)
 
         if response.status_code == 200:
             return self._create_device_from_response(json_response=response.json())
         return response
-
 
     def bindGatewayToDevice(self,
                             request: BindDeviceToGatewayRequest) :
@@ -361,7 +358,7 @@ class ClearBladeDeviceManager():
                                         request: BindDeviceToGatewayRequest) :
         if not request.parent:
             raise Exception('Parent must be supplied to the request object.')
-       
+
         body = {'deviceId':request.deviceId, 'gatewayId':request.gatewayId}
         params = {'method':'bindDeviceToGateway'}
         clearblade_config = await self._config_manager.regional_config_async(request.parent)
@@ -373,7 +370,7 @@ class ClearBladeDeviceManager():
                                 request: UnbindDeviceFromGatewayRequest) :
         if not request.parent:
             raise Exception('Parent must be supplied to the request object.')
-        
+
         clearblade_config = self._config_manager.regional_config(request.parent)
         sync_client = SyncClient(clearblade_config=clearblade_config)
         body = {'deviceId':request.deviceId, 'gatewayId':request.gatewayId}
@@ -385,7 +382,7 @@ class ClearBladeDeviceManager():
                                             request: UnbindDeviceFromGatewayRequest) :
         if not request.parent:
             raise Exception('Parent must be supplied to the request object.')
-        
+
         body = {'deviceId':request.deviceId, 'gatewayId':request.gatewayId}
         params = {'method':'unbindDeviceFromGateway'}
 
@@ -398,7 +395,7 @@ class ClearBladeDeviceManager():
                     request: ListDeviceStatesRequest):
         if not request.parent:
             raise Exception('Device Path must be supplied to the request object.')
-        
+
         clearblade_config = self._config_manager.regional_config(request.parent)
 
         params = {'name':request.parent, 'numStates':request.numStates}
@@ -410,13 +407,13 @@ class ClearBladeDeviceManager():
         return response
 
     async def states_list_async(self,
-                                       request: ListDeviceStatesRequest):
+                                request: ListDeviceStatesRequest):
 
         if not request.parent:
             raise Exception('Device Path must be supplied to the request object.')
-        
+
         params = {'name':request.parent, 'numStates':request.numStates}
-        clearblade_config=await self._config_manager.regional_config_async(request.parent)
+        clearblade_config = await self._config_manager.regional_config_async(request.parent)
         async_client = AsyncClient(clearblade_config=clearblade_config)
         response = await async_client.get(api_name="cloudiot_devices_states", request_params=params)
 
@@ -428,7 +425,7 @@ class ClearBladeDeviceManager():
                              request: ListDeviceConfigVersionsRequest):
         if not request.parent:
             raise Exception('Device Path must be supplied to the request object.')
-        
+
         clearblade_config = self._config_manager.regional_config(request.parent)
         params = {'name':request.parent, 'numVersions':request.numVersions}
         sync_client = SyncClient(clearblade_config=clearblade_config)
@@ -439,10 +436,10 @@ class ClearBladeDeviceManager():
         return response
 
     async def config_versions_list_async(self,
-                                         request: ListDeviceConfigVersionsRequest):     
+                                         request: ListDeviceConfigVersionsRequest):
         if not request.parent:
             raise Exception('Device Path must be supplied to the request object.')
-        
+
         params = {'name':request.parent, 'numVersions':request.numVersions}
         clearblade_config = await self._config_manager.regional_config_async(request.parent)
         async_client = AsyncClient(clearblade_config=clearblade_config)
