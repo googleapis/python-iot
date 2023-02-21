@@ -38,7 +38,7 @@ for library in s.get_staging_dirs(default_version):
 
     # Rename `format_` to `format` to avoid breaking change
     s.replace(
-        library / "google/cloud/**/types/resources.py",
+        library / "**/*.py",
         "format_",
         "format"
     )

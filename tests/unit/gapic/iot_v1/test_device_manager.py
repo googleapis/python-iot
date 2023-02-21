@@ -5899,7 +5899,7 @@ def test_create_device_registry_rest(request_type):
         "credentials": [
             {
                 "public_key_certificate": {
-                    "format_": 1,
+                    "format": 1,
                     "certificate": "certificate_value",
                     "x509_details": {
                         "issuer": "issuer_value",
@@ -6119,7 +6119,7 @@ def test_create_device_registry_rest_bad_request(
         "credentials": [
             {
                 "public_key_certificate": {
-                    "format_": 1,
+                    "format": 1,
                     "certificate": "certificate_value",
                     "x509_details": {
                         "issuer": "issuer_value",
@@ -6518,7 +6518,7 @@ def test_update_device_registry_rest(request_type):
         "credentials": [
             {
                 "public_key_certificate": {
-                    "format_": 1,
+                    "format": 1,
                     "certificate": "certificate_value",
                     "x509_details": {
                         "issuer": "issuer_value",
@@ -6739,7 +6739,7 @@ def test_update_device_registry_rest_bad_request(
         "credentials": [
             {
                 "public_key_certificate": {
-                    "format_": 1,
+                    "format": 1,
                     "certificate": "certificate_value",
                     "x509_details": {
                         "issuer": "issuer_value",
@@ -7451,7 +7451,7 @@ def test_create_device_rest(request_type):
         "num_id": 636,
         "credentials": [
             {
-                "public_key": {"format_": 3, "key": "key_value"},
+                "public_key": {"format": 3, "key": "key_value"},
                 "expiration_time": {"seconds": 751, "nanos": 543},
             }
         ],
@@ -7686,7 +7686,7 @@ def test_create_device_rest_bad_request(
         "num_id": 636,
         "credentials": [
             {
-                "public_key": {"format_": 3, "key": "key_value"},
+                "public_key": {"format": 3, "key": "key_value"},
                 "expiration_time": {"seconds": 751, "nanos": 543},
             }
         ],
@@ -8108,7 +8108,7 @@ def test_update_device_rest(request_type):
         "num_id": 636,
         "credentials": [
             {
-                "public_key": {"format_": 3, "key": "key_value"},
+                "public_key": {"format": 3, "key": "key_value"},
                 "expiration_time": {"seconds": 751, "nanos": 543},
             }
         ],
@@ -8344,7 +8344,7 @@ def test_update_device_rest_bad_request(
         "num_id": 636,
         "credentials": [
             {
-                "public_key": {"format_": 3, "key": "key_value"},
+                "public_key": {"format": 3, "key": "key_value"},
                 "expiration_time": {"seconds": 751, "nanos": 543},
             }
         ],
