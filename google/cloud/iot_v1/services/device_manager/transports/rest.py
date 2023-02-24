@@ -17,7 +17,7 @@
 import dataclasses
 import json  # type: ignore
 import re
-from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 import warnings
 
 from google.api_core import gapic_v1, path_template, rest_helpers, rest_streaming
@@ -730,7 +730,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("BindDeviceToGateway")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -832,7 +832,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("CreateDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -927,7 +927,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("CreateDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1024,7 +1024,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("DeleteDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1098,7 +1098,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("DeleteDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1174,7 +1174,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("GetDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1264,7 +1264,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("GetDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1352,7 +1352,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("GetIamPolicy")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1526,7 +1526,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDeviceConfigVersions")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1619,7 +1619,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDeviceRegistries")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1707,7 +1707,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDevices")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1797,7 +1797,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ListDeviceStates")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1889,7 +1889,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("ModifyCloudToDeviceConfig")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -1994,7 +1994,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("SendCommandToDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -2096,7 +2096,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("SetIamPolicy")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -2270,7 +2270,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("TestIamPermissions")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -2372,7 +2372,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("UnbindDeviceFromGateway")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {}
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {}
 
         @classmethod
         def _get_unset_required_fields(cls, message_dict):
@@ -2475,7 +2475,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("UpdateDevice")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {
             "updateMask": {},
         }
 
@@ -2577,7 +2577,7 @@ class DeviceManagerRestTransport(DeviceManagerTransport):
         def __hash__(self):
             return hash("UpdateDeviceRegistry")
 
-        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, str] = {
+        __REQUIRED_FIELDS_DEFAULT_VALUES: Dict[str, Any] = {
             "updateMask": {},
         }
 
