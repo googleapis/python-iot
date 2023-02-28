@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.9.0](https://github.com/googleapis/python-iot/compare/v2.8.1...v2.9.0) (2023-02-28)
+
+
+### Features
+
+* Enable "rest" transport in Python for services supporting numeric enums ([15758ae](https://github.com/googleapis/python-iot/commit/15758aea9839cc5e7509c17ba3f9cb4f98271b20))
+
 ## [2.8.1](https://github.com/googleapis/python-iot/compare/v2.8.0...v2.8.1) (2023-01-20)
 
 
