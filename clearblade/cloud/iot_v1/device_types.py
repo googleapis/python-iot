@@ -1,7 +1,38 @@
+# -*- coding: utf-8 -*-
+# Copyright 2023 ClearBlade Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# Copyright 2022 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 from typing import List
 from .resources import GatewayType, LogLevel
 from .utils import get_value
-
+import os
+from proto.datetime_helpers import DatetimeWithNanoseconds
+import base64
 
 class Device():
     """
@@ -37,14 +68,57 @@ class Device():
 
     @staticmethod
     def from_json(json):
-        return Device(id=json['id'], num_id=json['numId'],
-                      credentials=json['credentials'], last_heartbeat_time=json['lastHeartbeatTime'],
-                      last_event_time=json['lastEventTime'], last_state_time=json['lastStateTime'],
-                      last_config_ack_time=json['lastConfigAckTime'], last_config_send_time=json['lastConfigSendTime'],
-                      blocked=json['blocked'], last_error_time=json['lastErrorTime'],
-                      last_error_status_code=json['lastErrorStatus'], config=json['config'],
-                      state=json['state'], log_level=json['logLevel'], meta_data=json['metadata'],
-                      gateway_config=json['gatewayConfig'])
+        lastHeartbeatTimeFromJson = get_value(json,'lastHeartbeatTime')
+        lastEventTimeFromJson = get_value(json, 'lastEventTime')
+        lastStateTimeFromJson = get_value(json, 'lastStateTime')
+        lastConfigAckTimeFromJson = get_value(json, 'lastConfigAckTime')
+        lastConfigSendTimeFromJson = get_value(json, 'lastConfigSendTime')
+        lastErrorTimeFromJson = get_value(json, 'lastErrorTime')
+        
+        convert_times_to_datetime_with_nanoseconds = (False if os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT") == None else os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT").lower() == "true")
+        if convert_times_to_datetime_with_nanoseconds:
+            last_heartbeat_time = None if lastHeartbeatTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(lastHeartbeatTimeFromJson)
+            last_event_time = None if lastEventTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(lastEventTimeFromJson)
+            last_state_time = None if lastStateTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(lastStateTimeFromJson)
+            last_config_ack_time = None if lastConfigAckTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(lastConfigAckTimeFromJson)
+            last_config_send_time = None if lastConfigSendTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(lastConfigSendTimeFromJson)
+            last_error_time = None if lastErrorTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(lastErrorTimeFromJson) 
+        else:
+            last_heartbeat_time = lastHeartbeatTimeFromJson
+            last_event_time = lastEventTimeFromJson
+            last_state_time = lastStateTimeFromJson
+            last_config_ack_time = lastConfigAckTimeFromJson
+            last_config_send_time = lastConfigSendTimeFromJson
+            last_error_time = lastErrorTimeFromJson
+
+        deviceConfig = DeviceConfig.from_json(get_value(json, 'config'))
+        config = { "version": deviceConfig.version, "cloudUpdateTime": deviceConfig.cloud_update_time }
+        if (deviceConfig.binary_data not in [None, ""]):
+            config["binaryData"] = deviceConfig.binary_data
+        if (deviceConfig.device_ack_time not in [None, ""]):
+            config["deviceAckTime"] = deviceConfig.device_ack_time
+
+        deviceState = DeviceState.from_json(get_value(json, 'state'))
+        state = { "updateTime": deviceState.update_time, "binaryData": deviceState.binary_data }
+
+        return Device(
+            id=get_value(json, 'id'),
+            num_id=get_value(json, 'numId'),
+            credentials=get_value(json, 'credentials'),
+            last_heartbeat_time=last_heartbeat_time,
+            last_event_time=last_event_time,
+            last_state_time=last_state_time,
+            last_config_ack_time=last_config_ack_time,
+            last_config_send_time=last_config_send_time,
+            last_error_time=last_error_time,
+            blocked=get_value(json, 'blocked'),
+            last_error_status_code=get_value(json, 'lastErrorStatus'),
+            config=config,
+            state=state,
+            log_level=get_value(json, 'logLevel'),
+            meta_data=get_value(json, 'metadata'),
+            gateway_config=get_value(json, 'gatewayConfig')
+        )
 
     @property
     def id(self):
@@ -132,8 +206,26 @@ class DeviceState():
 
     @staticmethod
     def from_json(response_json):
-        return DeviceState(update_time=get_value(response_json, 'updateTime'),
-                           binary_data=get_value(response_json, 'binaryData'))
+        updateTimeFromJson = get_value(response_json, 'updateTime')
+        binaryDataFromJson = get_value(response_json, 'binaryData')
+        
+        convert_times_to_datetime_with_nanoseconds = (False if os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT") == None else os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT").lower() == "true")
+        if convert_times_to_datetime_with_nanoseconds:
+            update_time = None if updateTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(updateTimeFromJson)
+        else:
+            update_time = updateTimeFromJson
+
+        if (binaryDataFromJson not in [None, ""]):
+            convert_binarydata_to_bytes = (False if os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT") == None else os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT").lower() == "true")
+            if convert_binarydata_to_bytes:
+                binary_data = binaryDataFromJson.encode('utf-8')
+            else:
+                binary_data = binaryDataFromJson
+        else:
+            binary_data = binaryDataFromJson
+
+        return DeviceState(update_time=update_time,
+                           binary_data=binary_data)
 
 
 class Request():
@@ -220,11 +312,32 @@ class DeviceConfig(Request):
 
     @staticmethod
     def from_json(json):
+        cloudUpdateTimeFromJson = get_value(json,'cloudUpdateTime')
+        deviceAckTimeFromJson = get_value(json, 'deviceAckTime')
+        binaryDataFromJson = get_value(json,'binaryData')
+
+        convert_times_to_datetime_with_nanoseconds = (False if os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT") == None else os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT").lower() == "true")
+        if convert_times_to_datetime_with_nanoseconds:
+            cloud_update_time = None if cloudUpdateTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(cloudUpdateTimeFromJson)
+            device_ack_time = None if deviceAckTimeFromJson in [None, ""] else DatetimeWithNanoseconds.from_rfc3339(deviceAckTimeFromJson)
+        else:
+            cloud_update_time = cloudUpdateTimeFromJson
+            device_ack_time = deviceAckTimeFromJson
+        
+        if binaryDataFromJson not in [None, ""]:
+            convert_binarydata_to_bytes = (False if os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT") == None else os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT").lower() == "true")
+            if convert_binarydata_to_bytes:
+                binary_data = base64.b64decode(binaryDataFromJson.encode('utf-8'))
+            else:
+                binary_data = binaryDataFromJson
+        else:
+            binary_data = binaryDataFromJson
+
         return DeviceConfig(name='',
                             version=get_value(json, 'version'),
-                            cloud_update_time=get_value(json,'cloudUpdateTime'),
-                            device_ack_time=get_value(json, 'deviceAckTime'),
-                            binary_data=get_value(json,'binaryData'))
+                            cloud_update_time=cloud_update_time,
+                            device_ack_time=device_ack_time,
+                            binary_data=binary_data)
 
 
 class DeleteDeviceRequest(Request):
