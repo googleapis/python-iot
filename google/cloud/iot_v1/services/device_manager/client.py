@@ -58,6 +58,7 @@ from google.cloud.iot_v1.types import device_manager, resources
 from .transports.base import DEFAULT_CLIENT_INFO, DeviceManagerTransport
 from .transports.grpc import DeviceManagerGrpcTransport
 from .transports.grpc_asyncio import DeviceManagerGrpcAsyncIOTransport
+from .transports.rest import DeviceManagerRestTransport
 
 
 class DeviceManagerClientMeta(type):
@@ -71,6 +72,7 @@ class DeviceManagerClientMeta(type):
     _transport_registry = OrderedDict()  # type: Dict[str, Type[DeviceManagerTransport]]
     _transport_registry["grpc"] = DeviceManagerGrpcTransport
     _transport_registry["grpc_asyncio"] = DeviceManagerGrpcAsyncIOTransport
+    _transport_registry["rest"] = DeviceManagerRestTransport
 
     def get_transport_class(
         cls,
