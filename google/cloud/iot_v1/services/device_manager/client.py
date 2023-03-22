@@ -515,7 +515,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.CreateDeviceRegistryRequest, dict]):
-                The request object. Request for `CreateDeviceRegistry`.
+                The request object. Request for ``CreateDeviceRegistry``.
             parent (str):
                 Required. The project and cloud region where this device
                 registry must be created. For example,
@@ -626,7 +626,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.GetDeviceRegistryRequest, dict]):
-                The request object. Request for `GetDeviceRegistry`.
+                The request object. Request for ``GetDeviceRegistry``.
             name (str):
                 Required. The name of the device registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
@@ -727,7 +727,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.UpdateDeviceRegistryRequest, dict]):
-                The request object. Request for `UpdateDeviceRegistry`.
+                The request object. Request for ``UpdateDeviceRegistry``.
             device_registry (google.cloud.iot_v1.types.DeviceRegistry):
                 Required. The new values for the device registry. The
                 ``id`` field must be empty, and the ``name`` field must
@@ -842,7 +842,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.DeleteDeviceRegistryRequest, dict]):
-                The request object. Request for `DeleteDeviceRegistry`.
+                The request object. Request for ``DeleteDeviceRegistry``.
             name (str):
                 Required. The name of the device registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
@@ -937,7 +937,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.ListDeviceRegistriesRequest, dict]):
-                The request object. Request for `ListDeviceRegistries`.
+                The request object. Request for ``ListDeviceRegistries``.
             parent (str):
                 Required. The project and cloud region path. For
                 example,
@@ -1051,7 +1051,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.CreateDeviceRequest, dict]):
-                The request object. Request for `CreateDevice`.
+                The request object. Request for ``CreateDevice``.
             parent (str):
                 Required. The name of the device registry where this
                 device should be created. For example,
@@ -1162,7 +1162,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.GetDeviceRequest, dict]):
-                The request object. Request for `GetDevice`.
+                The request object. Request for ``GetDevice``.
             name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
@@ -1263,7 +1263,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.UpdateDeviceRequest, dict]):
-                The request object. Request for `UpdateDevice`.
+                The request object. Request for ``UpdateDevice``.
             device (google.cloud.iot_v1.types.Device):
                 Required. The new values for the device. The ``id`` and
                 ``num_id`` fields must be empty, and the field ``name``
@@ -1376,7 +1376,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.DeleteDeviceRequest, dict]):
-                The request object. Request for `DeleteDevice`.
+                The request object. Request for ``DeleteDevice``.
             name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
@@ -1471,7 +1471,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.ListDevicesRequest, dict]):
-                The request object. Request for `ListDevices`.
+                The request object. Request for ``ListDevices``.
             parent (str):
                 Required. The device registry path. Required. For
                 example,
@@ -1590,8 +1590,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.ModifyCloudToDeviceConfigRequest, dict]):
-                The request object. Request for
-                `ModifyCloudToDeviceConfig`.
+                The request object. Request for ``ModifyCloudToDeviceConfig``.
             name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
@@ -1708,8 +1707,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.ListDeviceConfigVersionsRequest, dict]):
-                The request object. Request for
-                `ListDeviceConfigVersions`.
+                The request object. Request for ``ListDeviceConfigVersions``.
             name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
@@ -1813,7 +1811,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.ListDeviceStatesRequest, dict]):
-                The request object. Request for `ListDeviceStates`.
+                The request object. Request for ``ListDeviceStates``.
             name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
@@ -1916,8 +1914,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.iam.v1.iam_policy_pb2.SetIamPolicyRequest, dict]):
-                The request object. Request message for `SetIamPolicy`
-                method.
+                The request object. Request message for ``SetIamPolicy`` method.
             resource (str):
                 REQUIRED: The resource for which the
                 policy is being specified. See the
@@ -2081,8 +2078,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.iam.v1.iam_policy_pb2.GetIamPolicyRequest, dict]):
-                The request object. Request message for `GetIamPolicy`
-                method.
+                The request object. Request message for ``GetIamPolicy`` method.
             resource (str):
                 REQUIRED: The resource for which the
                 policy is being requested. See the
@@ -2248,8 +2244,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.iam.v1.iam_policy_pb2.TestIamPermissionsRequest, dict]):
-                The request object. Request message for
-                `TestIamPermissions` method.
+                The request object. Request message for ``TestIamPermissions`` method.
             resource (str):
                 REQUIRED: The resource for which the
                 policy detail is being requested. See
@@ -2381,7 +2376,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.SendCommandToDeviceRequest, dict]):
-                The request object. Request for `SendCommandToDevice`.
+                The request object. Request for ``SendCommandToDevice``.
             name (str):
                 Required. The name of the device. For example,
                 ``projects/p0/locations/us-central1/registries/registry0/devices/device0``
@@ -2515,7 +2510,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.BindDeviceToGatewayRequest, dict]):
-                The request object. Request for `BindDeviceToGateway`.
+                The request object. Request for ``BindDeviceToGateway``.
             parent (str):
                 Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
@@ -2640,8 +2635,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
 
         Args:
             request (Union[google.cloud.iot_v1.types.UnbindDeviceFromGatewayRequest, dict]):
-                The request object. Request for
-                `UnbindDeviceFromGateway`.
+                The request object. Request for ``UnbindDeviceFromGateway``.
             parent (str):
                 Required. The name of the registry. For example,
                 ``projects/example-project/locations/us-central1/registries/my-registry``.
