@@ -74,6 +74,8 @@ class Device():
         lastConfigAckTimeFromJson = get_value(json, 'lastConfigAckTime')
         lastConfigSendTimeFromJson = get_value(json, 'lastConfigSendTime')
         lastErrorTimeFromJson = get_value(json, 'lastErrorTime')
+        configFromJson = get_value(json, 'config')
+        stateFromJson = get_value(json, 'state')
         
         convert_times_to_datetime_with_nanoseconds = (False if os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT") == None else os.environ.get("BINARYDATA_AND_TIME_GOOGLE_FORMAT").lower() == "true")
         if convert_times_to_datetime_with_nanoseconds:
@@ -91,15 +93,21 @@ class Device():
             last_config_send_time = lastConfigSendTimeFromJson
             last_error_time = lastErrorTimeFromJson
 
-        deviceConfig = DeviceConfig.from_json(get_value(json, 'config'))
-        config = { "version": deviceConfig.version, "cloudUpdateTime": deviceConfig.cloud_update_time }
-        if (deviceConfig.binary_data not in [None, ""]):
-            config["binaryData"] = deviceConfig.binary_data
-        if (deviceConfig.device_ack_time not in [None, ""]):
-            config["deviceAckTime"] = deviceConfig.device_ack_time
-
-        deviceState = DeviceState.from_json(get_value(json, 'state'))
-        state = { "updateTime": deviceState.update_time, "binaryData": deviceState.binary_data }
+        if (configFromJson):
+            deviceConfig = DeviceConfig.from_json(configFromJson)
+            config = { "version": deviceConfig.version, "cloudUpdateTime": deviceConfig.cloud_update_time }
+            if (deviceConfig.binary_data not in [None, ""]):
+                config["binaryData"] = deviceConfig.binary_data
+            if (deviceConfig.device_ack_time not in [None, ""]):
+                config["deviceAckTime"] = deviceConfig.device_ack_time
+        else:
+            config = configFromJson
+        
+        if (stateFromJson):
+            deviceState = DeviceState.from_json(stateFromJson)
+            state = { "updateTime": deviceState.update_time, "binaryData": deviceState.binary_data }
+        else:
+            state = stateFromJson
 
         return Device(
             id=get_value(json, 'id'),
@@ -180,6 +188,26 @@ class Device():
     def last_heartbeat_time(self):
         return self._last_heartbeat_time
     
+    @property
+    def last_event_time(self):
+        return self._last_event_time
+    
+    @property
+    def last_state_time(self):
+        return self._last_state_time
+
+    @property
+    def last_config_ack_time(self):
+        return self._last_config_ack_time
+
+    @property
+    def last_config_send_time(self):
+        return self._last_config_send_time
+    
+    @property
+    def last_error_time(self):
+        return self._last_error_time
+
     @property
     def blocked(self):
         return self._blocked
