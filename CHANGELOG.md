@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.9.1](https://github.com/googleapis/python-iot/compare/v2.9.0...v2.9.1) (2023-03-23)
+
+
+### Documentation
+
+* Fix formatting of request arg in docstring ([#460](https://github.com/googleapis/python-iot/issues/460)) ([c97f63e](https://github.com/googleapis/python-iot/commit/c97f63ed2c6bafee8037ff4091c2a2b6850770ed))
+
 ## [2.9.0](https://github.com/googleapis/python-iot/compare/v2.8.1...v2.9.0) (2023-02-28)
 
 
