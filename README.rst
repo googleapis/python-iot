@@ -117,3 +117,19 @@ Note about types of times and binaryData
 2. All **binaryData** (CONFIG, STATE etc.): **BYTE ARRAYS**
 
 - If this environment variable is not set, or is set to any unexpeced values, then the default types listed previously are used.
+
+Note about running from source instead of PyPi (pip) module:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- To temporarily use the source code in this repo. instead of the installed PyPi (pip) module do the following:
+
+1. Clone this repo.
+2. Checkout the desired branch using **git checkout <branch>**.
+3. In your code find where **clearblade** or **clearblade.cloud** is being imported.
+4. Precede that line with **import sys** and **sys.path.insert(0, <path_to_python-iot>)**. The path must end with "python-iot". So for example:
+
+.. code-block:: console
+
+    import sys
+    sys.path.insert(0, "path/to/python-iot")
+
+    from clearblade.cloud import iot_v1

@@ -1,38 +1,61 @@
-# -*- coding: utf-8 -*-
-# Copyright 2023 ClearBlade Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-# Copyright 2022 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+"""
+"Copyright 2023 ClearBlade Inc."
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+https://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+Copyright 2018 Google LLC
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+https://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+Copyright 2023 ClearBlade Inc.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+https://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+Copyright 2018 Google LLC
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+https://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+"""
+
 from typing import List
-from .resources import GatewayType, LogLevel
+from .resources import GatewayType, LogLevel, PublicKeyFormat, PublicKeyCredential, DeviceCredential
 from .utils import get_value
 import os
 from proto.datetime_helpers import DatetimeWithNanoseconds
 import base64
+
+def convertCredentialsFormatsFromString(credentials):
+    # Converts public Key Format from string to object of class PublicKeyFormat
+    for index, credential in enumerate(credentials):
+        if 'publicKey' in credential:
+            credential['publicKey']['format'] = PublicKeyFormat(credential['publicKey']['format'])
+            credentials[index] = DeviceCredential(credential)
+    return credentials
 
 class Device():
     """
@@ -93,26 +116,10 @@ class Device():
             last_config_send_time = lastConfigSendTimeFromJson
             last_error_time = lastErrorTimeFromJson
 
-        if (configFromJson):
-            deviceConfig = DeviceConfig.from_json(configFromJson)
-            config = { "version": deviceConfig.version, "cloudUpdateTime": deviceConfig.cloud_update_time }
-            if (deviceConfig.binary_data not in [None, ""]):
-                config["binaryData"] = deviceConfig.binary_data
-            if (deviceConfig.device_ack_time not in [None, ""]):
-                config["deviceAckTime"] = deviceConfig.device_ack_time
-        else:
-            config = configFromJson
-        
-        if (stateFromJson):
-            deviceState = DeviceState.from_json(stateFromJson)
-            state = { "updateTime": deviceState.update_time, "binaryData": deviceState.binary_data }
-        else:
-            state = stateFromJson
-
         return Device(
             id=get_value(json, 'id'),
             num_id=get_value(json, 'numId'),
-            credentials=get_value(json, 'credentials'),
+            credentials=convertCredentialsFormatsFromString(get_value(json, 'credentials')),
             last_heartbeat_time=last_heartbeat_time,
             last_event_time=last_event_time,
             last_state_time=last_state_time,
@@ -121,8 +128,8 @@ class Device():
             last_error_time=last_error_time,
             blocked=get_value(json, 'blocked'),
             last_error_status_code=get_value(json, 'lastErrorStatus'),
-            config=config,
-            state=state,
+            config=DeviceConfig.from_json(configFromJson),
+            state=DeviceState.from_json(stateFromJson),
             log_level=get_value(json, 'logLevel'),
             meta_data=get_value(json, 'metadata'),
             gateway_config=get_value(json, 'gatewayConfig')
@@ -221,16 +228,22 @@ class Device():
 
 class DeviceState():
     def __init__(self, update_time: str = None, binary_data:str = None) -> None:
-        self._update_time = update_time
-        self._binary_data = binary_data
+        self.updateTime = update_time
+        self.binaryData = binary_data
+
+    def __getitem__(self, arg):
+        return getattr(self, arg)
+
+    def get(self, arg):
+        return getattr(self, arg)
 
     @property
     def update_time(self):
-        return self._update_time
+        return self.updateTime
 
     @property
     def binary_data(self):
-        return self._binary_data
+        return self.binaryData
 
     @staticmethod
     def from_json(response_json):
@@ -254,8 +267,7 @@ class DeviceState():
 
         return DeviceState(update_time=update_time,
                            binary_data=binary_data)
-
-
+       
 class Request():
     def __init__(self, parent) -> None:
         self._parent = parent
@@ -318,9 +330,15 @@ class DeviceConfig(Request):
                  binary_data) -> None:
         super().__init__(name)
         self._version = version
-        self._cloud_update_time = cloud_update_time
-        self._device_ack_time = device_ack_time
-        self._binary_data = binary_data
+        self.cloudUpdateTime = cloud_update_time
+        self.deviceAckTime = device_ack_time
+        self.binaryData = binary_data
+
+    def __getitem__(self, arg):
+        return getattr(self, arg)
+
+    def get(self, arg):
+        return getattr(self, arg)
 
     @property
     def version(self):
@@ -328,15 +346,15 @@ class DeviceConfig(Request):
 
     @property
     def cloud_update_time(self):
-        return self._cloud_update_time
+        return self.cloudUpdateTime
 
     @property
     def device_ack_time(self):
-        return self._device_ack_time
+        return self.deviceAckTime
 
     @property
     def binary_data(self):
-        return self._binary_data
+        return self.binaryData
 
     @staticmethod
     def from_json(json):
@@ -493,8 +511,8 @@ class UpdateDeviceRequest(Request):
             body['metadata'] = self._device.meta_data
         if self._device._blocked is not None:
             body['blocked'] = self._device._blocked
-        if self._device.credentials is not None:
-            body['credentials'] = self._device.credentials
+        if self._device._credentials is not None:
+            body['credentials'] = DeviceCredential.convert_credentials_for_create_update(self._device._credentials)
 
         return params, body
 
