@@ -125,7 +125,7 @@ class PublicKeyCredential():
 class DeviceCredential():
     def __init__(self, public_key, expiration_time=''):
         if isinstance(public_key, dict):
-            self.publicKey = PublicKeyCredential(public_key['publicKey']['format'], public_key['publicKey']['key'])
+            self.publicKey = PublicKeyCredential(public_key['format'], public_key['key'])
         else:
             self.publicKey = public_key
         self.expirationTime = expiration_time

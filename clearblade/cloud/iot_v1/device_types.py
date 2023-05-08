@@ -54,7 +54,7 @@ def convertCredentialsFormatsFromString(credentials):
     for index, credential in enumerate(credentials):
         if 'publicKey' in credential:
             credential['publicKey']['format'] = PublicKeyFormat(credential['publicKey']['format'])
-            credentials[index] = DeviceCredential(credential)
+            credentials[index] = DeviceCredential(credential['publicKey'], credential['expirationTime'])
     return credentials
 
 class Device():
