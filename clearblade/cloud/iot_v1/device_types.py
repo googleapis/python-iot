@@ -50,11 +50,12 @@ from proto.datetime_helpers import DatetimeWithNanoseconds
 import base64
 
 def convertCredentialsFormatsFromString(credentials):
-    # Converts public Key Format from string to object of class PublicKeyFormat
-    for index, credential in enumerate(credentials):
-        if 'publicKey' in credential:
-            credential['publicKey']['format'] = PublicKeyFormat(credential['publicKey']['format'])
-            credentials[index] = DeviceCredential(credential['publicKey'], credential['expirationTime'])
+    if credentials is not None:
+        # Converts public Key Format from string to object of class PublicKeyFormat
+        for index, credential in enumerate(credentials):
+            if 'publicKey' in credential:
+                credential['publicKey']['format'] = PublicKeyFormat(credential['publicKey']['format'])
+                credentials[index] = DeviceCredential(credential['publicKey'], credential['expirationTime'])
     return credentials
 
 class Device():

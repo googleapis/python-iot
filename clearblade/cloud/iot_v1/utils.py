@@ -61,8 +61,9 @@ def find_project_region_registry_from_parent(parent):
     return project_region_registry_dict
 
 def get_value(json_data, key):
-    if key in json_data:
-        return json_data[key]
+    if json_data is not None:
+        if key in json_data:
+            return json_data[key]
     return None
 
 class SingletonMetaClass(type):
