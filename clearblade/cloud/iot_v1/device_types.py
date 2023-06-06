@@ -63,6 +63,8 @@ class Device():
     Data class for Clearblade Device
     """
     # TODO: find a better way to construct the Device object. I dont like so much parameter in a constructor
+    # From google SDK docs: The field ``name`` must be empty. The server generates ``name`` from the device 
+    # registry ``id`` and the ``parent`` field.
 
     def __init__(self, id: str, num_id: str = None,
                  credentials: list = [], last_heartbeat_time: str = None, last_event_time: str = None,
@@ -74,6 +76,7 @@ class Device():
                  log_level: str = LogLevel.NONE, meta_data: dict = {}, gateway_config : dict = {"gatewayType": GatewayType.NON_GATEWAY}) -> None:
 
         self._id = id
+        self._name = ''
         self._num_id = num_id
         self._credentials = credentials
         self._last_heartbeat_time = last_heartbeat_time
@@ -139,6 +142,10 @@ class Device():
     @property
     def id(self):
         return self._id
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def num_id(self):
