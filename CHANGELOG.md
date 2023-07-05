@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.9.2](https://github.com/googleapis/python-iot/compare/v2.9.1...v2.9.2) (2023-07-04)
+
+
+### Bug Fixes
+
+* Add async context manager return types ([#479](https://github.com/googleapis/python-iot/issues/479)) ([f4a64d8](https://github.com/googleapis/python-iot/commit/f4a64d808cf946afc994357dae003a850e38c43f))
+
 ## [2.9.1](https://github.com/googleapis/python-iot/compare/v2.9.0...v2.9.1) (2023-03-23)
 
 
