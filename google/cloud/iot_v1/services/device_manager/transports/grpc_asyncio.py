@@ -584,7 +584,8 @@ class DeviceManagerGrpcAsyncIOTransport(DeviceManagerTransport):
         r"""Return a callable for the list device states method over gRPC.
 
         Lists the last few versions of the device state in
-        descending order (i.e.: newest first).
+        descending order (i.e.:
+        newest first).
 
         Returns:
             Callable[[~.ListDeviceStatesRequest],
