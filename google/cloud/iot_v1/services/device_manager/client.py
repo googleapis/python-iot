@@ -1782,6 +1782,7 @@ class DeviceManagerClient(metaclass=DeviceManagerClientMeta):
     ) -> device_manager.ListDeviceStatesResponse:
         r"""Lists the last few versions of the device state in
         descending order (i.e.:
+
         newest first).
 
         .. code-block:: python
