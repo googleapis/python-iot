@@ -574,6 +574,7 @@ class DeviceManagerGrpcTransport(DeviceManagerTransport):
 
         Lists the last few versions of the device state in
         descending order (i.e.:
+
         newest first).
 
         Returns:
