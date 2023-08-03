@@ -4,6 +4,13 @@
 
 [1]: https://pypi.org/project/google-cloud-iot/#history
 
+## [2.9.3](https://github.com/googleapis/python-iot/compare/v2.9.2...v2.9.3) (2023-08-03)
+
+
+### Documentation
+
+* Minor formatting ([#505](https://github.com/googleapis/python-iot/issues/505)) ([ba9fbb5](https://github.com/googleapis/python-iot/commit/ba9fbb54fabc307c4b6645c63873441ae5c9a73a))
+
 ## [2.9.2](https://github.com/googleapis/python-iot/compare/v2.9.1...v2.9.2) (2023-07-04)
 
 
