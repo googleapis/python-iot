@@ -1,9 +1,0 @@
-cryptography==41.0.3
-flaky==3.7.0
-google-api-python-client==2.95.0
-google-auth-httplib2==0.1.0
-google-auth==2.22.0
-google-cloud-iot==2.9.2
-google-cloud-pubsub==2.18.2
-paho-mqtt==1.6.1
-pyjwt==2.8.0
