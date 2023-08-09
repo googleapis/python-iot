@@ -1,4 +1,4 @@
-:**NOTE**: **This github repository is archived. Google Cloud IoT Core is being retired in August 2023. For details, see https://cloud.google.com/iot-core. **
+:**NOTE**: **This github repository is archived. Google Cloud IoT Core is retired as of August 2023. For details, see https://cloud.google.com/iot-core. **
 
 Python Client for Google Cloud Internet of Things (IoT) Core API
 ================================================================
